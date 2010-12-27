@@ -9,7 +9,7 @@
 
 == 스프링 테스트 컨텍스트 계층 구조 ==
 
-http://spring3-study-with-cwp.googlecode.com/files/testcase.jpg
+http://developerhaus.googlecode.com/files/testcase.jpg
 
 == 각 컨테스트별 기능 ==
 Spring 통합 테스트 클래스들은 다양한 테스트 환경을 고려하여 설계되어 있으며 org.springframework.test 패키지에 존재합니다.
