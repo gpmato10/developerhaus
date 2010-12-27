@@ -27,5 +27,13 @@ Spring Framework JDBC abstraction에서 제공하는 부가가치는 아래의 �
 || connection 닫기 || X ||　||
  
 
+Spring framework는 지루한 API와 같은 Jdbc가 되게하는 모든 낮은 수준의 세부사항들을 다룬다.
+
+==== 1.1.1 JDDBC database access 접근법 선택 ====
+
+JDBC database access를 기반으로 한 몇 몇의 접근법들 중에 선택할수 있다.
+JdbcTemplate의 세가지 특징 이외에도, 새로운 Simple Jdbclnsert와 SimplejdbcCall approach는 database meatadata에 최적화 되어 있다. 그리고 the RDBMS object style은 JDO QUery design 수준의 객체지향적 접근법을 취한다. 
+일단 당신은 이 접근법들을 사용하며 시작해라. 당신은 서로다른 접근법에서의 각 특징들을 훨씬 더 많이 섞어서 사용할 수 있다. 모든 접근법은 JDBC 2.0-compliant driver를 요구한다. 그리고 일부 향상된 JDBC 3.0 driver 특징들을 요구한다.
+
 
 = 생각하기 =
