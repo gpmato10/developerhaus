@@ -1,0 +1,35 @@
+#summary 사이드바
+
+* 토비의 스프링 3
+
+  * [TobySpring_01 1장 오브젝트와 의존관계]
+    * [OCP OCP]
+    * [Singleton 싱글톤 (X)]   
+    * [TemplateMethodPattern 템플릿메소드패턴 (X)] 
+    * [AnnotationVsXML 애노테이션 vs XML 기반 설정 (X)]
+    * [TobySpring_01_done 1장 리뷰 정리]
+  * [TobySpring_02 2장 테스트]
+    * [TestWritingCaseStudy 테스트 케이스 공유하기 (X)]
+    * [SpringTestContext 스프링 테스트 컨텍스트 (X)]
+    * [TobySpring_02_done 2장 리뷰 정리 (X)]
+  * [TobySpring_03 3장 템플릿]
+    * [StrategyPattern 전략패턴]
+    * [SpringJdbcTemplate SpringJdbcTemplate (X)]
+    * [TobySpring_03_done 3장 리뷰 정리]
+  * [TobySpring_04 4장 예외 (X)]
+    * [TransferException 애니프레임의 예외처리]
+    * [SpringException 스프링기반 예외처리 (X)]
+    * [TobySpring_04_done 4장 리뷰 정리 (X)]
+  * [TobySpring_05 5장 서비스 추상화 (X)]
+  * [TobySpring_06 6장 AOP (X)]
+
+* 전문분야
+
+  * [MavenTest 메이븐]
+
+
+* 기타
+
+  * [WikiGuide 위키 사용법] 
+  * [CodeGuide 코드 가이드] 
+  * [IssueManagement 이슈 관리방안] 
