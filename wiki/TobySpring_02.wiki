@@ -177,10 +177,10 @@ JUnit은 사실상 자바의 표준 테스팅 프레임워크라고 불릴 만�
 *JUnit 테스트 실행 방법*
   * IDE* : 사실상의 표준 자바 IDE인 이클립스는 오래전부터 JUnit테스트를 지원하는 기능을 제공하고있다. @Test가 들어있는 테스트 클래스를 선택한 뒤에, 이클립스 run메뉴의 Run As 항목 중에서 JUnit Test를 선택하면 자동으로 실행된다. JUnitCore처럼 main()메소드를 만들지 않아도 된다.
 
-http://spring3-study-with-cwp.googlecode.com/files/success.jpg
+http://developerhaus.googlecode.com/files/success.jpg
  테스트의 총 수행시간, 실행한 테스트 수, 테스트 에러 수, 테스트 실패의 수를 확인할 수 있다. 또한 어떤 클래스를 실행했는지 알 수 있고, 각 테스트 메소드와 클래스의 테스트 수행에 걸린 시간도 보여준다.
 
-http://spring3-study-with-cwp.googlecode.com/files/fail.jpg
+http://developerhaus.googlecode.com/files/fail.jpg
  한개의 테스트 메소드가 실패했음을 알 수 있다. 실패한 이유는 뷰의 아래 Failure Trace 항목에 자세히 나와있다. 테스트 코드에서 검증에 실패한 assertTaht()의 위치도 나와있다.
 
 이클립스의 소스트리에서 특정 패키지를 선택하고 컨텍스트 메뉴의 [ Run AS ] -> [ JUnit Test ]를 실행하면 해당 패키지 아래에 있는 모든 JUnit테스트를 한번에 실행할 수 도 있다.
@@ -295,7 +295,7 @@ getCount()에 대해 좀더 꼼꼼한 테스트를 만들어보자. 여러개의
 	}
 }}}
 
-http://spring3-study-with-cwp.googlecode.com/files/test.jpg
+http://developerhaus.googlecode.com/files/test.jpg
 
 위 처럼 두개의 테스트가 실행됐지만 어떤 순서로 실행 될지는 알 수 없다. JUnit은 특정한 테스트 메소드의 실행 순서를 보장해주지 않는다. 모든 테스트는 실행 순서에 상관없이 독립적으로 항상 동일한 결과를 낼 수 있도록 해야 한다.
 
