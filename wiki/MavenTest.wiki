@@ -87,9 +87,8 @@
     http://lh4.ggpht.com/_ISarakVcQjw/TPfXNZBrcBI/AAAAAAAAAD0/asnU6YLNjWI/svn-check.jpg
 
   * Source 탭에 보시면 SVN checkout 주소와 비밀번호를 확인할 수 있습니다.
-    http://lh4.ggpht.com/_ISarakVcQjw/TPfYotAajzI/AAAAAAAAAEA/sEeDe14eII0/s912/svn-url.jpg
   * SVN Repositories에서 Repository Location을 추가합니다. 
-  * SVN URL : https://spring3-study-with-cwp.googlecode.com/svn/trunk/
+  * SVN URL : https://developerhaus.googlecode.com/svn/trunk/
     http://lh6.ggpht.com/_ISarakVcQjw/TPfYoHoiHHI/AAAAAAAAAD8/fIGR6dJ9pkQ/svn-repository.jpg
     http://lh4.ggpht.com/_ISarakVcQjw/TPfaQ3kRTRI/AAAAAAAAAEI/jT-aXbpYFLI/s512/svn-location-info.jpg
 
