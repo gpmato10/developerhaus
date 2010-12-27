@@ -57,17 +57,9 @@ Spring 3.0은 generics(제네릭스)와 varargs(가변인자)와 같은 Java 5 �
 ==== 12.1.2 Package 계층 ====
 Spring Framework의 JDBC abstraction framework는 core, datasource, object, support의 서로 다른 4개의 package들로 구성되어 있다.
 
-org.springframework.jdbc.core package는 JdbcTemplate 클래스와 다양한 callback interface들, 뿐만 아니라 연관된 다양한 클래스까지도 포함한다.
+ * *org.springframework.jdbc.core* package는 JdbcTemplate 클래스와 다양한 callback interface들, 뿐만 아니라 연관된 다양한 클래스까지도 포함한다. org.springframework.jdbc.core.simple로 명명된 subpackage는 SimpleJdbcTemplate 클래스와 그에 연관된 SimpleJdbcInsert 와 SimpleJdbcCall 클래스들을 포함한다. org.springframework.jdbc.core.namedparam 로 명명된 또 다른 subpackage는 NamedParameterJdbcTemplate 클래스와 연관된 support 클래스들을 포함한다. Section 12.2, “Using the JDBC core classes to control basic JDBC processing and error handling”, Section 12.4, “JDBC batch operations”, Section 12.5, “Simplifying JDBC operations with the SimpleJdbc classes”를 참고하길 바람.
 
-org.springframework.jdbc.core.simple로 명명된 subpackage는 SimpleJdbcTemplate 클래스와
-그에 연관된 SimpleJdbcInsert 와 SimpleJdbcCall 클래스들을 포함한다.
 
-org.springframework.jdbc.core.namedparam 로 명명된 또 다른 subpackage는 
-NamedParameterJdbcTemplate 클래스와 연관된 support 클래스들을 포함한다. 
-
-Section 12.2, “Using the JDBC core classes to control basic JDBC processing and error handling”, 
-Section 12.4, “JDBC batch operations”,
-Section 12.5, “Simplifying JDBC operations with the SimpleJdbc classes”를 참고하길 바람.
 
 
 
