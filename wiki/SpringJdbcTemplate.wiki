@@ -5,9 +5,10 @@
 
 = 내용정리 =
 
-== 1. Data access with JDBC == 
 * http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/jdbc.html
 
+
+== 1. Data access with JDBC == 
 === 1.1 Introduction to Spring Framework JDBC == 
 
 Spring Framework JDBC abstraction에서 제공하는 부가가치는 아래의 표에서 가장 잘 보여준다.
@@ -43,8 +44,13 @@ Spring 3.0은 generics(제네릭스)와 varargs(가변인자)와 같은 Java 5 �
 
  * *JdbcTemplate* 은 전통적 Spring JDBC 접근법이며, 가장 유명하다. 이것은 "가장 낮은 레벨"의 접근법이다. 그리고 다른 모든것은 JdbcTemplate 안으로 들어와 사용한다. 그리고 모두 generics와 varargs와 같은 Java 5 지원으로 업데이트된다.
 
- * *NamedParameterJdbcTemplate* 은 traditional JDBC의 "?"를 대신하여 named parameters를 JdbcTemplate를 제공한다. 이 접근법은 더 나은 문서화와 SQL문의 다수의 매개변수를 사용하기 쉽게 제공한다.
+ * *NamedParameterJdbcTemplate* 은 traditional JDBC의 "?"를 대신하여 named parameters를 JdbcTemplate를 제공한다. 이 접근법은 더 나은 문서화와 SQL문의 다수의 매개변수(multiple parameters)를 사용하기 쉽게 제공한다.
 
+ * *SimpleJdbcTemplate* 은 JdbcTemplate과 NamedParameterJdbcTemplate의 사용빈도가 높은 작업들을 결합한다.
+
+ * *SimpleJdbcInsert and SimpleJdbcCall* 은 필요한 환경설정의 양을 제한하기 위하여 database metadata를 최적화한다. 이 접근법은 테이블의 이름 또는 절차와 행이름에 어울리는 parameters의 map을 제공할 필요가 있는 당신을 위하여 코딩을 간단하게 한다. 이것은 단지 데이타베이스가 충분한 메타데이타를 제공할 때만 수행한다. 만약 데이타베이스가 이 메타데이타를 제공하지 못한다면 당신은 parameters의 확실한 환경설정을 제공해야만 할 것이다. 
+
+ * *RDBMS Objects including MappingSqlQuery, SqlUpdate and StoredProcedure* 은 data access layer를 초기화 하는 동안에 재사용 가능하고 thread-safe object들을 만들도록 요구한다. 이 접근법은 query string을 정의하고, parameter들을 선언하고, 그리고 query를 컴파일하는 점에서 JDO Query을 모방해서 만들었다 할 수있다. execute methods는 여러 parameter 값들이 지나갈 때 multiple times에 call 될 수 있다.
 
 
 = 생각하기 =
