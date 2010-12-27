@@ -39,9 +39,12 @@ JdbcTemplate의 세가지 특징 이외에도, 새로운 Simple Jdbclnsert와 Si
 http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/images/note.gif *NOTE*
 
  
-Spring 3.0은 generics(제네릭스)와 varargs(가변인자)와 같은 Java 5 지원과 함께 다음에 나오는 모든 접근법으로 업데이트 된다.
+Spring 3.0은 generics(제네릭스)와 varargs(가변인자)와 같은 Java 5 지원과 함께 다음에 나오는 모든 접근법으로 업데이트 된다. 
 
- * *JdbcTemplate* 은 
+ * *JdbcTemplate* 은 전통적 Spring JDBC 접근법이며, 가장 유명하다. 이것은 "가장 낮은 레벨"의 접근법이다. 그리고 다른 모든것은 JdbcTemplate 안으로 들어와 사용한다. 그리고 모두 generics와 varargs와 같은 Java 5 지원으로 업데이트된다.
+
+ * *NamedParameterJdbcTemplate* 은 traditional JDBC의 "?"를 대신하여 named parameters를 JdbcTemplate를 제공한다. 이 접근법은 더 나은 문서화와 SQL문의 다수의 매개변수를 사용하기 쉽게 제공한다.
+
 
 
 = 생각하기 =
