@@ -36,4 +36,12 @@ JdbcTemplate의 세가지 특징 이외에도, 새로운 Simple Jdbclnsert와 Si
 일단 당신은 이 접근법들을 사용하며 시작해라. 당신은 서로다른 접근법에서의 각 특징들을 훨씬 더 많이 섞어서 사용할 수 있다. 모든 접근법은 JDBC 2.0-compliant driver를 요구한다. 그리고 일부 향상된 JDBC 3.0 driver 특징들을 요구한다.
 
 
+http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/images/note.gif *NOTE*
+
+ 
+Spring 3.0은 generics(제네릭스)와 varargs(가변인자)와 같은 Java 5 지원과 함께 다음에 나오는 모든 접근법으로 업데이트 된다.
+
+ * *JdbcTemplate* 은 
+
+
 = 생각하기 =
