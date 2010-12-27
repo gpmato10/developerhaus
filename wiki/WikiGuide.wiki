@@ -26,4 +26,4 @@
   # 토비의 스프링 리뷰 문서 예제
    * [TobySpring_01 1장 오브젝트와 의존관계]
   # 본문만 보기 원하실 때는 주소에 "?show=content" 만 추가해주시면 됩니다~
-   * 예를 들어 http://code.google.com/p/spring3-study-with-cwp/wiki/WikiGuide?show=content
+   * 예를 들어 http://code.google.com/p/developerhaus/wiki/WikiGuide?show=content
