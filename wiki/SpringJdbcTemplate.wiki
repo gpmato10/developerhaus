@@ -1,0 +1,31 @@
+#summary Spring Jdbc Template
+
+<wiki:toc max_depth="2" />
+
+
+= 내용정리 =
+
+== 1. Data access with JDBC == 
+* http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/jdbc.html
+
+=== 1.1 Introduction to Spring Framework JDBC == 
+
+Spring Framework JDBC abstraction에서 제공하는 부가가치는 아래의 표에서 가장 잘 보여준다.
+이 표는 어떤 action은 Spring이 처리하고, 어떤 action은 당신(application developer)이 처리해야 하는 것을 보여준다.
+
+* Spring JDBC - who does what? (어떤일을 분담할 것인가?)
+|| *Action* || *Spring* || *You* ||
+|| connection 파라미터들을 정의하기 ||　|| X || 
+|| connection 오픈 || X ||　|| 
+|| 구체적인 SQL 작성 ||　|| X || 
+|| 파라미터 선언 및 파라미터 값 제공 ||　|| X || 
+|| 질의문 준비 및 실행 || X ||　||
+|| 결과에 대한 반복 루프 준비(필요하다면) || X ||　||
+|| 반복되는 각 항목에 대한 작업 수행 ||　|| X ||
+|| 예외 처리 || X ||　||
+|| 트랜잭션을 다루기 || X ||　||
+|| connection 닫기 || X ||　||
+ 
+
+
+= 생각하기 =
