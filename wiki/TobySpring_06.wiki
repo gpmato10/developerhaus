@@ -6,9 +6,7 @@
  
  문제를 해결하기 위한 핵심 관심 사항(core concern, 핵심 로직)과 전체에 적용되는 공통 관심 사항(cross-cutting concern, 공통 기능)을 기준으로 프로그래밍함으로써 공통 모듈을 여러 코드에 쉽게 적용할 수 있도록 해 줌.
 
-http://spring3-study-with-cwp.googlecode.com/files/aop0001.png
-
-[출처:http://blog.naver.com/chocolleto?Redirect=Log&logNo=30086009893]
+http://developerhaus.googlecode.com/files/aop0001.png
 
  근데 이걸 작성하다가 문득... Filter와는 차이가 뭘까요?
 
