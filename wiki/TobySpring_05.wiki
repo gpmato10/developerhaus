@@ -991,5 +991,121 @@ private void sendUpgradeEMail(User user) {
 
 [http://dl.dropbox.com/u/176648/mailExcepiton.png]
 
+JavaMail은 많은 사람이 사용하는 검증된 모듈이다. 메일 발송이라는 큰 부하를 발생시키지 않고 테스트용 메일 서버를 이용해 발송 테스트를 한다.
+
+==== 테스트의 문제점 ====
+ * JavaMail API에서는 DataSource 처럼 인터페이스로 만들어져서 구현을 바꿀 수 있는게 없다.
+ * Session 오브젝트를 만들어야 메일 메시지를 생성하고 전송할 수 있다.
+ * Session은 상속이 불가능한 *final* 클래스 이고, 생성자도 모두 private로 되어 있다.
+ * 메일 메시지를 작성하는 MailMessage도 전송 기능을 하는 Transport도 마찬가지이다.
+
+==== 해결 방법 ====
+ * 서비스 추상화를 적용한다.
+
+ * JavaMail의 서비스 추상화 인터페이스
+{{{
+package org.springframework.mail;
+...
+public interface MailSender {
+	void send(SimpleMailMessage simpleMessage) throws MailException;
+	void send(SimpleMailMessage[] simpleMessages) throws MailException;
+}
+}}}
+ * 스프링의 MailSender를 이용한 메일 발송 메소드
+{{{
+private void sendUpgradeEMail(User user) {
+	// MailSender 구현 클래스의 오브젝트를 생성한다.
+	JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+	mailSender.setHost("mail.server.com");
+	
+	//  MailMessage 인터페이스의 구현 클래스 오브젝트를 만들어 메일 내용을 작성한다.
+	SimpleMailMessage mailMessage = new SimpleMailMessage();
+	mailMessage.setTo(user.getEmail());
+	mailMessage.setFrom("useradmin@ksug.org");
+	mailMessage.setSubject("Upgrade 안내");
+	mailMessage.setText("사용자님의 등급이 " + user.getLevel().name() + "로 변경되었습니다.");
+	
+	mailSender.send(mailMessage);
+}
+}}}
+  * try/catch 블록이 사라졌다.
+   * 스프링의 예외 처리 원칙에 따라 MailException 이라는 런타임 예외로 포장해서 던져준다.
+ * 스프링의 DI를 적용한다.
+  * 구체적인 메일 전송 구현을 담은 클래스 정보는 코드에서 제거한다.(호스트를 설정하는 코드도 제거)
+  * 메일 전송 기능을 가진 오브젝트를 DI 받도록 수정한다.
+{{{
+public class UserService {
+	...
+	private MailSender mailSender;
+	
+	public void setMailSender(MailSender mailSender) {
+		this.mailSender = mailSender;
+	}
+
+	private void sendUpgradeEMail(User user) {
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setTo(user.getEmail());
+		mailMessage.setFrom("useradmin@ksug.org");
+		mailMessage.setSubject("Upgrade 안내");
+		mailMessage.setText("사용자님의 등급이 " + user.getLevel().name() + "로 변경되었습니다.");
+		
+		this.mailSender.send(mailMessage);
+	}
+}
+}}}
+{{{
+<bean id="userService" class="springbook.user.service.UserService">
+	<property name="userDao" ref="userDao" />
+	<property name="transactionManager" ref="transactionManager" />
+	<property name="mailSender" ref="mailSender" />
+</bean>
+
+<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	<property name="host" value="mail.server.com" />
+</bean>
+}}}
+
+ * MailSender 인터페이스를 구현해 테스트용 메일 전송 클래스를 만든다.
+{{{
+package springbook.user.service;
+
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+
+public class DummyMailSender implements MailSender{
+
+	@Override
+	public void send(SimpleMailMessage arg0) throws MailException {
+	}
+
+	@Override
+	public void send(SimpleMailMessage[] arg0) throws MailException {
+	}
+
+}
+}}}
+ * mailSender의 빈 클래스를DummyMailSender로 변경한다.
+{{{
+<bean id="mailSender" class="springbook.user.service.DummyMailSender" />
+}}}
+ * upgradeAllOrNothing()메소드에도 mailSender를 추가해 준다.
+{{{
+public class UserServiceTest {
+	@Autowired
+	MailSender mailSender;
+	@Test
+	public void upgradeAllOrNothing() throws Exception {
+		...
+		testUserService.setMailSender(mailSender);
+		...
+}
+}}}
+
 
 = 생각하기 =
+ * 트랜잭션 처리를 한 후 테스트를 실행했을 때 자꾸 오류가 발생해서 이것저것 해보면서 확인을 했는데, 결국 테이블의 엔진 타입을 바꿔주고 해결했다.(이것 때문에 버린 시간이...흑..ㅜㅜ)
+{{{
+ALTER TABLE USERS ENGINE = InnoDB;
+}}}
+ * 참고 [http://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-j2ee.html#connector-j-usagenotes-spring-config-transactional]
