@@ -1128,9 +1128,60 @@ public class UserServiceTest {
 스텁처럼 테스트 오브젝트가 정상적으로 실행되도록 도와주면서, 테스트 오브제그와 자신의 사이에서 일어나는 커뮤니케이션 내용을 저장해뒀다가 테스트 결과를 검증하는 데 활용할 수 있게 해준다.
 
 ==== 목 오브젝트를 이용한 테스트 ====
+ * 새로 생성하는 MockMailSender 클래스에 메일 발송하는 기능은 없지만 UserService의 코드가 정상적으로 수행되도록 하고, 테스트 대상의 출력값을 보관해둔다.
+{{{
+public class MockMailSender implements MailSender {
 
+	private List<String> requests = new ArrayList<String>();
 
+	public List<String> getRequests() {
+		return requests;
+	}
 
+	@Override
+	public void send(SimpleMailMessage mailMessage) throws MailException {
+		requests.add(mailMessage.getTo()[0]);
+	}
+
+	@Override
+	public void send(SimpleMailMessage[] mailMessage) throws MailException {
+	}
+
+}
+}}}
+ * MockMailSender도 메일 발송하는 기능은 없지만 테스트 대상인 UserService가 send() 메소드를 통해 자신을 불러서 메일 전송 요청을 보냈을 때 관련 정보를 저장해두는 기능을 한다.
+{{{
+@Test
+@DirtiesContext // 컨텍스트의 DI 설정을 변경하는 테스트라는 것을 알려준다.
+public void upgradeLevels() throws Exception {
+	userDao.deleteAll();
+	for (User user : users) {
+		userDao.add(user);
+	}
+	
+	// 메일 발송 결과를 테스트할 수 있도록 목 오브젝트를 만들어 userService의 의존 오브젝트로 주입한다.
+	MockMailSender mockMailSender = new MockMailSender();
+	userService.setMailSender(mockMailSender);
+
+	// 메일 발송이 일어나면 MockMailSender 오브젝트의 리스트에 그 결과가 저장된다.
+	userService.upgradeLevels();
+
+	checkLevelUpgraded(users.get(0), false);
+	checkLevelUpgraded(users.get(1), true);
+	checkLevelUpgraded(users.get(2), false);
+	checkLevelUpgraded(users.get(3), true);
+	checkLevelUpgraded(users.get(4), false);
+	
+	// 목 오브젝트에 저장된 메일 수신자 목록을 가져와 업그레이드 대상과 일치하는지 확인한다.
+	List<String> request = mockMailSender.getRequests();
+	assertThat(request.size(), is(2));
+	assertThat(request.get(0), is(users.get(1).getEmail()));
+	assertThat(request.get(1), is(users.get(3).getEmail()));
+}
+}}}
+ * DummyMailSender를 대신할 목 오브젝트인 MockMailSender를 만들고 UserService 오브젝트의 수정자를 이용해 수동 DI 해준다.
+ * 테스트 대상의 메소드를 호출하고 업그레이드 결과를 검증한다.
+ * userService에 DI 해줬던 목 오브젝트로부터 getRequests() 를 호출해서 메일 주소가 저장된 리스트를 가져온 후 그 결과를 검증한다.
 
 
 = 생각하기 =
