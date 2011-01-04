@@ -64,5 +64,12 @@ Spring Framework의 JDBC abstraction framework는 core, datasource, object, supp
  * *The org.springframework.jdbc.datasource* package는 DataSource에 쉽게 접근하기 위한 utility 클래스를 포함한다. 그리고 다양한 simple DataSource를 implementations한다. 그것은 testing 과 Java EE container의 외부의 변경하지 않은 JDBC 코드를 실행할 때 사용할 수 있다. org.springfamework.jdbc.datasource.embedded로 명명된 서브패키지는 HSQL과 H2와 같은 자바 데이터베이스 엔진을 사용하는 in-memory database instances를 만들어 내는 지원을 제공한다. Section 12.3, “Controlling database connections”, Section 12.8, “Embedded database support”를 참고하기바람.
 
 
+ * *The org.springframework.jdbc.object* package 는 RDBMS queries, updates, and stored procedures as thread safe, reusable objects를 대표하는 클래스를 포함한다. Section 12.6,“Modeling JDBC operations as Java objects"를 참고하길 바람. 이 접근법은 JDO에 의해 만들어졌다. 그러나 물론 쿼리에 의해 되돌아온 object들은 데이터베이스에서 "disconnected" 된다. 이 높은 단계의 JDBC abstraction은  org.springframework.jdbc.core package의 낮은 단계의 abstraction에 의존한다.
+
+
+
+ * *The org.springframework.jdbc.support* package 는 SQLException translation functionality과 몇몇의 유틸리티 클래스를 제공한다.JDBC processing 동안에 Exceptions thrown는 org.springframework.dao package에서 정의된 예외로 번역되어 진다. 이것은 Spring JDBC abstraction layer를 사용하는 코드가 JDBC 또는 RDBMS-specific error handling 같은 도구를 필요로 하지 않음을 의미한다. 번역된 예외 모두는 체크되어지지 않았다. 예외를 catch하는 옵션을 준다. 다른 예외들이 caller에게 전달될 수 있도록 허용하는 동안에 당신은 회복할 수 있다. Section 12.2.4,“SQLExceptionTranslator 를 참고 바람.
+
+
 
 = 생각하기 =
