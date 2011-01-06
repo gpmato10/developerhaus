@@ -23,6 +23,8 @@
   * [TobySpring_05 5장 서비스 추상화 (X)]
   * [TobySpring_06 6장 AOP (X)]
 
+* Repository
+
 * 전문분야
 
   * [MavenTest 메이븐]
