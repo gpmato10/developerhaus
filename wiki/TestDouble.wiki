@@ -1,0 +1,13 @@
+#Test Double 정리
+
+= Introduction =
+
+Test Double과 그에 속한 Test Stub, Test Spy, Mock Object, Fake Object에 대해 정리한다.
+
+
+= Details =
+
+=== Test Double ===
+ 오리지널 객체를 사용해서 테스트를 진행하기 어려울 경우 이를 대신해서 테스트를 진행할 수 있도록 만들어 주는 객체를 지칭한다.
+
+http://xunitpatterns.com/Test%20Double.gif
