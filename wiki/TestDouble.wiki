@@ -1,4 +1,4 @@
-#Test Double 정리
+# Test Double 정리
 
 = Introduction =
 
@@ -7,7 +7,131 @@ Test Double과 그에 속한 Test Stub, Test Spy, Mock Object, Fake Object에 �
 
 = Details =
 
-=== Test Double ===
+== Test Double ==
  오리지널 객체를 사용해서 테스트를 진행하기 어려울 경우 이를 대신해서 테스트를 진행할 수 있도록 만들어 주는 객체를 지칭한다.
 
 http://xunitpatterns.com/Test%20Double.gif
+    - SUT(System Under Test) : 테스트 대상이 되는 시스템(이나 모듈)을 뜻한다.
+
+==== Test Double 하위 분류 ====
+http://xunitpatterns.com/Types%20Of%20Test%20Doubles.gif
+
+==== 테스트 예시 ====
+ * 인터넷 쇼핑몰에서 유저에게 쿠폰을 발급하는 업무를 가정
+ * 고객이 쿠폰을 발급받아 저장하고, 그 내역을 확인할 수 있는 기능을 구현
+ * 쿠폰 인터페이스
+{{{
+  public interface ICoupon {
+	
+	String getName();				// 쿠폰이름
+	boolean isValid();				// 쿠폰 유효 여부 확
+	int getDiscountPercent();		// 할인율
+	boolean isAppliable(Item item); // 해당 아이템에 적용 가능 여부
+	public void doExpire();			// 사용할 수 없는 쿠폰으로 만듦
+}
+}}}
+
+
+== Dummy Object ==
+ 객체의 전달에만 사용되고 실제로 이를 사용하지 않는 것이다. 대개 매개변수 목록을 채우는데 쓰이며, 오로지 인스턴스화될 수 있는 수준으로만 구현된다.
+{{{
+public class DummyCoupon implements ICoupon {
+
+	@Override
+	public String getName() {
+		return null;
+	}
+
+	@Override
+	public boolean isValid() {
+		return false;
+	}
+
+	@Override
+	public int getDiscountPercent() {
+		return 0;
+	}
+
+	@Override
+	public boolean isAppliable(Item item) {
+		return false;
+	}
+
+	@Override
+	public void doExpire() {
+	}
+}
+}}}
+
+==== 테스트 구현 ====
+{{{
+	@Test
+	public void testAddCoupon() throws Exception {
+	
+		User user = new User("abc");
+		assertEquals(0, user.getTotalCouponCount());
+		
+		ICoupon coupon = new DummyCoupon();
+		
+		user.addCoupon(coupon);
+		assertEquals(1, user.getTotalCouponCount());
+	}
+}}}
+
+* 더미객체는 단지 인스턴스화된 객체가 필요할 뿐 해당 객체의 기능까지는 필요하지 않은 경우에 사용한다. 따라서 해당 더미 객체의 메소드가 호출됐을 때의 정상 동작은 보장되지 않는다.*
+
+기본타입이 아닌, 특정 상황을 가정해야 하는 경우가 생긴다면 다른식의 접근이 필요하다. 예를 들어 coupon.getName()이나 coupon.getDiscountRate() 같은 메소드 호출이 테스트케이스 과정에 필요한 경우이다.
+
+== Test Stub ==
+ 더미객체가 마치 실제로 동작하는 것처럼 보이게 만들어 놓은 객체다. 테스트를 위해 미리 준비한 응답만을 제공하며, 그외의 상황에 대해서는 정상적으로 작동하지 못하는 것이 일반적이다.
+{{{
+public class StubCoupon implements ICoupon {
+
+	@Override
+	public String getName() {
+		return "VIP 고객 한가위 감사쿠폰";
+	}
+
+	@Override
+	public boolean isValid() {
+		return false;
+	}
+
+	@Override
+	public int getDiscountPercent() {
+		return 7;
+	}
+
+	@Override
+	public boolean isAppliable(Item item) {
+		return false;
+	}
+
+	@Override
+	public void doExpire() {
+	}
+}
+}}}
+
+==== Dummy Object와 Test Stub 차이 ====
+ * 단지 인스턴스화 될 수 있는 객체 수준이면 더미
+ * 인스턴스화 된 객체가 특정 상태나 모습을 대표하면 스텁
+
+==== 테스트 구현 ====
+{{{
+	@Test
+	public void testAddCoupon() throws Exception {
+	
+		User user = new User("abc");
+		assertEquals(0, user.getTotalCouponCount());
+		
+		ICoupon coupon = new DummyCoupon();
+		
+		user.addCoupon(coupon);
+		assertEquals(1, user.getTotalCouponCount());
+	}
+}}}
+
+* Test Sutb은 특정 객체가 상태를 대신해주고 있긴 하지만, 거의 하드코딩된 형태이기 때문에 로직이 들어가는 부분을 테스트 할 수 없다. *
+
+== Fake Object ==
