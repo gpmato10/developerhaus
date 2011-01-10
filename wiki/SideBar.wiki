@@ -21,6 +21,7 @@
     * [SpringException 스프링기반 예외처리 (X)]
     * [TobySpring_04_done 4장 리뷰 정리 (X)]
   * [TobySpring_05 5장 서비스 추상화 (X)]
+    * [TestDouble 테스트대역]
   * [TobySpring_06 6장 AOP (X)]
 
 * Repository
