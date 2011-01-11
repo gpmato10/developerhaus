@@ -123,12 +123,14 @@ public class StubCoupon implements ICoupon {
 	public void testAddCoupon() throws Exception {
 	
 		User user = new User("abc");
-		assertEquals(0, user.getTotalCouponCount());
+		ICoupon eventCoupon = new StubCoupon();
+		user.addCoupon(eventCoupon);
 		
-		ICoupon coupon = new DummyCoupon();
+		ICoupon lastCoupon = user.getLastOccupiedCoupon());
 		
-		user.addCoupon(coupon);
-		assertEquals(1, user.getTotalCouponCount());
+		assertEquals("쿠폰 할인율", 7, lastCoupon.getDiscountPercent());
+		assertEquals("쿠폰 이름", "VIP 고객 한가위 감사쿠폰", lastCoupon.getName());
+
 	}
 }}}
 
