@@ -29,8 +29,6 @@
 * 전문분야
 
   * [MavenTest 메이븐]
-  * [AOP AOP(X)]
-
 
 * 기타
 
