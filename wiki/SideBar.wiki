@@ -25,7 +25,8 @@
 * Repository
 
   * [Repository Repository 정리]
-  * [RepositoryImplementaitonPreview  Repository구현 및 적용프로젝트]
+  * [RepositoryImplementaitonPreview  Repository 구현 및 적용프로젝트]
+    * [RepositoryPlan Repository 구현 계획/일정]
 
 * 전문분야
 
