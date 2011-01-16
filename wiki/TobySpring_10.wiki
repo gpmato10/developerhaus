@@ -5,9 +5,5 @@
 Add your content here.
 
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+IoC컨테이너 정의 
+ - 오브젝트의 생성과 관계설정, 사용, 제거 등의 작업을 컨테이너가 담당
