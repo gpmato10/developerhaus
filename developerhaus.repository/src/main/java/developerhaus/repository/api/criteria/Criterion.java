@@ -8,7 +8,7 @@ package developerhaus.repository.api.criteria;
  * @param <K>
  * @param <T>
  */
-public interface Criterion<K, T> {
+public interface Criterion<K, T, O> {
 
 	K getKey();
 
@@ -17,4 +17,8 @@ public interface Criterion<K, T> {
 	T getValue();
 
 	void setValue(T value);
+	
+	O getOperator();
+	
+	void setOperator(O operator);
 }
