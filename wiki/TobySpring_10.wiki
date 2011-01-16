@@ -1,16 +1,20 @@
 #summary 토비의 스프링, 2부 선택 - 10장 IoC 컨테이너와 DI
 
-<wiki:toc max_depth="2" />
+= Introduction =
 
-= 정리 =
-
-== IoC 컨테이너: 빈 팩토리와 애플리케이션 컨텍스트 ==
-
-== IoC/DI를 위한 빈 설정 메타정보 작성 ==
-
-== 프로토타입과 스코프 ==
-
-== 기타 빈 설정 메타정보 ==
+Add your content here.
 
 
-= 생각하기 =
+== IoC컨테이너 정의 ==
+ * 오브젝트의 생성과 관계설정, 사용, 제거 등의 작업을 컨테이너가 담당
+ * 오브젝트의 제어권을 컨테이너가 가지고 있어 IoC라 부름
+ * 스프링 컨테이너를 Ioc컨테이너라고도 함
+ * 스프링에선 IoC를 담당하는 컨테이너를 빈 팩토리 또는 애플리케이션 컨텍스트라고 부르기도함
+
+ {{{
+  public interface ApplicationContext extends ListableBeanFactory,
+  HierarchicalBeanFactory, MessageSource, ApplicationEventPublisher,
+  ResourcePatternResolver {
+ }}}
+
+스프링의 빈 팩토리와 애플리케이션 컨텍스트는 각각 기능을 대표하는 BeanFactory와 ApplicationContext라는 두 개의 인터페이스로 정의
