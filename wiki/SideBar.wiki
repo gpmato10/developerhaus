@@ -33,6 +33,8 @@
 * 전문분야
 
   * [MavenTest 메이븐]
+  * [Test 테스트]
+    * [testClassLocation 테스트클래스 소스구조]
 
 * 기타
 
