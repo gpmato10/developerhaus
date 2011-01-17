@@ -1,7 +1,11 @@
 package developerhaus.repository.hibernate;
 
 import developerhaus.repository.api.criteria.Criterion;
-
+/**
+ * DefaultCriterion
+ * 
+ * @author sunghee, Park
+ */
 public class DefaultCriterion<K, T, O> implements Criterion<K, T, O> {
 
 	private K key;

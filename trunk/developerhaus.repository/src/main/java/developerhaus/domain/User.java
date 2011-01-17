@@ -1,7 +1,12 @@
 package developerhaus.domain;
 
 import java.io.Serializable;
-
+/**
+ * User Domain
+ * 
+ * @author sunghee, Park
+ * 
+ */
 public class User {
 
 	private int seq;

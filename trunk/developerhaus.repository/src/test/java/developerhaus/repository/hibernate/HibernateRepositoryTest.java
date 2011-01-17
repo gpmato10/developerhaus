@@ -2,6 +2,8 @@ package developerhaus.repository.hibernate;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -10,6 +12,8 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import developerhaus.domain.User;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
+import developerhaus.repository.api.criteria.Order;
+import developerhaus.repository.api.criteria.OrderType;
 
 public class HibernateRepositoryTest {	
 	HibernateRepository<User, Integer> repository;
@@ -24,12 +28,18 @@ public class HibernateRepositoryTest {
 	
 	@Test
 	public void getCount() throws Exception {
-		Criterion<String, String, CriterionOperator> criterion = new DefaultCriterion<String, String, CriterionOperator>("name", "박성희", CriterionOperator.EQ);
+		Criterion<String, String, CriterionOperator> criterion = new DefaultCriterion<String, String, CriterionOperator>("name", "박", CriterionOperator.LIKE);
+		Order order = new DefaultOrder("name", OrderType.DESC);
 		
 		Criteria criteria = new DefaultCriteria();
 		criteria.add(criterion);
+		criteria.add(order);
 		
-		assertEquals(repository.list(criteria).size(), 2);
+		List<User> list = repository.list(criteria);
+		
+		assertEquals(list.size(), 2);
+
+		assertEquals(list.get(0).getName(), "박희희");
 	}
 
 	@Test

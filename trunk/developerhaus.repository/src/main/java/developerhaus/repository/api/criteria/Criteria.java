@@ -24,13 +24,17 @@ public interface Criteria {
 	 */
 	void add(Order order);
 	
-	/*
+	/**
 	 * 조회 조건 검색
+	 * 
+	 * @author shughee, Park
 	 */
 	List<Criterion> getCriterionList();
 	
-	/*
+	/**
 	 * 정렬 조건 검색
+	 * 
+	 * @author shughee, Park
 	 */
 	List<Order> getOrderList();
 	
