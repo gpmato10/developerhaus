@@ -24,7 +24,7 @@
 === IoC컨테이너를 이용해 애플리케이션 만들기 ===
 
 {{{
- StaticApplicationContext ac = new StaticApplicationContext();
+  StaticApplicationContext ac = new StaticApplicationContext();
 }}}
 
  * ApplicationContext 인터페이스를 구현한 클래스인 StaticApplicationContextdml 오브젝트 생성
@@ -132,12 +132,51 @@ Hello hello = ac.getBean("hello", Hello.class);
 
 ==== WebApplicationContext ====
 
-* 스프링 애플리케이션에서 가장 많이 사용되는 애플리케이션 컨텍스트
-* 이름 그대로 웹 환경에서 사용할 때 필요한 기능이 추가된 애플리케이션 컨텍스트
-* XML 설정파일을 사용하도록 만들어진 XmlWebApplicationContext가 가장 많이 사용
+ * 스프링 애플리케이션에서 가장 많이 사용되는 애플리케이션 컨텍스트
+ * 이름 그대로 웹 환경에서 사용할 때 필요한 기능이 추가된 애플리케이션 컨텍스트
+ * XML 설정파일을 사용하도록 만들어진 XmlWebApplicationContext가 가장 많이 사용
+ * 스프링 IoC 컨테이너는 빈 설정 메타정보를 이용해 빈 오브젝트를 만들고 DI작업을 수행
+ * 이것만으로는 애플리케이션이 동작하지 않고 어디에선가 특정 빈 오브젝트의 메소드를 호출함으로써 애플리케이션을 동작시킴 
 
-==== StaticApplicationContext ====
+=== IoC 컨테이너 계층구조 ===
+ * 모든 애플리케이션 컨텍스트는 부모 애플리케이션 컨텍스트를 가질 수 있음 (이를 이용해 트리구조의 컨텍스트 계층을 만들 수 있음)
+ * 계층구조 안의 코든 컨텍스트는 각자 독립적인 설정정보를 이용해 빈 오브젝트를 만들고 관리
+ * 각자 독립적으로 자신이 관리하는 빈을 갖고 있긴 하지만 DI를 위해 빈을 찾을때는 부모 애플리케이션 컨텍스트의 빈까지 검색
+ * 자신이 관리하는 빈 중에서 필요한 빈을 찾아보고 없으면 부모 컨텍스트에게 빈을 찾아달라고 요청
+ * 부모 컨텍스트에서도 없으면 부모 컨텍스트의 부모 컨텍스트에게 까지 다시요청하고 이렇게 계층구조를 따라 가장 위에 존재하는 루트 컨텍스트까지 요청이 전달
+ * 중요한건 부모 컨텍스트에게만 빈 검색을 요청하지 자식, 형제 컨텍스트에는 요청하지 않음
+ * 검색 순서는 자신이 먼저이고 다음 직계 부모 순서
+ * 부모 컨텍스트와 같은 이름의 빈을 자신이 정의해서 갖고 있다면 자신것이 우선
 
+{{{
+   <bean id="printer" class="springbook.learningtest.spring.ioc.bean.StringPrinter" />
+   
+   <bean id="hello" class="springbook.learningtest.spring.ioc.bean.Hello">
+	<property name="name" value="Parent" />
+        <property name="printer" ref="printer" />
+   </bean>
+
+}}}
+ * 부모(루트) 컨텍스트가 사용하는 설정파일
+
+{{{
+   <bean id="hello" class="springbook.learningtest.spring.ioc.bean.Hello">
+	<property name="name" value="Child" />
+        <property name="printer" ref="printer" />
+   </bean>
+}}} 
+ * 자식 컨텍스트가 사용하는 설정파일
+
+{{{
+ ApplicationContext parent = new GenericXmlApplicationContext(basePath + "parentContext.xml");
+}}}
+ * 부모 컨텍스트는 더 이상 상위에 부모 컨텍스트가 존재하지 않는 루트 컨텍스트
+ * 루트컨텍스트는 반드시 스스로 완전한 빈 의존관계를 보장(자신 외에는 다른 데서 필요한 빈을 찾을 방법이 없기 때문)
+
+{{{
+ GenericApplicationContext child = new GenericApplicationContext(parent);
+}}}
+ * 애플리케이션 컨텍스트를 생성할 때 앞에서 만든 parent를 부모 컨텍스트로 지정 
 === IoC컨테이너의 종류와 사용 방법 ===
 
 
