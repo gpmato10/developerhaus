@@ -129,6 +129,15 @@ GenericApplicationContext ac = new GenericXmlApplicationContext("springbook/lear
 Hello hello = ac.getBean("hello", Hello.class);
 ...
 }}}
+
+==== WebApplicationContext ====
+
+* 스프링 애플리케이션에서 가장 많이 사용되는 애플리케이션 컨텍스트
+* 이름 그대로 웹 환경에서 사용할 때 필요한 기능이 추가된 애플리케이션 컨텍스트
+* XML 설정파일을 사용하도록 만들어진 XmlWebApplicationContext가 가장 많이 사용
+
+==== StaticApplicationContext ====
+
 === IoC컨테이너의 종류와 사용 방법 ===
 
 
