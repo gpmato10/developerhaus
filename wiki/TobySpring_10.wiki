@@ -106,7 +106,7 @@ ac.registerBeanDefinition("hello2", helloDef);
 
 	assertThat(ac.getBean("printer").toString(), is("Hello Spring"));
 }}}
-
+ * XmlBeanDefinitionReader는 스프링의 리소스 로더를 이용해 XML 내용을 읽어옴
 === IoC컨테이너의 종류와 사용 방법 ===
 
 
