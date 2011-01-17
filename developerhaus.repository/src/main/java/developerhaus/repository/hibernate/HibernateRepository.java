@@ -23,7 +23,7 @@ import developerhaus.repository.api.criteria.OrderType;
  */
 public class HibernateRepository<D, I extends Serializable> implements GenericRepository<D, I> {
 	
-	protected HibernateTemplate hibernateTemplate;
+	private HibernateTemplate hibernateTemplate;
 	private Class targetClass;
 	
 	public void setSessionFactory(SessionFactory sessionFactory) {
