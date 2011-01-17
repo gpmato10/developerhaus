@@ -54,6 +54,60 @@ ac.registerSingleton("hello1", Hello.class);
 Hello hello1 = ac.getBean("hello1", Hello.class);
 assertThat(hello1, is(notNullValue()));
 }}}
+ * StaticApplicationContext는 코드에 의해 설정 메타정보를 등록하는 기능을 제공하는 애플리케이션 컨텍스트
+
+{{{
+BeanDefinition helloDef = new RootBeanDefinition(Hello.class);
+helloDef.getPropertyValues().addPropertyValue("name", "Spring");
+ac.registerBeanDefinition("hello2", helloDef);
+}}}
+
+ * BeanDefinition타입의 설정 메타정보를 만들어서 IoC 컨테이너에 등록하는 방법
+ * RootBeanDefinition은 가장 기본적인 BeanDefinition 인터페이스 구현클래스
+
+{{{
+ Hello hello2 = ac.getBean("hello2", Hello.class);
+ assertThat(hello2.sayHello(), is("Hello Spring"));
+ 
+ assertThat(hello1, is(not(hello2)));
+ assertThat(ac.getBeanFactory().getBeanDefinitionCount(), is(2));
+}}}
+
+ * 빈은 오브젝트 단위로 등록되고 만들어지기 때문에 같은 클래스 타입이더라도 두 개를 등록하면 서로 다른 빈 오브젝트가 생성
+
+==== StaticApplicationContext ====
+ * 코드를 통해 빈 메타정보를 등록하기 위해 사용
+ * 스프링의 기능에 대한 학습 테스트를 만들 때를 제외하면 실제로 사용되지 않음
+
+==== GenericApplicationContext ====
+ * 가장 일반적인 애플리케이션 컨텍스트의 구현 클래스 
+ * StaticApplicationContext와는 다르게 XML 파일과 같은 외부의 리소스에 있는 빈 설정 메타정보를 리더를 통해 읽어들여서 메타정보로 전환해서 사용
+
+ {{{
+   <bean id="hello" class="springbook.learningtest.spring.ioc.bean.Hello">
+	<property name="name" value="Spring" />
+        <property name="printer" ref="printer" />
+   </bean>
+
+   <bean id="printer" class="springbook.learningtest.spring.ioc.bean.StringPrinter" />
+ }}}
+
+{{{
+ @Test
+ public void genericApplicationContext() {
+	GenericApplicationContext ac = new GenericApplicationContext();
+	XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(ac);
+	reader.loadBeanDefinitions("springbook/learningtest/spring/ioc/genericApplicationContext.xml");
+
+        ac.refresh();
+
+	Hello hello = ac.getBean("hello", Hello.class);   
+        hello.print();
+
+	assertThat(ac.getBean("printer").toString(), is("Hello Spring"));
+}}}
+
+=== IoC컨테이너의 종류와 사용 방법 ===
 
 
 
