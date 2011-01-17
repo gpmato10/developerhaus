@@ -91,7 +91,7 @@ ac.registerBeanDefinition("hello2", helloDef);
 
    <bean id="printer" class="springbook.learningtest.spring.ioc.bean.StringPrinter" />
  }}}
-
+ * XML로 만든 빈 설정 메타정보
 {{{
  @Test
  public void genericApplicationContext() {
