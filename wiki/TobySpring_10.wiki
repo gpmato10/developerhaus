@@ -23,6 +23,14 @@
 
 === IoC컨테이너를 이용해 애플리케이션 만들기 ===
 
+{{{
+ StaticApplicationContext ac = new StaticApplicationContext();
+}}}
+
+ * ApplicationContext 인터페이스를 구현한 클래스인 StaticApplicationContextdml 오브젝트 생성
+ * 본격적인 IoC 컨테이너로서 동작하려면 POJO클래스와 설정 메타정보 필요
+
+==== POJO 클래스 ====
 
 
 == 10.2 IoC/DI를 위한 빈 설정 메타정보 작성 ==
