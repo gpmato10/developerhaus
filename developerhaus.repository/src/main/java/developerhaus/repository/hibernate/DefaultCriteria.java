@@ -7,6 +7,11 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 
+/**
+ * DefaultCriteria
+ * 
+ * @author sunghee, Park
+ */
 public class DefaultCriteria implements Criteria {
 
 	private List<Criterion> criterionList; 
