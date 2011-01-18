@@ -315,9 +315,17 @@ public class AnnotatedHello {
 || @Service || 서비스 계층의 클래스에 사용된다. ||
 || @Controller || 프레젠테이션 계층의 MVC 컨트롤러에 사용된다. 스프링 웹 서블릿에 의해 웹 요청을 처리하는 컨트롤러 빈으로 선정된다. ||
 
- * 특정 계층으로 분류하기 힘든 경우에는 @Component를 사용한다.
- * 직접 커스텀 태그를 설정할 수도 있다.
-
+특정 계층으로 분류하기 힘든 경우에는 @Component를 사용한다.
+또한 직접 커스텀 태그를 설정할 수도 있다.
+{{{
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Component
+public @interface BusinessRule {
+	String value() default "";
+}
+}}}
 
 == 10.3 프로토타입과 스코프 ==
 
