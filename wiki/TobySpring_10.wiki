@@ -274,7 +274,7 @@ Hello hello = ac.getBean("hello", Hello.class);
  {{{
    <context-param>
 	<param-name>contextClass</param-name>
- 	<param-value> 		  org.springframework.web.context.support.AnnoationConfigWebApplicationContext
+ 	<param-value>org.springframework.web.context.support.AnnoationConfigWebApplicationContext
    	</param-value>
    </context-param>
  }}}
