@@ -237,7 +237,50 @@ Hello hello = ac.getBean("hello", Hello.class);
   - 스프링 웹 기술을 사용하면서 스프링 외의 프레임워크나 서비스 엔진에서 스프링의 빈을 이용할 생각이 아니라면 루트 애플리케이션 생략 가능
   - 서블릿에서 만들어지는 컨텍스트에 모든 빈을 등록
 
+==== 루트 애플리케이션 컨텍스트 등록 ====
+ * 이벤트 리스너를 이용해 루트 웹 애플리케이션 컨텍스르르 등록
+ * 스프링은 웹 애플리케이션의 시작과 종료 시 발생하는 이벤트를 처리하는 리스너인 ServletContextLister를 이용
+ * 웹 애플리케이션이 시작될 때 루트 애플리케이션 컨텍스트를 만들어 초기화하고, 웹 애플리케이션이 종료될 때 컨텍스트를 함께 종료하는 기능을 가진 리스너를 만듬(스프링은 ContextLoaderListener를 제공)
 
+ {{{
+  <listner>
+	<listner-class>org.springframework.web.context.ContextLoderListener
+     </listner-class>
+  </listner>
+ }}}
+ 
+ * 애플리케이션 컨텍스트 클래스 : XmlWebApplicationContext
+ * XML 설정파일 위치 : /WEB-INF/applicationContext.xml
+ * 컨텍스트 클래스와 설정파일 위치는 서블릿 컨텍스트 파라미터를 선언해서 변경가능
+
+ {{{
+   <context-param>
+	<param-name>contextConfigLocation</param-name>
+ 	<param-value>
+  		/WEB-INF/daoContext.xml
+ 		/WEB-INF/applicationContext.xml
+   	</param-value>
+   </context-param>
+ }}}
+
+ * 디폴트 설정 파일 위치인 /WEB-INF/applicationContext.xml은 무시되고 파라미터로 제공된 설정파일을 사용
+
+ {{{
+	<param-value>classpath:applicationContext.xml</param-value>
+ }}}
+
+ * 리소스 로더가 사요아는 접두어를 사용해서 표현 할 수 있음
+ 
+ {{{
+   <context-param>
+	<param-name>contextClass</param-name>
+ 	<param-value> 		  org.springframework.web.context.support.AnnoationConfigWebApplicationContext
+   	</param-value>
+   </context-param>
+ }}}
+
+ * 애플리케이션 컨텍스트 구현 클래스 변경
+ * 여기서 사용될 컨텍스트는 반드시 WebApplicationContext 인터페이스를 구현
 
 == 10.2 IoC/DI를 위한 빈 설정 메타정보 작성 ==
 
