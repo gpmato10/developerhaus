@@ -27,16 +27,25 @@
 	        <name>JBoss Repsitory</name>
 	        <layout>default</layout>
 	        <url>http://repository.jboss.org/maven2</url>
-	    </repository>		
+	    </repository>
+	    <repository>
+			<id>mybatis-snapshot</id>
+			<name>MyBatis Snapshot Repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</repository> 		
 	</repositories>
 	
 	<dependencies>
+	
+		<!-- spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>org.springframework.spring-library</artifactId>
 			<type>libd</type>
 			<version>3.0.5.RELEASE</version>
 		</dependency>
+		
+		<!-- junit -->
 		<dependency>
 			<groupId>org.junit</groupId>
 			<artifactId>com.springsource.org.junit</artifactId>
@@ -44,7 +53,6 @@
 		</dependency>
 		
 		<!-- hibernate -->
-		
 		<dependency>
        		<groupId>org.hibernate</groupId>
 	       	<artifactId>hibernate-core</artifactId>
@@ -69,6 +77,28 @@
 		    <groupId>org.slf4j</groupId>  
 		    <artifactId>slf4j-log4j12</artifactId>  
 		    <version>1.5.8</version>
-	    </dependency>	
+	    </dependency>
+	    
+	    <!-- mybatis -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>1.0.0-RC2</version>
+		</dependency>
+		
+		<!-- ibatis -->
+		<dependency>
+			<groupId>org.apache.ibatis</groupId>
+		    <artifactId>ibatis-sqlmap</artifactId>
+		    <version>2.3.4.726</version>
+		</dependency>
+		
+		<!-- hsqldb -->
+		<dependency>
+		    <groupId>org.hsqldb</groupId>
+		    <artifactId>hsqldb</artifactId>
+		    <version>2.0.0</version>
+		</dependency>
+ 
 	</dependencies> 
 </project>
