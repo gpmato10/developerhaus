@@ -282,6 +282,49 @@ Hello hello = ac.getBean("hello", Hello.class);
  * 애플리케이션 컨텍스트 구현 클래스 변경
  * 여기서 사용될 컨텍스트는 반드시 WebApplicationContext 인터페이스를 구현
 
+==== 서블릿 애플리케이션 컨텍스트 등록 ====
+ * 스프링의 웹 기능을 지원하는 프론트 컨트롤러 서블릿은 DispatcherServlet
+ * 서블릿 이름을 다르게 지정해주면 하나의 웹 애플리케이션에 여러 개의 DispatcherServlet 등록
+ * 각 DispatcherServlet은 서블릿이 초기화 될 때 자신만의 컨텍스트를 생성하고 초기화
+ 
+ {{{
+    <servlet>
+        <servlet-name>spring</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+ }}}
+ 
+ * DispatcherServlet에 의해 만들어지는 애플리케이션 컨텍스트는 모두 독립적인 네임스페이스를 가지고 있음
+ * 이 네임스페이스가 서블릿 단위로 만들어지는 컨텍스트를 구분하는 키
+ * 네임스페이스는 <servlet-name>으로 지정한 서블릿 이름에 -servlet을 붙여서 만듬
+ * DispatcherServlet이 사용할 디폴트 XML 설정파일의 위츠를 네임스페이스를 이용해서 만듬
+   - '/WEB-INF/' + 서블릿네임스페이스 + '.xml'
+ * <load-on-startup>은 서블릿 컨테이너가 등록된 서블릿을 언제 만들고 초기화할지, 또 그 순서는 어떻게 되는지를 지정하는 정수 값
+ * 이 항목을 생략하거나 음수를 넣으면 해당 서블릿은 임의로 정한 시점에서 만들어지고 초기화
+ * 0이상의 값을 넣으면 웹 애플리케이션이 시작되는 시점에서 서블릿을 로딩하고 초기화
+ * 여러개 서블릿이 등록되어 있다면 작은 수를 가진 서블릿이 우선만들어짐
+ 
+ {{{
+  <servlet>
+    <servlet-name></servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatchServlet</servlet-class>
+    <init-param>
+	<param-name>contextConfigLocation</param-name>
+	<param-value>
+	     /WEB-INF/application.xml
+	     /WEB-INF/spring-servlet.xml
+	</param-value>		
+    </init-param>
+     <load-on-startup>1</load-on-startup>
+  </servlet>
+ }}}
+
+ * DispatcherServlet의 컨텍스트에 대한 디폴트 설정을 변경하고 싶다면 루트 애플리케이션 컨텍스트와 마찬가지로 contextConfigLocation과 contextClass를 지정
+ * <context-param>대신 <servlet>안에 있는 <init-param>을 이용한다는 점만 다름
+ 
+
+
 == 10.2 IoC/DI를 위한 빈 설정 메타정보 작성 ==
 
  * IoC 컨테이너
