@@ -576,6 +576,35 @@ public class HelloService {
     * 장점 : 모든 빈의 정보가 자바 코드에 담겨 있으므로 빈의 설정정보를 타입에 안전한 방식으로 작성할 수 있다.
     * 단점 : 스프링이 제공하는 스키마에 정의된 전용 태그를 사용할 수 없다.(aop, tx 등의 전용 태그에 대응되는 빈을 @Configuration 클래스 안에 직접 등록해주면 모든 기능을 다 쓸 수는 있다.)
 
+=== 10.2.3 빈 의존관계 설정 방법 ===
+ * XML: `<property>`,  `<consturctor-arg>`
+  * `<property>`: 수정자주입
+  * `<constructor-arg>`: 생성자 주입
+ * XML: 자동와이어링
+  * byName: 빈 이름 자동와이어링
+  * byType: 타입에 의한 자동와이어링
+ * XML: 네임스페이스와 전용 태그
+ * 애노테이션: @Resource
+  * 수정자 메소드
+  * 필드
+ * 애노테이션: @Autowired / @Inject
+  * 수정자 메소드와 필드
+  * 생성자
+  * 일반 메소드
+  * 컬렉션과 배열
+  * @Qualifier
+  * @javax.inject.Inject
+  * @javax.inject.Qualifier
+ * @Autowired와 getBean(), 스프링 테스트
+ * 자바 코드에 의한 의존관계 설정
+  * 애노테이션에 의한 설정 @Autowired, @Resource
+  * @Bean 메소드 호출
+  * @Bean과 메소드 자동와이어링
+ * 빈 의존관계 설정 전략
+  * XML 단독
+  * XML과 애노테이션 설정의 혼합
+  * 애노테이션 단독
+
 
 == 10.3 프로토타입과 스코프 ==
 
