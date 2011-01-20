@@ -4,7 +4,7 @@
 
   * [TobySpring_01 1장 오브젝트와 의존관계]
     * [OCP OCP]
-    * [Singleton 싱글톤 (X)]   
+    * [Singleton 싱글톤]   
     * [TemplateMethodPattern 템플릿메소드패턴] 
     * [AnnotationVsXML 애노테이션 vs XML 기반 설정 (X)]
     * [TobySpring_01_done 1장 리뷰 정리]
