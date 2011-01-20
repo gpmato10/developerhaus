@@ -39,8 +39,11 @@
 * 전문분야
 
   * [MavenTest 메이븐]
-  * [testClassLocation 테스트]
+  * 테스트
     * [testClassLocation 테스트클래스 소스구조]
+  * MVC
+    * [SpringMVCHandlerInterceptor Spring MVC HandlerInterceptor(X)]
+
 
 * 기타
 
