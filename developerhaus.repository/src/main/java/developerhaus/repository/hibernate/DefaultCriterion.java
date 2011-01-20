@@ -17,6 +17,7 @@ public class DefaultCriterion<K, T, O> implements Criterion<K, T, O> {
 		this.value = value;
 		this.operator = operator;
 	}
+	
 	@Override
 	public K getKey() {
 		return key;
