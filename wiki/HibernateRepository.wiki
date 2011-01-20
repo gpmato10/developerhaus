@@ -1,0 +1,1 @@
+#summary hibernateRepository 구현
