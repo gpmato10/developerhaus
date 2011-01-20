@@ -26,12 +26,8 @@
 			</props>
 		</property>
 	</bean>
-
-	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
 	
-	<bean id="hibernateRepository" class="developerhaus.repository.hibernate.HibernateRepository">
+	<bean id="hibernateUserRepository" class="developerhaus.repository.hibernate.HibernateUserRepository">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	

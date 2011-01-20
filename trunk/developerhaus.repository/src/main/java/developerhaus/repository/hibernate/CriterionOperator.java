@@ -2,7 +2,7 @@ package developerhaus.repository.hibernate;
 
 public enum CriterionOperator {
 	EQ("="), NOT_EQ("!="), LIKE("LIKE"), LIKE_LEFT("LIKE"), LIKE_RIGHT("LIKE"), NOT_LIKE("NOT LIKE"), GT(">"), GTE(">="), LT(
-	"<"), LTE("<="), BETWEEN("BETWEEN"), NOT_BETWEEN("NOT BETWEEN"), IN("IN"), NOT_IN("NOT IN");
+	"<"), LTE("<="), BETWEEN("BETWEEN"), NOT_BETWEEN("NOT BETWEEN"), IN("IN"), NOT_IN("NOT IN"), OR("OR");
 
 	private String operatorText;
 

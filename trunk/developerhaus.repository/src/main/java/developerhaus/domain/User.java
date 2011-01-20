@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author sunghee, Park
  * 
  */
-public class User {
+public class User implements Serializable{
 
 	private int seq;
 	private String name;
