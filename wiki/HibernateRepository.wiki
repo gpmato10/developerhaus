@@ -20,7 +20,7 @@
     - 장점 : 템플릿/콜백 패턴으로 중복제거, 예외 변환, 트랜잭션 동기화
 
     - 단점 : 스프링 template 구조에 종속되어 사용되므로 hibernate api 직접 사용 불가
-  - ~~targetClass 수동 DI~~ -> 제네릭 타입 알아내기
+  - ~~targetClass 수동 DI~~ -> 코드를 통한 제네릭 타입 알아내기
 
 ==== 조회 조건 : HQL or Criteria ====
   - Criteria, Criterion, Order, CriterionOperator 공통으로 사용
