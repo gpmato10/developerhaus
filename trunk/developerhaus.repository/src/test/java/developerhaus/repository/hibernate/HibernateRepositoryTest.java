@@ -23,7 +23,6 @@ public class HibernateRepositoryTest {
 	public void setUp() throws Exception {
 		ApplicationContext context = new GenericXmlApplicationContext("/developerhaus/repository/hibernate/applicationContext-hibernate-test.xml");
 		repository = (HibernateUserRepository) context.getBean("hibernateUserRepository");
-		repository.setTargetClass(User.class);
 	}
 	
 	@Test
