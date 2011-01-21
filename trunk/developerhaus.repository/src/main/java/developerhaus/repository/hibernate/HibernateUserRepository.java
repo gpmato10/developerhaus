@@ -16,7 +16,7 @@ import developerhaus.repository.api.criteria.Criteria;
  * @author want
  *
  */
-public class HibernateUserRepository extends HibernateSupportRepository<User, Integer>
+public class HibernateUserRepository extends GenericHibernateSupportRepository<User, Integer>
 		implements UserRepository {
 
 	@Override
