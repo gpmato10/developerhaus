@@ -4,6 +4,7 @@
 
 ==== Maven 설정 ====
   - repository : Jboss, http://repository.jboss.org/maven2
+
   - dependency : hibernate-core, slf4j-log4j12 등...
 
 ==== In-Memory DB ====
@@ -29,7 +30,7 @@
 
 *2011.01.19 이슈사항*
 
-  - repository 요건 충족시키기
+  - 도메인 클래스 기준 API 제공
 
   - d.r.api.Criteria 를 Hibernate 의 Criteria 로 변환 이슈 (간단한 것 부터..)
 
