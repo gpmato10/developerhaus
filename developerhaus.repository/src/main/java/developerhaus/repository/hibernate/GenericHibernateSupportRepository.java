@@ -28,21 +28,15 @@ import developerhaus.repository.api.criteria.OrderType;
 public class GenericHibernateSupportRepository<D, I extends Serializable> implements GenericRepository<D, I> {
 	
 	private HibernateTemplate hibernateTemplate;
-	private Class targetClass;
-	private Class<D> mappedClass;
+	private Class<D> targetClass;
 	
 
 	public GenericHibernateSupportRepository() {
-		this.mappedClass = (Class<D>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-		System.out.println(" this.mappedClass : "+this.mappedClass);
+		this.targetClass = (Class<D>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
-	
 	
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.hibernateTemplate = new HibernateTemplate(sessionFactory); 
-	}
-	public void setTargetClass(Class targetClass) {
-		this.targetClass = targetClass;
 	}
 	@Override
 	public D get(I id) {
