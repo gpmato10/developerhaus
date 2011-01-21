@@ -18,8 +18,8 @@
   - SessionFactory 를 SpringBean 으로 등록하기
 
   - o.s.orm.hibernate3.HibernateTemplate 이용
-    - 장점 : 템플릿/콜백 패턴으로 중복제거, 예외 변환, 트랜잭션 동기화
-    - 단점 : 스프링 template 구조에 종속되어 사용되므로 hibernate api 직접 사용 불가
+    - 템플릿/콜백 패턴으로 중복제거, 예외 변환, 트랜잭션 동기화의 장점이 있으나 스프링 template 구조에 종속되어 사용되므로 hibernate api 직접 사용이 불가한 단점도 있다.
+
   - ~~targetClass 수동 DI~~ -> 코드를 통한 제네릭 타입 알아내기
 
 ==== 조회 조건 : HQL or Criteria ====
