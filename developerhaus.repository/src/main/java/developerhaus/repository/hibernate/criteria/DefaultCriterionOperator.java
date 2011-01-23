@@ -1,12 +1,12 @@
-package developerhaus.repository.hibernate;
+package developerhaus.repository.hibernate.criteria;
 
-public enum CriterionOperator {
+public enum DefaultCriterionOperator {
 	EQ("="), NOT_EQ("!="), LIKE("LIKE"), LIKE_LEFT("LIKE"), LIKE_RIGHT("LIKE"), NOT_LIKE("NOT LIKE"), GT(">"), GTE(">="), LT(
 	"<"), LTE("<="), BETWEEN("BETWEEN"), NOT_BETWEEN("NOT BETWEEN"), IN("IN"), NOT_IN("NOT IN"), OR("OR");
 
 	private String operatorText;
 
-	CriterionOperator(String operatorText) {
+	DefaultCriterionOperator(String operatorText) {
 		this.operatorText = operatorText;
 	}
 
@@ -19,8 +19,8 @@ public enum CriterionOperator {
 		return operatorText;
 	}
 
-	public static CriterionOperator toOperator(String operatorName) {
-		for (CriterionOperator co : values()) {
+	public static DefaultCriterionOperator toOperator(String operatorName) {
+		for (DefaultCriterionOperator co : values()) {
 			if (co.name().equals(operatorName)) {
 				return co;
 			}
@@ -28,11 +28,11 @@ public enum CriterionOperator {
 		return null;
 	}
 
-	public static CriterionOperator getDefaultMultiValueOperator() {
+	public static DefaultCriterionOperator getDefaultMultiValueOperator() {
 		return BETWEEN;
 	}
 
-	public static CriterionOperator getDefaultSingleValueOperator() {
+	public static DefaultCriterionOperator getDefaultSingleValueOperator() {
 		return EQ;
 	}
 

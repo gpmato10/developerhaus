@@ -1,4 +1,4 @@
-package developerhaus.repository.hibernate;
+package developerhaus.repository.hibernate.criteria;
 
 import java.util.ArrayList;
 import java.util.List;

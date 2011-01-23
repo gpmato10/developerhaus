@@ -14,6 +14,10 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
+import developerhaus.repository.hibernate.criteria.CriterionOperator;
+import developerhaus.repository.hibernate.criteria.DefaultCriteria;
+import developerhaus.repository.hibernate.criteria.DefaultCriterion;
+import developerhaus.repository.hibernate.criteria.DefaultOrder;
 
 public class HibernateRepositoryTest {	
 	HibernateUserRepository repository;
