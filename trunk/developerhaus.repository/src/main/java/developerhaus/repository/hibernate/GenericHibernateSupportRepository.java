@@ -19,6 +19,7 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
+import developerhaus.repository.hibernate.criteria.CriterionOperator;
 /**
  * 하이버네이트 Repository
  * 

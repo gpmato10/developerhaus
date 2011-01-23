@@ -5,7 +5,7 @@
 *마지막변경일자 : 2011. 1. 17.
 *마지막변경자   : want
 =========================================================*/
-package developerhaus.repository.hibernate;
+package developerhaus.repository.hibernate.criteria;
 
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
