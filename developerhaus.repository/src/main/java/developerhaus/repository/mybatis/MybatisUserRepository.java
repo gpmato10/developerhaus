@@ -5,13 +5,12 @@ import java.util.List;
 import developerhaus.domain.User;
 import developerhaus.repository.api.criteria.Criteria;
 
-public class MybatisUserRepository implements UserRepository,
-		GenericMybatisSupportRepository<User, Integer> {
+public class MybatisUserRepository extends GenericMybatisSupportRepository<User, Integer> 
+		implements UserRepository {
 
 	@Override
 	public User get(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		return super.get(id);
 	}
 
 	@Override
