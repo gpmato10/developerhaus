@@ -15,12 +15,19 @@
 		<property name="configLocation" value="classpath:developerhaus/repository/mybatis/Mybatis-SqlMapConfig.xml" />
 	</bean>
 	
+	<!-- 
 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSessionFactory" />
 	</bean>
 	
 	<bean id="userDao" class="developerhaus.repository.mybatis.dao.UserDaoImpl">
 		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+	</bean>
+	 -->
+	 
+	<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="developerhaus.repository.mybatis.GenericMybatisSupportRepository" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 	</bean>
 
 </beans>
