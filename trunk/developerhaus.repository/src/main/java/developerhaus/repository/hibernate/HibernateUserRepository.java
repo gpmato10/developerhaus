@@ -1,20 +1,16 @@
-/**========================================================
-*파일명         : HibernateUserRepository.java
-*파일용도       : 
-*
-*마지막변경일자 : 2011. 1. 20.
-*마지막변경자   : want
-=========================================================*/
 package developerhaus.repository.hibernate;
 
 import java.util.List;
 
 import developerhaus.domain.User;
 import developerhaus.repository.api.criteria.Criteria;
+import developerhaus.user.UserRepository;
 
 /**
- * @author want
- *
+ * 하이버네이트 User Repository
+ * 
+ * @author sunghee, Park
+ * 
  */
 public class HibernateUserRepository extends GenericHibernateSupportRepository<User, Integer>
 		implements UserRepository {
