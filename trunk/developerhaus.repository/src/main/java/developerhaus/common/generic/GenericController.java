@@ -1,11 +1,10 @@
-package developerhaus.control;
+package developerhaus.common.generic;
 
 import java.util.List;
 
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import developerhaus.repository.api.criteria.Criteria;
-import developerhaus.service.GenericService;
 
 /**
  * Generic Controller

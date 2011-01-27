@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
-import developerhaus.domain.User;
 import developerhaus.repository.ibatis.dao.UserDao;
+import developerhaus.user.User;
 
 public class IbatisDaoTest {
 	

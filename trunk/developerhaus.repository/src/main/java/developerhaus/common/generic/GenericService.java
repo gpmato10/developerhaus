@@ -1,4 +1,4 @@
-package developerhaus.service;
+package developerhaus.common.generic;
 
 import java.util.List;
 

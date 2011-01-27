@@ -19,7 +19,6 @@ import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
-import developerhaus.domain.User;
 import developerhaus.repository.api.GenericRepository;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
@@ -27,6 +26,7 @@ import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
 import developerhaus.repository.hibernate.criteria.CriterionOperator;
 import developerhaus.repository.hibernate.criteria.HibernateCriteriaUtils;
+import developerhaus.user.User;
 /**
  * 하이버네이트 Repository
  * 
