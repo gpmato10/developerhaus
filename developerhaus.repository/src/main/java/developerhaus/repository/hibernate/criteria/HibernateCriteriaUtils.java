@@ -22,7 +22,7 @@ public class HibernateCriteriaUtils {
 	/**
 	 * @param targetClass
 	 */
-	private static Class targetClass;
+	private Class targetClass;
 	public HibernateCriteriaUtils(Class targetClass) {
 		this.targetClass = targetClass;
 	}
@@ -32,7 +32,7 @@ public class HibernateCriteriaUtils {
 	 * @param criteria
 	 * @return DetachedCriteria
 	 */
-	public static DetachedCriteria getHibernateCriteria(Criteria criteria) {
+	public DetachedCriteria getHibernateCriteria(Criteria criteria) {
 		DetachedCriteria hcriteria = DetachedCriteria.forClass(targetClass);
 		List<Criterion> criterionList = criteria.getCriterionList();
 		for(Criterion<?, ?, CriterionOperator> criterion : criterionList) {
@@ -56,7 +56,7 @@ public class HibernateCriteriaUtils {
 	 * @param Criterion
 	 * @return org.hibernate.criterion.Criterion
 	 */
-	private static org.hibernate.criterion.Criterion getHibernateCriterion(Criterion<?, ?, CriterionOperator> criterion) {
+	private org.hibernate.criterion.Criterion getHibernateCriterion(Criterion<?, ?, CriterionOperator> criterion) {
 		org.hibernate.criterion.Criterion hCriterion = null;
 		CriterionOperator operator = criterion.getOperator();
 		if(operator.equals(CriterionOperator.EQ)) {

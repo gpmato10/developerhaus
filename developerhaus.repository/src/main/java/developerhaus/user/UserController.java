@@ -3,8 +3,7 @@ package developerhaus.user;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import developerhaus.control.GenericController;
-import developerhaus.domain.User;
+import developerhaus.common.generic.GenericController;
 
 /**
  * User controller

@@ -2,8 +2,8 @@ package developerhaus.repository.mybatis;
 
 import java.util.List;
 
-import developerhaus.domain.User;
 import developerhaus.repository.api.criteria.Criteria;
+import developerhaus.user.User;
 
 public class MybatisUserRepository extends GenericMybatisSupportRepository<User, Integer> 
 		implements UserRepository {

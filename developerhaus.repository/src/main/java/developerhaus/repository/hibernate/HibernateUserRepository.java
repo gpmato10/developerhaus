@@ -2,8 +2,8 @@ package developerhaus.repository.hibernate;
 
 import java.util.List;
 
-import developerhaus.domain.User;
 import developerhaus.repository.api.criteria.Criteria;
+import developerhaus.user.User;
 import developerhaus.user.UserRepository;
 
 /**

@@ -2,7 +2,7 @@ package developerhaus.repository.ibatis.dao;
 
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 
-import developerhaus.domain.User;
+import developerhaus.user.User;
 
 /**
  * USER 정보의 등록/수정/삭제/조회 처리를 위한 DAO implementation 이다.
