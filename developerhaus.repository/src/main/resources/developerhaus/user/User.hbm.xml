@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="developerhaus.user">
+  	<class name="User" table="USERS">
+  		<id name="seq" column="SEQ">
+			<generator class="increment" />
+		</id>
+	  	<property name="id" column="ID"/>
+	  	<property name="name" column="NAME"/>
+	  	<property name="password" column="PASSWORD"/>  
+	  	<property name="point" column="POINT"/>  
+	  	<list name="userPointList" table="USER_POINT" inverse="true" lazy="true" fetch="select" cascade="save-update">
+	  		<key column="SEQ" />
+	  		<index column="USER_POINT_SEQ" />
+	  		<one-to-many class="UserPoint"/>
+	  	</list>
+  	</class>
+  	
+  	<class name="UserPoint" table="USER_POINT">
+  		<id name="userPointSeq" column="USER_POINT_SEQ">
+			<generator class="increment" />
+		</id>
+  		<property name="userSeq" column="USER_SEQ"/>
+	  	<property name="point" column="POINT"/>
+	  	<property name="pointType" column="POINT_TYPE"/>  
+	  	<property name="regDt" column="REG_DT"/>  
+  	</class>
+  	
+</hibernate-mapping>

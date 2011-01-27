@@ -14,7 +14,7 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="mappingLocations">
 			<list>
-				<value>classpath:developerhaus/domain/User.hbm.xml</value>
+				<value>classpath:developerhaus/user/User.hbm.xml</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

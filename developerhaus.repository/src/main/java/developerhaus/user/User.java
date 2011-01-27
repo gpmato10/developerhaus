@@ -1,6 +1,7 @@
 package developerhaus.user;
 
 import java.io.Serializable;
+import java.util.List;
 /**
  * User Domain
  * 
@@ -13,6 +14,8 @@ public class User implements Serializable{
 	private String name;
 	private String id;
 	private String password;
+	private int point;
+	private List<UserPoint> userPointList;
 	
 	public int getSeq() {
 		return seq;
@@ -37,6 +40,24 @@ public class User implements Serializable{
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public void setUserPointList(List<UserPoint> userPointList) {
+		this.userPointList = userPointList;
+	}
+	public List<UserPoint> getUserPointList() {
+		return userPointList;
+	}
+	/**
+	 * @param point the point to set
+	 */
+	public void setPoint(int point) {
+		this.point = point;
+	}
+	/**
+	 * @return the point
+	 */
+	public int getPoint() {
+		return point;
 	}
 	
 	

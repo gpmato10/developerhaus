@@ -30,6 +30,11 @@ public class HibernateUserRepositoryTest {
 	}
 	
 	@Test
+	public void joinSite() throws Exception {
+		// 회원 가입시 포인트를 100 준다.... 
+	}
+	
+	@Test
 	public void paging() throws Exception {
 		Criterion<String, String, CriterionOperator> criterion = new DefaultCriterion("name", "박", CriterionOperator.LIKE_LEFT);		
 		Order order = new DefaultOrder("name", OrderType.DESC);
@@ -39,12 +44,9 @@ public class HibernateUserRepositoryTest {
 		criteria.add(order);
 		
 		List<User> list = repository.page(criteria, 0, 5);
-		System.out.println("list.size():"+list.size());
 		assertEquals(list.size(), 5);
 		
 		int cnt = repository.count(criteria);
-		System.out.println("cnt:"+cnt);
-		
 		assertEquals(cnt, 10);
 		
 		
