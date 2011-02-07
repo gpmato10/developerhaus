@@ -3,10 +3,12 @@ package developerhaus.repository.jdbc.strategy;
 public class DefaultTableStrategy implements TableStrategy{
 	
 	private String tableName;
+	private String aliasName;
 	private String[] allColumn;
 	
-	public DefaultTableStrategy(String tableName){
+	public DefaultTableStrategy(String tableName, String aliasName){
 		this.tableName = tableName;
+		this.aliasName = aliasName;
 	}
 
 	@Override
@@ -14,6 +16,11 @@ public class DefaultTableStrategy implements TableStrategy{
 		return this.tableName;
 	}
 
+	@Override
+	public String getAliasName() {
+		return this.aliasName;
+	}
+	
 	@Override
 	public String[] getAllColumn() {
 		return this.allColumn;
@@ -24,4 +31,5 @@ public class DefaultTableStrategy implements TableStrategy{
 		this.allColumn = allColumn;
 		return this;
 	}
+
 }

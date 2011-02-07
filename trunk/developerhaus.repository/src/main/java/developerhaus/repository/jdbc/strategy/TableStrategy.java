@@ -3,9 +3,9 @@ package developerhaus.repository.jdbc.strategy;
 public interface TableStrategy {
 	
 	String getTableName();
+	String getAliasName();
 	String[] getAllColumn();
 	
-//	String getAliasName();
 
 //	TableStrategy setTableName(String tableName);
 	TableStrategy setAllColumn(String... allColumn);
