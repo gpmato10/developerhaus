@@ -19,4 +19,17 @@ public class JdbcStudentRepositoryTest {
 		List<Student> studentList = repository.list(null);
 		assertNull(studentList);
 	}
+	
+	@Test
+	public void get() throws Exception {
+		
+		String studentNumber = "1";
+		
+		StudentRepository repository = new JdbcStudentRepository();
+		Student student = repository.get(studentNumber);
+		
+		assertNotNull(student);
+		assertEquals(studentNumber, student.getNumber());
+		
+	}
 }
