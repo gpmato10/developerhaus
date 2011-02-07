@@ -2,6 +2,7 @@ package developerhaus.repository.jdbc;
 
 import developerhaus.domain.Student;
 import developerhaus.repository.api.GenericRepository;
+import developerhaus.repository.jdbc.strategy.TableStategyAware;
 
 public interface StudentRepository extends GenericRepository<Student, String>{
 	
@@ -12,6 +13,5 @@ public interface StudentRepository extends GenericRepository<Student, String>{
 	 * @return
 	 */
 	float getGrade(int year);
-	
 	
 }

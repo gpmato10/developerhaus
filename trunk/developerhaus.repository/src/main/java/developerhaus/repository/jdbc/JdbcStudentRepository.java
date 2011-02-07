@@ -2,52 +2,73 @@ package developerhaus.repository.jdbc;
 
 import java.util.List;
 
+import static developerhaus.repository.jdbc.RepositoryUtils.*;
+
 import developerhaus.domain.Student;
 import developerhaus.repository.api.criteria.Criteria;
+import developerhaus.repository.jdbc.criteria.CriterionOperator;
+import developerhaus.repository.jdbc.criteria.DefaultCriteria;
+import developerhaus.repository.jdbc.criteria.SingleValueCriterion;
 import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStategyAware;
 import developerhaus.repository.jdbc.strategy.TableStrategy;
 
 public class JdbcStudentRepository implements StudentRepository, TableStategyAware{
+	
+	public final static String TABLE_NAME = "STUDENT";
+	public final static String ALIAS = "stu";
+	
+//	private String no;
+//	private String name;
+//	private int year;
+//	private String dept;
+//	"SNO", "SNAME", "YEAR", "DEPT"
+	
+	// DB 의존성을 제거하기 위해 DB컬럼명 변화에 상관없이 대표되는 컬럼명 정의
+	// TODO : 쿼리결과 도메인 속성명과 매핑하기 위한 정책 수립(Spring JDBC 붙인 후 다시 생각)
+	public final static String STUDENT_NUMBER = addAliasToColumn(ALIAS,	"sno");  		// 학번
+	public final static String STUDENT_NAME = addAliasToColumn(ALIAS, "sname");  		// 이름
+	public final static String YEAR = addAliasToColumn(ALIAS, "year");  		// 학년
+	public final static String DEPARTMENT  = addAliasToColumn(ALIAS, "dept"); 	// 학과
 
 	@Override
 	public Student get(String id) {
 		
-		String sql =  new SqlBuilder(getTableStrategy())
-						.selectAll()
-						.from()
-						.build();
+
+		Criteria criteria = new DefaultCriteria();
+		criteria.add(new SingleValueCriterion(
+								JdbcStudentRepository.STUDENT_NUMBER, 
+								id, 
+								CriterionOperator.EQ));
+		SqlBuilder sqlBuilder = new SqlBuilder(getTableStrategy(), criteria);
+		String sql = sqlBuilder.selectAll().from().where().build();
+		
+		System.out.println("getByID : " + sql);
 		
 //		스프링의 JDBC 클래스를 이용하여 쿼리 수행
-		
+//		LinkedHashMap map;
 		return null;
 	}
 
 	@Override
 	public List<Student> list(Criteria criteria) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean update(Student domain) {
-		// TODO Auto-generated method stub
+	public boolean update(Student student) {
 		return false;
 	}
 
 	@Override
 	public float getGrade(int year) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-//	TODO : 요건처리1의 데이터베이시의 의존성을 제거해야 한다.(일단 테이블명, 컬럼명을 직접 매핑하여 설정) 
 	public TableStrategy getTableStrategy() {
 
-		return new DefaultTableStrategy("STUDENT")
-					.setAllColumn("SNO", "SNAME", "YEAR", "DEPT");
+		return new DefaultTableStrategy(TABLE_NAME, ALIAS)
+					.setAllColumn(STUDENT_NUMBER, STUDENT_NAME, YEAR, DEPARTMENT);
 	}
-
-
 }
