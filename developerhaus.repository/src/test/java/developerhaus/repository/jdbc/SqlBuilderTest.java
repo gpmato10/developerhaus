@@ -12,6 +12,7 @@ import developerhaus.repository.api.criteria.OrderType;
 import developerhaus.repository.jdbc.criteria.CriterionOperator;
 import developerhaus.repository.jdbc.criteria.DefaultCriteria;
 import developerhaus.repository.jdbc.criteria.DefaultOrder;
+import developerhaus.repository.jdbc.criteria.JoinCriterion;
 import developerhaus.repository.jdbc.criteria.MultiValueCriterion;
 import developerhaus.repository.jdbc.criteria.SingleValueCriterion;
 import developerhaus.repository.jdbc.exception.SqlBuilderException;
@@ -37,16 +38,16 @@ public class SqlBuilderTest {
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(tableStrategy);
 		String sql = sqlBuilder.select("t.SNO, t.SNAME, t.YEAR, t.DEP").from().build();
-		this.singleTableValidCheck(sql, "simpleSqlBuild1");
+		this.oneSelectValidCheck(sql, "simpleSqlBuild1");
 		
 		
 		SqlBuilder sqlBuilder2 = new SqlBuilder(tableStrategy);
 		String sql2 = sqlBuilder2.select(" * ").from().build();
-		this.singleTableValidCheck(sql2, "simpleSqlBuild2");
+		this.oneSelectValidCheck(sql2, "simpleSqlBuild2");
 		
 		SqlBuilder sqlBuilder3 = new SqlBuilder(tableStrategy);
 		String sql3 = sqlBuilder3.selectAll().from().build();
-		this.singleTableValidCheck(sql3, "simpleSqlBuild3");
+		this.oneSelectValidCheck(sql3, "simpleSqlBuild3");
 	}
 	
 	@Test
@@ -55,7 +56,7 @@ public class SqlBuilderTest {
 		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategy);
 
 		String sql = sqlBuilder.selectAll().from().build();
-		this.singleTableValidCheck(sql, "oneTableSelectBuild");
+		this.oneSelectValidCheck(sql, "oneTableSelectBuild");
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -76,7 +77,7 @@ public class SqlBuilderTest {
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategy, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
-		this.singleTableValidCheck(sql, "oneTableSelectBuildWithWhere");
+		this.oneSelectValidCheck(sql, "oneTableSelectBuildWithWhere");
 		
 		
 		Criteria criteria2 = new DefaultCriteria();
@@ -86,7 +87,7 @@ public class SqlBuilderTest {
 								"60022416"));
 		SqlBuilder sqlBuilder2 = new SqlBuilder(studentTableStrategy, criteria2);
 		String sql2 = sqlBuilder2.selectAll().from().where().build();
-		this.singleTableValidCheck(sql2, "oneTableSelectBuildWithWhere2");
+		this.oneSelectValidCheck(sql2, "oneTableSelectBuildWithWhere2");
 		
 		
 		Criteria criteria3 = new DefaultCriteria();
@@ -104,7 +105,7 @@ public class SqlBuilderTest {
 								"공학과"));
 		SqlBuilder sqlBuilder3 = new SqlBuilder(studentTableStrategy, criteria3);
 		String sql3 = sqlBuilder3.selectAll().from().where().build();
-		this.singleTableValidCheck(sql3, "oneTableSelectBuildWithWhere3");
+		this.oneSelectValidCheck(sql3, "oneTableSelectBuildWithWhere3");
 		
 		Criteria criteria4 = new DefaultCriteria();
 		criteria4.add(new MultiValueCriterion(
@@ -121,7 +122,7 @@ public class SqlBuilderTest {
 							CriterionOperator.NOT_IN, "123", "456"));
 		SqlBuilder sqlBuilder4 = new SqlBuilder(studentTableStrategy, criteria4);
 		String sql4 = sqlBuilder4.selectAll().from().where().build();
-		this.singleTableValidCheck(sql4, "oneTableSelectBuildWithWhere4");
+		this.oneSelectValidCheck(sql4, "oneTableSelectBuildWithWhere4");
 		
 		
 	}
@@ -135,7 +136,7 @@ public class SqlBuilderTest {
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategy, criteria);
 		String sql = sqlBuilder.selectAll().from().order().build();
-		this.singleTableValidCheck(sql, "oneTableSelectBuildWithOrder");
+		this.oneSelectValidCheck(sql, "oneTableSelectBuildWithOrder");
 		
 		criteria.add(new SingleValueCriterion(
 								JdbcStudentRepository.STUDENT_NUMBER, 
@@ -151,11 +152,31 @@ public class SqlBuilderTest {
 		
 		SqlBuilder sqlBuilder2 = new SqlBuilder(studentTableStrategy, criteria);
 		String sql2 = sqlBuilder2.selectAll().from().where().order().build();
-		this.singleTableValidCheck(sql2, "oneTableSelectBuildWithOrder2");
+		this.oneSelectValidCheck(sql2, "oneTableSelectBuildWithOrder2");
 		
 	}
 	
 	
+	@Test
+	public void twoTableSelectBuild() throws Exception {
+		
+		JdbcStudentRepository studentRepository = new JdbcStudentRepository();
+		JdbcUniversityRepository universityRepository = new JdbcUniversityRepository();
+		
+		Criteria criteria = new DefaultCriteria();
+		criteria.add(new JoinCriterion(
+						JdbcStudentRepository.UNIVERSITY_ID, 
+						JdbcUniversityRepository.UNIVERSITY_ID));
+		
+		SqlBuilder sqlBuilder = new SqlBuilder(
+									studentRepository.getTableStrategy(),
+									criteria,
+									universityRepository.getTableStrategy());
+	
+		String sql = sqlBuilder.selectAll().from().where().build();
+		this.oneSelectValidCheck(sql, "twoTableSelectBuild");
+		
+	}
 	
 	
 	@Ignore
@@ -180,7 +201,7 @@ public class SqlBuilderTest {
 	 * 단일 테이블의 조회 쿼리일경우 위치에 대한 간단한 검증
 	 * @param sql
 	 */
-	private void singleTableValidCheck(String sql, String name){
+	private void oneSelectValidCheck(String sql, String name){
 		
 		System.out.println(name + " : " + sql);
 		

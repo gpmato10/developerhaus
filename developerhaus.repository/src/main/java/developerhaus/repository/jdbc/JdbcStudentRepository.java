@@ -20,11 +20,12 @@ public class JdbcStudentRepository implements StudentRepository, TableStategyAwa
 	
 	// DB 의존성을 제거하기 위해 DB컬럼명 변화에 상관없이 대표되는 컬럼명 정의
 	// TODO : 쿼리결과 도메인 속성명과 매핑하기 위한 정책 수립(Spring JDBC 붙인 후 다시 생각)
-	public final static String STUDENT_NUMBER = addAliasToColumn(ALIAS,	"sno");  	// 학번
-	public final static String STUDENT_NAME = addAliasToColumn(ALIAS, "sname");  	// 이름
+	public final static String STUDENT_NUMBER = addAliasToColumn(ALIAS,	"num");  	// 학번
+	public final static String STUDENT_NAME = addAliasToColumn(ALIAS, "name");  	// 이름
 	public final static String YEAR = addAliasToColumn(ALIAS, "year");  			// 학년
 	public final static String DEPARTMENT  = addAliasToColumn(ALIAS, "dept"); 		// 학과
-
+	public final static String UNIVERSITY_ID = addAliasToColumn(ALIAS, "univId"); 	// 대학교ID
+ 
 	@Override
 	public Student get(String id) {
 		
@@ -62,6 +63,6 @@ public class JdbcStudentRepository implements StudentRepository, TableStategyAwa
 	public TableStrategy getTableStrategy() {
 
 		return new DefaultTableStrategy(TABLE_NAME, ALIAS)
-					.setAllColumn(STUDENT_NUMBER, STUDENT_NAME, YEAR, DEPARTMENT);
+					.setAllColumn(STUDENT_NUMBER, STUDENT_NAME, YEAR, DEPARTMENT, UNIVERSITY_ID);
 	}
 }
