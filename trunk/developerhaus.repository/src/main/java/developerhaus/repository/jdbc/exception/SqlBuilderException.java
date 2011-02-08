@@ -11,5 +11,4 @@ public class SqlBuilderException extends RuntimeException {
 		super(msg);
 	}
 
-
 }
