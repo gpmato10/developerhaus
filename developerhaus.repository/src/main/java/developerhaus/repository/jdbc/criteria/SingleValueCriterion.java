@@ -11,12 +11,10 @@ public class SingleValueCriterion implements Criterion<String, Object, Criterion
 	private Object value;
 	private CriterionOperator operator;
 	
-	public SingleValueCriterion(String key, Object value,
-			CriterionOperator operator) {
-		super();
+	public SingleValueCriterion(String key, CriterionOperator operator, Object value) {
 		this.key = key;
-		this.value = value;
 		this.operator = operator;
+		this.value = value;
 	}
 
 	@Override

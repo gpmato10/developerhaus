@@ -2,13 +2,17 @@ package developerhaus.repository.jdbc;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import developerhaus.domain.Student;
 import developerhaus.repository.api.criteria.Criteria;
+import developerhaus.repository.api.criteria.OrderType;
 import developerhaus.repository.jdbc.criteria.CriterionOperator;
 import developerhaus.repository.jdbc.criteria.DefaultCriteria;
+import developerhaus.repository.jdbc.criteria.DefaultOrder;
+import developerhaus.repository.jdbc.criteria.MultiValueCriterion;
 import developerhaus.repository.jdbc.criteria.SingleValueCriterion;
 import developerhaus.repository.jdbc.exception.SqlBuilderException;
 import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
@@ -16,6 +20,14 @@ import developerhaus.repository.jdbc.strategy.TableStrategy;
 
 
 public class SqlBuilderTest {
+	
+	private TableStrategy studentTableStrategy;
+	
+	@Before
+	public void setUp(){
+		studentTableStrategy = new DefaultTableStrategy("STUDENT", "stu")
+								.setAllColumn("stu.SNO", "stu.SNAME", "stu.YEAR", "stu.DEPT");
+	}
 	
 //	@Ignore
 	@Test
@@ -40,10 +52,7 @@ public class SqlBuilderTest {
 	@Test
 	public void oneTableSelectBuild() throws Exception {
 		
-		TableStrategy tableStrategy 
-			= new DefaultTableStrategy("STUDENT", "stu")
-				.setAllColumn("stu.SNO", "stu.SNAME", "stu.YEAR", "stu.DEPT");
-		SqlBuilder sqlBuilder = new SqlBuilder(tableStrategy);
+		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategy);
 
 		String sql = sqlBuilder.selectAll().from().build();
 		this.singleTableValidCheck(sql, "oneTableSelectBuild");
@@ -58,18 +67,14 @@ public class SqlBuilderTest {
 //		  WHERE stu.DEPT = '컴퓨터공학과'
 //		    and stu.YEAR > 2
 		
-		TableStrategy tableStrategy 
-			= new DefaultTableStrategy("STUDENT", "stu")
-				.setAllColumn("stu.SNO", "stu.SNAME", "stu.YEAR", "stu.DEPT");
-		
 		Criteria criteria = new DefaultCriteria();
 		criteria.add( new SingleValueCriterion(
 								JdbcStudentRepository.DEPARTMENT, 
-								"컴퓨터공학과", 
-								CriterionOperator.EQ) );
-		criteria.add(new SingleValueCriterion(JdbcStudentRepository.YEAR, 2, CriterionOperator.GT));
+								CriterionOperator.EQ, 
+								"컴퓨터공학과") );
+		criteria.add(new SingleValueCriterion(JdbcStudentRepository.YEAR, CriterionOperator.GT, 2));
 		
-		SqlBuilder sqlBuilder = new SqlBuilder(tableStrategy, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategy, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
 		this.singleTableValidCheck(sql, "oneTableSelectBuildWithWhere");
 		
@@ -77,22 +82,88 @@ public class SqlBuilderTest {
 		Criteria criteria2 = new DefaultCriteria();
 		criteria2.add(new SingleValueCriterion(
 								JdbcStudentRepository.STUDENT_NUMBER, 
-								"60022416", 
-								CriterionOperator.EQ));
-		SqlBuilder sqlBuilder2 = new SqlBuilder(tableStrategy, criteria2);
+								CriterionOperator.EQ, 
+								"60022416"));
+		SqlBuilder sqlBuilder2 = new SqlBuilder(studentTableStrategy, criteria2);
 		String sql2 = sqlBuilder2.selectAll().from().where().build();
 		this.singleTableValidCheck(sql2, "oneTableSelectBuildWithWhere2");
+		
+		
+		Criteria criteria3 = new DefaultCriteria();
+		criteria3.add(new SingleValueCriterion(
+								JdbcStudentRepository.DEPARTMENT, 
+								CriterionOperator.LIKE, 
+								"공학"));
+		criteria3.add(new SingleValueCriterion(
+								JdbcStudentRepository.DEPARTMENT, 
+								CriterionOperator.LIKE_LEFT, 
+								"컴퓨터"));
+		criteria3.add(new SingleValueCriterion(
+								JdbcStudentRepository.DEPARTMENT, 
+								CriterionOperator.LIKE_LEFT, 
+								"공학과"));
+		SqlBuilder sqlBuilder3 = new SqlBuilder(studentTableStrategy, criteria3);
+		String sql3 = sqlBuilder3.selectAll().from().where().build();
+		this.singleTableValidCheck(sql3, "oneTableSelectBuildWithWhere3");
+		
+		Criteria criteria4 = new DefaultCriteria();
+		criteria4.add(new MultiValueCriterion(
+							JdbcStudentRepository.DEPARTMENT, 
+							CriterionOperator.IN, 
+							"컴퓨터공학과", "전자공학과", "산업시스템공학과"));	
+		criteria4.add(new MultiValueCriterion(
+							JdbcStudentRepository.YEAR, 
+							CriterionOperator.BETWEEN, 
+							2, 3));
+		
+		criteria4.add(new MultiValueCriterion(
+							JdbcStudentRepository.STUDENT_NUMBER, 
+							CriterionOperator.NOT_IN, "123", "456"));
+		SqlBuilder sqlBuilder4 = new SqlBuilder(studentTableStrategy, criteria4);
+		String sql4 = sqlBuilder4.selectAll().from().where().build();
+		this.singleTableValidCheck(sql4, "oneTableSelectBuildWithWhere4");
+		
+		
 	}
 	
-//	@Ignore
+	@Test
+	public void oneTableSelectBuildWithOrder() throws Exception {
+		
+		Criteria criteria = new DefaultCriteria();
+		criteria.add(new DefaultOrder(JdbcStudentRepository.DEPARTMENT, OrderType.ASC));
+		criteria.add(new DefaultOrder(JdbcStudentRepository.YEAR, OrderType.DESC));
+		
+		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategy, criteria);
+		String sql = sqlBuilder.selectAll().from().order().build();
+		this.singleTableValidCheck(sql, "oneTableSelectBuildWithOrder");
+		
+		criteria.add(new SingleValueCriterion(
+								JdbcStudentRepository.STUDENT_NUMBER, 
+								CriterionOperator.EQ,
+								"60022416")
+					);
+		
+		criteria.add(new SingleValueCriterion(
+								JdbcStudentRepository.DEPARTMENT,
+								CriterionOperator.LIKE,
+								"공학")
+					);
+		
+		SqlBuilder sqlBuilder2 = new SqlBuilder(studentTableStrategy, criteria);
+		String sql2 = sqlBuilder2.selectAll().from().where().order().build();
+		this.singleTableValidCheck(sql2, "oneTableSelectBuildWithOrder2");
+		
+	}
+	
+	
+	
+	
+	@Ignore
 	@Test
 //	TODO : 대소문자를 구분하는지 체크, 실제이름이 아니라 Alias를 이용하여 실제 컬럼명과 매핑
 	public void oneTableInsertBuild() throws Exception {
 //		INSERT INTO STUDENT(SNO, SNAME, YEAR, DEPT) VALUES(:SNO, :SNAME, :YEAR, :DEPT)
-		TableStrategy tableStrategy 
-			= new DefaultTableStrategy("STUDENT", "stu")
-				.setAllColumn("stu.SNO", "stu.SNAME", "stu.YEAR", "stu.DEPT");
-		SqlBuilder sqlBuilder = new SqlBuilder(tableStrategy);
+		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategy);
 		
 		Student student = new Student();
 		
@@ -105,15 +176,13 @@ public class SqlBuilderTest {
 	}
 	
 	
-	
-	
 	/**
 	 * 단일 테이블의 조회 쿼리일경우 위치에 대한 간단한 검증
 	 * @param sql
 	 */
 	private void singleTableValidCheck(String sql, String name){
 		
-		System.out.println("name : " + sql);
+		System.out.println(name + " : " + sql);
 		
 		assertNotNull(sql);
 		
