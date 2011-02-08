@@ -27,6 +27,7 @@ public class SqlBuilder {
 	 */
 	private TableStrategy defaultTableStrategy;
 	private Criteria criteria;
+	private TableStrategy[] tableStrategys;
 	
 	public SqlBuilder(TableStrategy tableStrategy) {
 		this.sql = new StringBuilder();
@@ -40,6 +41,12 @@ public class SqlBuilder {
 	}
 
 
+	public SqlBuilder(TableStrategy tableStrategy, Criteria criteria, TableStrategy... tableStrategys) {
+		this(tableStrategy, criteria);
+		this.tableStrategys = tableStrategys;
+	}
+
+
 	/**
 	 * 구성된 쿼리 반환
 	 * @return
@@ -50,13 +57,26 @@ public class SqlBuilder {
 	
 	public SqlBuilder selectAll() {
 		
+		StringBuffer selectBuffer = new StringBuffer();
+		
 		String[] allColumn = defaultTableStrategy.getAllColumn();
-		//		TODO : 컬럼이 없을 경우 '*' 표현하는것이 맞는지 검토 필요(모든 컬럼의 명을 꼭 알고 있어야 한다면 사용불가)
-		if(allColumn == null){
-			this.select("*");
+		if(allColumn != null){
+			selectBuffer.append(RepositoryUtils.toColumn(allColumn));
 			
+			if(tableStrategys != null){
+				for(int i = 0; i < tableStrategys.length; i++){
+					
+					allColumn = tableStrategys[i].getAllColumn();
+					if(allColumn != null){
+						selectBuffer.append(" ,");
+						selectBuffer.append(RepositoryUtils.toColumn(allColumn));
+					}
+				}
+			}
+			
+			this.select(selectBuffer.toString());
 		} else {
-			this.select(RepositoryUtils.toColumn(allColumn).toString());
+			this.select(" * ");
 		}
 		
 		return this;
@@ -75,6 +95,16 @@ public class SqlBuilder {
 		sql.append(defaultTableStrategy.getTableName());
 		sql.append(" ");
 		sql.append(defaultTableStrategy.getAliasName());
+		sql.append(" ");
+		
+		if(tableStrategys != null){
+			for(int i = 0; i < tableStrategys.length; i++){
+				sql.append(", ");
+				sql.append(tableStrategys[i].getTableName());
+				sql.append(" ");
+				sql.append(tableStrategys[i].getAliasName());
+			}
+		}
 		
 		return this;
 	}
