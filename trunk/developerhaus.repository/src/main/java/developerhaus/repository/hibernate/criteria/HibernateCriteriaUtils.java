@@ -19,24 +19,20 @@ import developerhaus.repository.api.criteria.OrderType;
  * 
  */
 public class HibernateCriteriaUtils {
-	/**
-	 * @param targetClass
-	 */
-	private Class targetClass;
-	public HibernateCriteriaUtils(Class targetClass) {
-		this.targetClass = targetClass;
-	}
-
+	
+	private HibernateCriteriaUtils() {
+    }
+	
 	/**
 	 * Criteria 를 Hibernate Criteria 로 바꿔서 리턴한다.
 	 * @param criteria
 	 * @return DetachedCriteria
 	 */
-	public DetachedCriteria getHibernateCriteria(Criteria criteria) {
+	public static DetachedCriteria getHibernateCriteria(Class targetClass, Criteria criteria) {
 		DetachedCriteria hcriteria = DetachedCriteria.forClass(targetClass);
 		List<Criterion> criterionList = criteria.getCriterionList();
 		for(Criterion<?, ?, CriterionOperator> criterion : criterionList) {
-			hcriteria.add(getHibernateCriterion(criterion));
+			hcriteria.add(getHibernateCriterion(targetClass, criterion));
 		}
 		List<Order> orderList = criteria.getOrderList();
 		for(Order order : orderList) {
@@ -56,7 +52,7 @@ public class HibernateCriteriaUtils {
 	 * @param Criterion
 	 * @return org.hibernate.criterion.Criterion
 	 */
-	private org.hibernate.criterion.Criterion getHibernateCriterion(Criterion<?, ?, CriterionOperator> criterion) {
+	private static org.hibernate.criterion.Criterion getHibernateCriterion(Class targetClass, Criterion<?, ?, CriterionOperator> criterion) {
 		org.hibernate.criterion.Criterion hCriterion = null;
 		CriterionOperator operator = criterion.getOperator();
 		if(operator.equals(CriterionOperator.EQ)) {

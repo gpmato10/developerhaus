@@ -37,12 +37,10 @@ public class GenericHibernateSupportRepository<D, I extends Serializable> implem
 	
 	private HibernateTemplate hibernateTemplate;
 	private Class<D> targetClass;
-	private HibernateCriteriaUtils hibernateCriteriaUtils;
 	
 
 	public GenericHibernateSupportRepository() {
 		this.targetClass = (Class<D>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-		hibernateCriteriaUtils = new HibernateCriteriaUtils(targetClass);
 	}
 	
 	public void setSessionFactory(SessionFactory sessionFactory) {
@@ -54,7 +52,7 @@ public class GenericHibernateSupportRepository<D, I extends Serializable> implem
 	}
 	@Override
 	public List<D> list(Criteria criteria) {
-		return hibernateTemplate.findByCriteria(hibernateCriteriaUtils.getHibernateCriteria(criteria));
+		return hibernateTemplate.findByCriteria(HibernateCriteriaUtils.getHibernateCriteria(targetClass, criteria));
 	}
 	@Override
 	public boolean update(D domain) {
@@ -66,7 +64,7 @@ public class GenericHibernateSupportRepository<D, I extends Serializable> implem
 		return list(criteria).size();
 	}	
 	public List<D> page(Criteria criteria, int firstResult, int maxResult) {
-		return hibernateTemplate.findByCriteria(hibernateCriteriaUtils.getHibernateCriteria(criteria), firstResult, maxResult);
+		return hibernateTemplate.findByCriteria(HibernateCriteriaUtils.getHibernateCriteria(targetClass, criteria), firstResult, maxResult);
 	}
 
 }
