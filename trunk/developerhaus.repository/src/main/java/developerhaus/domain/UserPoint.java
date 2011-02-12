@@ -1,5 +1,5 @@
 
-package developerhaus.user;
+package developerhaus.domain;
 
 /**
  * User Point History 클래스
