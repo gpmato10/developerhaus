@@ -2,6 +2,8 @@ package developerhaus.repository.jdbc;
 
 import java.util.List;
 
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
 import static developerhaus.repository.jdbc.RepositoryUtils.*;
 
 import developerhaus.domain.Student;
@@ -29,16 +31,25 @@ public class JdbcStudentRepository implements StudentRepository, TableStategyAwa
 	@Override
 	public Student get(String id) {
 		
+//		SELECT  stu.num, stu.name, stu.year, stu.dept, stu.univId FROM  STUDENT stu  WHERE stu.num = :stu.num, 
+		
 		Criteria criteria = new DefaultCriteria();
 		criteria.add(new SingleValueCriterion(
 								JdbcStudentRepository.STUDENT_NUMBER, 
 								CriterionOperator.EQ, 
 								id)
 					);
-		SqlBuilder sqlBuilder = new SqlBuilder(getTableStrategy(), criteria);
-		String sql = sqlBuilder.selectAll().from().where().build();
 		
-		System.out.println("getByID : " + sql);
+		MapSqlParameterSource msps;
+		
+//		SqlBuilder sqlBuilder = new SqlBuilder(getTableStrategy(), criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(this.getTableStrategy(), criteria);
+		String sql = sqlBuilder.selectAll().from().where().build();
+		System.out.println(sql);
+		
+//		이렇게 구현해 주세요.
+//		Student student = JDBC구현체.get(sql, Student.class, msps);
+		
 		
 //		스프링의 JDBC 클래스를 이용하여 쿼리 수행
 		return null;
