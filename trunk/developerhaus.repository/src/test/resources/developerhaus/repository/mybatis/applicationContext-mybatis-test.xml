@@ -3,31 +3,41 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="org.hsqldb.jdbcDriver"></property>
 		<property name="url" value="jdbc:hsqldb:hsql://127.0.0.1/lecture"></property>
 		<property name="username" value="sa"></property>
 		<property name="password" value=""></property>
 	</bean>
-	
+
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation" value="classpath:developerhaus/repository/mybatis/Mybatis-SqlMapConfig.xml" />
+		<property name="configLocation"
+			value="classpath:developerhaus/repository/mybatis/mybatis-config.xml" />
 	</bean>
-	
-	<!-- 
+
 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSessionFactory" />
 	</bean>
 	
-	<bean id="userDao" class="developerhaus.repository.mybatis.dao.UserDaoImpl">
+	<bean id="mybatisUserRepository" class="developerhaus.repository.mybatis.MybatisUserRepository">
 		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
 	</bean>
-	 -->
-	 
-	<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="developerhaus.repository.mybatis.GenericMybatisSupportRepository" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+
+	<!-- scan for mappers and let them be autowired -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="developerhaus.repository.mybatis" />
 	</bean>
+
+	<!-- <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate"> 
+		<constructor-arg ref="sqlSessionFactory" /> </bean> <bean id="userDao" class="developerhaus.repository.mybatis.dao.UserDaoImpl"> 
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" /> </bean> 
+
+	<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="developerhaus.repository.mybatis.GenericMybatisSupportRepository" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>-->
 
 </beans>
