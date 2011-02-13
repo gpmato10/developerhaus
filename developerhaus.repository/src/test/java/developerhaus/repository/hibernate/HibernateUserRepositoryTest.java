@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
+
+import developerhaus.domain.User;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
@@ -16,7 +18,6 @@ import developerhaus.repository.hibernate.criteria.CriterionOperator;
 import developerhaus.repository.hibernate.criteria.DefaultCriteria;
 import developerhaus.repository.hibernate.criteria.DefaultCriterion;
 import developerhaus.repository.hibernate.criteria.DefaultOrder;
-import developerhaus.user.User;
 
 public class HibernateUserRepositoryTest {	
 	HibernateUserRepository repository;

@@ -1,12 +1,13 @@
 package developerhaus.repository.mybatis;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
-import developerhaus.user.User;
+import developerhaus.domain.User;
 
 public class MybatisRepositoryTest {
 	
@@ -14,6 +15,16 @@ public class MybatisRepositoryTest {
 	public void getUser() throws Exception {
 		ApplicationContext context = new GenericXmlApplicationContext("/developerhaus/repository/mybatis/applicationContext-mybatis-test.xml");
 		
+		System.out.println("context:"+context);
+		
+		MybatisUserRepository userRepository = (MybatisUserRepository) context.getBean("mybatisUserRepository");
+		
+		assertNotNull(userRepository);
+		
+		System.out.println("userRepository:"+userRepository);
+		User user = userRepository.get(2);
+		System.out.println("user:"+user);
+		System.out.println("user.getId:"+user.getId());
 //		UserDao userDao = (UserDao) context.getBean("userDao");
 //		User user = userDao.getUser("want813");
 //		
