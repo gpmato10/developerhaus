@@ -23,7 +23,9 @@ public class MybatisRepositoryTest {
 		
 		System.out.println("userRepository:"+userRepository);
 		User user = userRepository.get(2);
+		assertNotNull(user);
 		System.out.println("user:"+user);
+		assertEquals(user.getId(), "want815");
 		System.out.println("user.getId:"+user.getId());
 //		UserDao userDao = (UserDao) context.getBean("userDao");
 //		User user = userDao.getUser("want813");

@@ -2,8 +2,14 @@ package developerhaus.repository.mybatis;
 
 import java.util.List;
 
+import javax.annotation.PreDestroy;
+
+import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.Case;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.runners.Parameterized.Parameters;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -15,6 +21,8 @@ import developerhaus.domain.UserPoint;
 import developerhaus.repository.UserRepository;
 import developerhaus.repository.api.GenericRepository;
 import developerhaus.repository.api.criteria.Criteria;
+import static org.apache.ibatis.jdbc.SelectBuilder.*;
+//import static org.mybatis.jdbc.SqlBuilder.*;
 
 public class MybatisUserRepository extends GenericMybatisSupportRepository<User, Integer>
 		implements UserRepository {
@@ -24,13 +32,13 @@ public class MybatisUserRepository extends GenericMybatisSupportRepository<User,
 		this.sqlSessionTemplate = sqlSessionTemplate;
 	}
 
-	public interface UserMapper extends GenericRepository<User, Integer> {
+	public interface UserMapper {
+		@SelectProvider(method="getQuery", type = MybatisUserRepository.class)
+		public User get(Integer id);
 		
-		final String GET = "SELECT * FROM USERS WHERE seq = #{id}";
-		@Override
-		@Select (GET)
-		public User get(@Param("id") Integer id);
-		
+		final String LIST = "SELECT * FROM USERS";
+		@Select (LIST)
+		public List<User> list(Criteria criteria);
 	}
 	
 	private UserMapper getUserMapper() {
@@ -41,11 +49,20 @@ public class MybatisUserRepository extends GenericMybatisSupportRepository<User,
 	public User get(Integer id) {
 		return getUserMapper().get(id);
 	}
-
+	
+	public String getQuery(Integer id) {
+		BEGIN();
+		SELECT("*");
+		FROM("USERS");
+		WHERE("SEQ = #{id}");
+		System.out.println(" >>>>>>>>>>>>>>>>> getQuery : "+id);
+		return SQL();
+	}
+	
 	@Override
 	public List<User> list(Criteria criteria) {
 		// TODO Auto-generated method stub
-		return null;
+		return getUserMapper().list(criteria);
 	}
 
 	@Override
@@ -62,3 +79,4 @@ public class MybatisUserRepository extends GenericMybatisSupportRepository<User,
 	}
 
 }
+
