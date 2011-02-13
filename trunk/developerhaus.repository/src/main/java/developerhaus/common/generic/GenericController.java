@@ -18,7 +18,6 @@ public class GenericController<D, I, S extends GenericService> {
 
 	S service;
 	
-	@RenderMapping("/list")
 	public List<D> list(Criteria criteria) {
 		return service.list(criteria);
 	}
