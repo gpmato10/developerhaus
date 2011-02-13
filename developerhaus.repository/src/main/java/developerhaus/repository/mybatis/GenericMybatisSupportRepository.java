@@ -13,7 +13,7 @@ public class GenericMybatisSupportRepository<D, I extends Serializable> implemen
 		GenericRepository<D, I> {
 	
 	@Override
-	@Select("SELECT SEQ, ID, NAME, PASSWORD FROM USERS WHERE ID = #{id}")
+	//@Select("SELECT SEQ, ID, NAME, PASSWORD FROM USERS WHERE ID = #{id}")
 	public D get(@Param("id") I id) {
 		return null;
 	}

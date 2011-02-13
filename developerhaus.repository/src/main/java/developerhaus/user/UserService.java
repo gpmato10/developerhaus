@@ -1,6 +1,7 @@
 package developerhaus.user;
 
 import developerhaus.common.generic.GenericService;
+import developerhaus.domain.User;
 import developerhaus.repository.hibernate.HibernateUserRepository;
 
 /**
