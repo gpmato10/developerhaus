@@ -7,10 +7,10 @@ import java.util.List;
 import developerhaus.domain.Student;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
-import developerhaus.repository.jdbc.strategy.TableStategyAware;
+import developerhaus.repository.jdbc.strategy.TableStrategyAware;
 import developerhaus.repository.jdbc.strategy.TableStrategy;
 
-public class JdbcUniversityRepository implements UniversityRepository, TableStategyAware {
+public class JdbcUniversityRepository implements UniversityRepository, TableStrategyAware {
 	
 	public final static String TABLE_NAME = "UNIVERSITY";
 	public final static String ALIAS = "univ";

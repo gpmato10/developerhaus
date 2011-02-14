@@ -1,16 +1,19 @@
 package developerhaus.domain;
 
+import static developerhaus.repository.jdbc.RepositoryUtils.addAliasToColumn;
+
 /**
  * 
  * @author jin
  *
  */
 public class Student {
-	
+
 	private String number;
 	private String name;
 	private int year;
 	private String dept;
+	private String universityId;
 	
 	public Student(){	
 	}

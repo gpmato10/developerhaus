@@ -12,10 +12,10 @@ import developerhaus.repository.jdbc.criteria.CriterionOperator;
 import developerhaus.repository.jdbc.criteria.DefaultCriteria;
 import developerhaus.repository.jdbc.criteria.SingleValueCriterion;
 import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
-import developerhaus.repository.jdbc.strategy.TableStategyAware;
+import developerhaus.repository.jdbc.strategy.TableStrategyAware;
 import developerhaus.repository.jdbc.strategy.TableStrategy;
 
-public class JdbcStudentRepository implements StudentRepository, TableStategyAware{
+public class JdbcStudentRepository implements StudentRepository, TableStrategyAware{
 	
 	public final static String TABLE_NAME = "STUDENT";
 	public final static String ALIAS = "stu";
@@ -43,7 +43,7 @@ public class JdbcStudentRepository implements StudentRepository, TableStategyAwa
 		MapSqlParameterSource msps;
 		
 //		SqlBuilder sqlBuilder = new SqlBuilder(getTableStrategy(), criteria);
-		SqlBuilder sqlBuilder = new SqlBuilder(this.getTableStrategy(), criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
 		System.out.println(sql);
 		
