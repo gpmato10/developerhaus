@@ -2,14 +2,29 @@ package developerhaus.domain;
 
 import java.io.Serializable;
 import java.util.List;
+
+import developerhaus.repository.jdbc2.DomainTableMapperStrategy;
+
 /**
  * User Domain
  * 
  * @author sunghee, Park
  * 
  */
-public class User implements Serializable{
+public class User implements DomainTableMapperStrategy, Serializable  {
+	
+	public static final String TABLE_NAME = "USERS";
 
+	public static final String KEY = "id";
+	@Override
+	public String getKey() {
+		return KEY;
+	}
+
+	@Override
+	public String getTableName() {
+		return TABLE_NAME;
+	}
 	private int seq;
 	private String name;
 	private String id;
@@ -59,6 +74,8 @@ public class User implements Serializable{
 	public int getPoint() {
 		return point;
 	}
+	
+	
 	
 	
 	
