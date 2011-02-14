@@ -1,5 +1,8 @@
 package developerhaus.repository.jdbc;
 
+import org.apache.ibatis.ognl.MapElementsAccessor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
 import developerhaus.domain.Student;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
@@ -10,6 +13,7 @@ import developerhaus.repository.jdbc.criteria.MultiValueCriterion;
 import developerhaus.repository.jdbc.criteria.SingleValueCriterion;
 import developerhaus.repository.jdbc.exception.CriteriaException;
 import developerhaus.repository.jdbc.exception.SqlBuilderException;
+import developerhaus.repository.jdbc.strategy.TableStrategyAware;
 import developerhaus.repository.jdbc.strategy.TableStrategy;
 
 /**
@@ -26,26 +30,30 @@ public class SqlBuilder {
 	 * 단일 테이블은 물론, 여러 테이블과 조인등에 항상 기준이 된다. 
 	 */
 	private TableStrategy defaultTableStrategy;
+	
 	private Criteria criteria;
 	private TableStrategy[] tableStrategys;
 	
-	public SqlBuilder(TableStrategy tableStrategy) {
+	private int parameterOrder;
+	
+	public SqlBuilder(TableStrategyAware tableStrategyAware) {
 		this.sql = new StringBuilder();
-		this.defaultTableStrategy = tableStrategy;
+		this.defaultTableStrategy = tableStrategyAware.getTableStrategy();
+		this.parameterOrder = 1;
 	}
 	
 
-	public SqlBuilder(TableStrategy tableStrategy, Criteria criteria) {
-		this(tableStrategy);
+	public SqlBuilder(TableStrategyAware tableStrategyAware, Criteria criteria) {
+		this(tableStrategyAware);
 		this.criteria = criteria;
 	}
 
 
-	public SqlBuilder(TableStrategy tableStrategy, Criteria criteria, TableStrategy... tableStrategys) {
-		this(tableStrategy, criteria);
+	public SqlBuilder(TableStrategyAware tableStrategyAware, Criteria criteria, TableStrategy... tableStrategys) {
+		this(tableStrategyAware, criteria);
 		this.tableStrategys = tableStrategys;
 	}
-
+	
 
 	/**
 	 * 구성된 쿼리 반환
@@ -111,11 +119,11 @@ public class SqlBuilder {
 
 	@SuppressWarnings("rawtypes")
 	public SqlBuilder where() {
-
+		
 		if(criteria == null || criteria.getCriterionList().size() == 0){
 			throw new CriteriaException("where절 추가시 Criteria의 criterion이 하나 이상 존재해야 합니다.");
 		}
-
+		
 		sql.append(" WHERE ");
 		
 		boolean isFirst = true;
@@ -125,11 +133,8 @@ public class SqlBuilder {
 			} else {
 				isFirst = false;
 			}
-
-			
 			createQueryStringByCriteria(criterion);
 		}
-		
 		
 		return this;
 	}
@@ -137,14 +142,12 @@ public class SqlBuilder {
 //	TODO : Criterion 구현체에 따라 쿼리 생성(현재는 SingleValueCriterion, JoinCriterion만 구현 / Spring JDBC API 생각안함)
 	@SuppressWarnings("rawtypes")
 	private void createQueryStringByCriteria(Criterion criterion) {
-//			to_char(sysdate, 'YYYYMMDD') between vaild_start_date and vaild_end_date
-//			cpn_id in ('T00001', 'T00004', 'T00005', 'T00006');
 		
 		// Operation 종류 체크 및 value 개수 체크는 생성자 호출시 검증
 		if(criterion instanceof MultiValueCriterion){
 			
+			String mappedKey = ((MultiValueCriterion)criterion).getKey();
 			Object[] values = (Object[]) criterion.getValue();
-			
 			
 			if(CriterionOperator.BETWEEN.equals(criterion.getOperator()) || CriterionOperator.NOT_BETWEEN.equals(criterion.getOperator())){
 				
@@ -152,9 +155,10 @@ public class SqlBuilder {
 				sql.append(" ");
 				sql.append(criterion.getOperator());
 				sql.append(" ");
-				sql.append(this.wrapSingleQuote(values[0]));
+				sql.append( RepositoryUtils.toSqlParameterSource(mappedKey + "_" + (parameterOrder++)) );
 				sql.append(" AND ");
-				sql.append(this.wrapSingleQuote(values[1]));
+				sql.append( RepositoryUtils.toSqlParameterSource(mappedKey + "_" + (parameterOrder++)) );
+				
 			} else if( (CriterionOperator.IN.equals(criterion.getOperator()) || CriterionOperator.NOT_IN.equals(criterion.getOperator()))){ 
 				
 				sql.append(criterion.getKey());
@@ -163,48 +167,29 @@ public class SqlBuilder {
 				sql.append(" ");
 				sql.append("(");
 				
+				
 				for (int i = 0; i < values.length; i++) {
 					if(i > 0){
 						sql.append(",");
 					}
 					
 					sql.append(" ");
-					sql.append(this.wrapSingleQuote(values[i]));
+					sql.append( RepositoryUtils.toSqlParameterSource(mappedKey + "_" + (parameterOrder++)) );
 				}
 				
 				sql.append(")");
 			}
+			
 		} else if(criterion instanceof SingleValueCriterion){
 			
-			// 값이 숫자타입일경우 ''를 감싸지 않는다.
-			boolean isNumberValue = criterion.getValue() instanceof Number;
-		
+			String mappedKey = ((SingleValueCriterion)criterion).getKey();
 			
 			sql.append(criterion.getKey());
 			sql.append(" ");
 			sql.append(criterion.getOperator());
 			sql.append(" ");
-			if(!isNumberValue){
-				sql.append("'");
-			}
 			
-			if(CriterionOperator.LIKE.equals(criterion.getOperator())){
-				sql.append("%");
-				sql.append(criterion.getValue());
-				sql.append("%");
-			} else if(CriterionOperator.LIKE_LEFT.equals(criterion.getOperator())){
-				sql.append("%");
-				sql.append(criterion.getValue());
-			} else if(CriterionOperator.LIKE_RIGHT.equals(criterion.getOperator())){
-				sql.append(criterion.getValue());
-				sql.append("%");
-			} else {
-				sql.append(criterion.getValue());
-			}
-			
-			if(!isNumberValue){
-				sql.append("'");
-			}
+			sql.append( RepositoryUtils.toSqlParameterSource(mappedKey + "_" + (parameterOrder++)) );
 			
 		} else if(criterion instanceof JoinCriterion){
 			sql.append(criterion.getValue());
@@ -212,47 +197,62 @@ public class SqlBuilder {
 		
 	}
 	
-	/**
-	 * 숫자타입이 아닐 경우 '를 좌우로 감싼다.
-	 * @param value
-	 */
-	private StringBuffer wrapSingleQuote(Object value){
+	
+	public MapSqlParameterSource getMapSqlParameterSource(){
 		
-		StringBuffer buffer = new StringBuffer();
-		boolean isNumberValue = value instanceof Number;
+		MapSqlParameterSource msps = new MapSqlParameterSource();
+		int parameterOrder = 1;
 		
-		if(!isNumberValue){
-			buffer.append("'");
+		for (Criterion criterion : criteria.getCriterionList()) {
+			
+			if(criterion instanceof MultiValueCriterion){
+				
+				String mappedKey = ((MultiValueCriterion)criterion).getKey();
+				Object[] values = (Object[]) criterion.getValue();
+				
+				for(int i = 0; i < values.length; i++){
+					msps.addValue(mappedKey + "_" + (parameterOrder++), values[i]);
+				}
+					
+			} else if(criterion instanceof SingleValueCriterion){
+				
+				String mappedKey = ((SingleValueCriterion)criterion).getKey();
+				
+				if(CriterionOperator.LIKE.equals(criterion.getOperator())){
+					msps.addValue(mappedKey + "_" + (parameterOrder++), "%" + criterion.getValue() + "%");
+				} else if(CriterionOperator.LIKE_LEFT.equals(criterion.getOperator())){
+					msps.addValue(mappedKey + "_" + (parameterOrder++), "%" + criterion.getValue());
+				} else if(CriterionOperator.LIKE_RIGHT.equals(criterion.getOperator())){
+					msps.addValue(mappedKey + "_" + (parameterOrder++), criterion.getValue() + "%");
+				} else {
+					msps.addValue(mappedKey + "_" + (parameterOrder++), criterion.getValue());
+				}
+				
+			} else if(criterion instanceof JoinCriterion){
+				
+			}
 		}
-		
-		buffer.append(value);
-		
-		if(!isNumberValue){
-			buffer.append("'");
-		}
-		
-		return buffer;
+		return msps;
 	}
+	
 
 	public SqlBuilder order() {
 		
-		if(criteria == null || criteria.getOrderList().size() == 0){
-			throw new CriteriaException("order절 추가시 Criteria의 Order가 하나 이상 존재해야 합니다.");
-		}
+		if(criteria != null && criteria.getOrderList().size() > 0){
 		
-		sql.append(" ORDER BY ");
-		boolean isFirst = true;
-		for (Order order : criteria.getOrderList()) {
-			if (!isFirst) {
-				sql.append(", ");
-			} else {
-				isFirst = false;
+			sql.append(" ORDER BY ");
+			boolean isFirst = true;
+			for (Order order : criteria.getOrderList()) {
+				if (!isFirst) {
+					sql.append(", ");
+				} else {
+					isFirst = false;
+				}
+				sql.append(order.getProperty());
+				sql.append(" ");
+				sql.append(order.getType());
 			}
-			sql.append(order.getProperty());
-			sql.append(" ");
-			sql.append(order.getType());
 		}
-		
 		
 		return this;
 	}
@@ -272,7 +272,7 @@ public class SqlBuilder {
 		
 		sql.append(" ) ");
 		sql.append(" VALUES( ");
-		sql.append(RepositoryUtils.toMappedColumn(allColumn));
+		sql.append(RepositoryUtils.toSqlParameterSource(allColumn));
 		sql.append(" ) ");
 		
 		return this;

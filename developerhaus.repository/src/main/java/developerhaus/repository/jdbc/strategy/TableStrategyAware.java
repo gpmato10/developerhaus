@@ -6,7 +6,7 @@ package developerhaus.repository.jdbc.strategy;
  * @author jin
  *
  */
-public interface TableStategyAware {
+public interface TableStrategyAware {
 	
 	TableStrategy getTableStrategy();
 }

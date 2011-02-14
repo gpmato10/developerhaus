@@ -2,7 +2,7 @@ package developerhaus.repository.jdbc;
 
 import developerhaus.domain.Student;
 import developerhaus.repository.api.GenericRepository;
-import developerhaus.repository.jdbc.strategy.TableStategyAware;
+import developerhaus.repository.jdbc.strategy.TableStrategyAware;
 
 public interface StudentRepository extends GenericRepository<Student, String>{
 	
