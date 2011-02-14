@@ -4,10 +4,20 @@ import static developerhaus.repository.jdbc.RepositoryUtils.addAliasToColumn;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+
 import developerhaus.domain.User;
 import developerhaus.domain.UserPoint;
 import developerhaus.repository.UserRepository;
 import developerhaus.repository.api.criteria.Criteria;
+import developerhaus.repository.jdbc.criteria.CriterionOperator;
+import developerhaus.repository.jdbc.criteria.DefaultCriteria;
+import developerhaus.repository.jdbc.criteria.SingleValueCriterion;
 import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStrategyAware;
@@ -25,19 +35,63 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 	public final static String PASSWORD = addAliasToColumn(ALIAS, "password");	// 비밀번호 
 	public final static String POINT = addAliasToColumn(ALIAS, "point");  			// 포인트
 
+	protected SimpleJdbcTemplate template;
+	//DataSource dataSource;
+
+	@Resource
+	public void setDataSource(DataSource dataSource) {
+		this.template = new SimpleJdbcTemplate(dataSource);
+		//this.dataSource = dataSource;
+	}
+	
 	@Override
 	public User get(Integer id) {
-		return null;
+		Criteria criteria = new DefaultCriteria();
+		criteria.add(new SingleValueCriterion(
+								this.SEQEUNCE, 
+								CriterionOperator.EQ, 
+								id)
+					);
+		
+		MapSqlParameterSource msps=null;
+		
+//		SqlBuilder sqlBuilder = new SqlBuilder(getTableStrategy(), criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
+		String sql = sqlBuilder.selectAll().from().where().build();
+		System.out.println(sql);
+		
+//		이렇게 구현해 주세요.
+//		Student student = JDBC구현체.get(sql, Student.class, msps);
+		return template.queryForObject(sql, User.class, msps);
 	}
 
 	@Override
 	public List<User> list(Criteria criteria) {
-		return null;
+		MapSqlParameterSource msps=null;
+		
+//		SqlBuilder sqlBuilder = new SqlBuilder(getTableStrategy(), criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
+		String sql = sqlBuilder.selectAll().from().where().build();
+		System.out.println(sql);	
+		//return getDataSource().queryForList(sql, msps);
+		return template.query(sql, new BeanPropertyRowMapper<User>(User.class), msps);
 	}
 
 	@Override
 	public boolean update(User domain) {
-		return false;
+		MapSqlParameterSource msps=null;
+		Criteria criteria = new DefaultCriteria();
+		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
+		String sql = sqlBuilder.selectAll().from().where().build();
+		System.out.println(sql);	
+		
+		
+		int result = template.update(sql, msps);
+		if (result>0){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	@Override
@@ -51,4 +105,5 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 		return new DefaultTableStrategy(TABLE_NAME, ALIAS)
 			.setAllColumn(SEQEUNCE, ID, NAME, PASSWORD, POINT);
 	}
+
 }
