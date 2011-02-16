@@ -242,7 +242,7 @@ public class SqlBuilderTest {
 	}
 	
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void userSqlBuild() throws Exception {
 		
