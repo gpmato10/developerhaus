@@ -6,13 +6,13 @@ import developerhaus.repository.criteria.CriterionOperator;
 
 //<String, Object, CriterionOperator>
 
-public class SingleValueCriterion implements Criterion<String, Object, CriterionOperator>{
-
-	private String key;
-	private Object value;
-	private CriterionOperator operator;
+public class SingleValueCriterion<String, O, T> implements Criterion<String, O, T>{
 	
-	public SingleValueCriterion(String key, CriterionOperator operator, Object value) {
+	private String key;
+	private O operator;
+	private T value;
+	
+	public SingleValueCriterion(String key, O operator, T value) {
 		this.key = key;
 		this.operator = operator;
 		this.value = value;
@@ -29,22 +29,22 @@ public class SingleValueCriterion implements Criterion<String, Object, Criterion
 	}
 
 	@Override
-	public Object getValue() {
+	public T getValue() {
 		return value;
 	}
 
 	@Override
-	public void setValue(Object value) {
+	public void setValue(T value) {
 		this.value = value;
 	}
 
 	@Override
-	public CriterionOperator getOperator() {
+	public O getOperator() {
 		return operator;
 	}
 
 	@Override
-	public void setOperator(CriterionOperator operator) {
+	public void setOperator(O operator) {
 		this.operator = operator;
 	}
 }

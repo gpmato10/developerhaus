@@ -1,5 +1,7 @@
 package developerhaus.repository.jdbc;
 
+import java.lang.reflect.Field;
+
 import org.apache.ibatis.ognl.MapElementsAccessor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
@@ -36,10 +38,13 @@ public class SqlBuilder {
 	
 	private int parameterOrder;
 	
+	private Class mappedClass;
+	
 	public SqlBuilder(TableStrategyAware tableStrategyAware) {
 		this.sql = new StringBuilder();
 		this.defaultTableStrategy = tableStrategyAware.getTableStrategy();
 		this.parameterOrder = 1;
+		mappedClass=tableStrategyAware.getClass();
 	}
 	
 
@@ -118,7 +123,7 @@ public class SqlBuilder {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public SqlBuilder where() {
+	public SqlBuilder where(){
 		
 		if(criteria == null || criteria.getCriterionList().size() == 0){
 			throw new CriteriaException("where절 추가시 Criteria의 criterion이 하나 이상 존재해야 합니다.");
@@ -133,7 +138,12 @@ public class SqlBuilder {
 			} else {
 				isFirst = false;
 			}
-			createQueryStringByCriteria(criterion);
+			try {
+				createQueryStringByCriteria(criterion);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return this;
@@ -141,7 +151,7 @@ public class SqlBuilder {
 
 //	TODO : Criterion 구현체에 따라 쿼리 생성(현재는 SingleValueCriterion, JoinCriterion만 구현 / Spring JDBC API 생각안함)
 	@SuppressWarnings("rawtypes")
-	private void createQueryStringByCriteria(Criterion criterion) {
+	private void createQueryStringByCriteria(Criterion criterion) throws Exception {
 		
 		// Operation 종류 체크 및 value 개수 체크는 생성자 호출시 검증
 		if(criterion instanceof MultiValueCriterion){
@@ -182,7 +192,16 @@ public class SqlBuilder {
 			
 		} else if(criterion instanceof SingleValueCriterion){
 			
-			String mappedKey = ((SingleValueCriterion)criterion).getKey();
+			
+//			JdbcUserRepository r = new JdbcUserRepository();
+//			Class c = JdbcUserRepository.class;
+//			
+//			Field f = c.getField("name".toUpperCase());
+//			System.out.println(f.get(r));
+			
+			String mappedKey = 	(String) criterion.getKey();
+			Field f = mappedClass.getField(mappedKey.toUpperCase());
+			String alaisMappedKey = (String) f.get(defaultTableStrategy);
 			
 			sql.append(criterion.getKey());
 			sql.append(" ");
@@ -216,7 +235,7 @@ public class SqlBuilder {
 					
 			} else if(criterion instanceof SingleValueCriterion){
 				
-				String mappedKey = ((SingleValueCriterion)criterion).getKey();
+				String mappedKey = (String)criterion.getKey();
 				
 				if(CriterionOperator.LIKE.equals(criterion.getOperator())){
 					msps.addValue(mappedKey + "_" + (parameterOrder++), "%" + criterion.getValue() + "%");
