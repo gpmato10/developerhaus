@@ -11,8 +11,8 @@
 	  	<property name="name" column="NAME"/>
 	  	<property name="password" column="PASSWORD"/>  
 	  	<property name="point" column="POINT"/>
-	  	<list name="userPointList" table="USER_POINT" inverse="true" lazy="true" fetch="select" cascade="save-update">
-	  		<key column="SEQ" />
+	  	<list name="userPointList" table="USER_POINT" inverse="true" lazy="false" fetch="subselect">
+	  		<key column="USER_SEQ" />
 	  		<index column="USER_POINT_SEQ" />
 	  		<one-to-many class="UserPoint" />
 	  	</list>
