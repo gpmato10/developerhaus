@@ -16,6 +16,14 @@ public class User implements DomainTableMapperStrategy, Serializable  {
 	public static final String TABLE_NAME = "USERS";
 
 	public static final String KEY = "id";
+	public User(int seq2, String id2, String name2, String password2,
+			String point2) {
+		// TODO Auto-generated constructor stub
+	}
+	public User(){
+		
+	}
+
 	@Override
 	public String getKey() {
 		return KEY;
