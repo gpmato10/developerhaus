@@ -14,9 +14,9 @@ import developerhaus.repository.api.criteria.OrderType;
 import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
 import developerhaus.repository.criteria.DefaultOrder;
-import developerhaus.repository.jdbc.criteria.JoinCriterion;
-import developerhaus.repository.jdbc.criteria.MultiValueCriterion;
-import developerhaus.repository.jdbc.criteria.SingleValueCriterion;
+import developerhaus.repository.criteria.JoinCriterion;
+import developerhaus.repository.criteria.MultiValueCriterion;
+import developerhaus.repository.criteria.SingleValueCriterion;
 import developerhaus.repository.jdbc.exception.SqlBuilderException;
 import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStrategy;
@@ -44,25 +44,16 @@ public class SqlBuilderTest {
 			@Override
 			public TableStrategy getTableStrategy() {
 				return new DefaultTableStrategy(JdbcUserRepository.TABLE_NAME, JdbcUserRepository.ALIAS)
-					.setAllColumn(JdbcUserRepository.SEQEUNCE, JdbcUserRepository.ID, JdbcUserRepository.NAME, JdbcUserRepository.PASSWORD, JdbcUserRepository.POINT);
+					.setAllColumn(JdbcUserRepository.SEQ, JdbcUserRepository.ID, JdbcUserRepository.NAME, JdbcUserRepository.PASSWORD, JdbcUserRepository.POINT);
 			}
 		};
 		
 	}
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void simpleSqlBuild() throws Exception {
 
-		TableStrategyAware tsa = new TableStrategyAware() {
-			
-			@Override
-			public TableStrategy getTableStrategy() {
-				// TODO Auto-generated method stub
-				return  new DefaultTableStrategy("test", "t");
-			}
-		};
-		
 		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategyAware);
 		String sql = sqlBuilder.select("t.SNO, t.SNAME, t.YEAR, t.DEP").from().build();
 		this.oneSelectValidCheck(sql, "simpleSqlBuild1");
@@ -77,7 +68,7 @@ public class SqlBuilderTest {
 		this.oneSelectValidCheck(sql3, "simpleSqlBuild3");
 	}
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void oneTableSelectBuild() throws Exception {
 		
@@ -99,10 +90,10 @@ public class SqlBuilderTest {
 		
 		Criteria criteria = new DefaultCriteria();
 		criteria.add( new SingleValueCriterion(
-								JdbcStudentRepository.DEPARTMENT, 
+								"dept", 
 								CriterionOperator.EQ, 
 								"컴퓨터공학과") );
-		criteria.add(new SingleValueCriterion(JdbcStudentRepository.YEAR, CriterionOperator.GT, 2));
+		criteria.add(new SingleValueCriterion("year", CriterionOperator.GT, 2));
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategyAware, criteria);
 		
@@ -240,7 +231,7 @@ public class SqlBuilderTest {
 	}
 	
 	
-//	@Ignore
+	@Ignore
 	@Test
 	public void userSqlBuild() throws Exception {
 		
@@ -253,7 +244,7 @@ public class SqlBuilderTest {
 		
 		Criteria criteria = new DefaultCriteria();
 		criteria.add(new SingleValueCriterion(JdbcUserRepository.ID, CriterionOperator.EQ, userId));
-		criteria.add(new DefaultOrder(JdbcUserRepository.SEQEUNCE, OrderType.DESC));
+		criteria.add(new DefaultOrder(JdbcUserRepository.SEQ, OrderType.DESC));
 		
 		SqlBuilder sqlBuilder2 = new SqlBuilder(userTableStrategyAware, criteria);
 		
