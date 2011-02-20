@@ -31,4 +31,9 @@ public class RepositoryUtils {
 	public static String addAliasToColumn(String alias, String columnName){
 		return alias + "." + columnName;
 	}
+	
+	public static String getColumnName(String domainFieldName){
+		
+		return domainFieldName.substring(domainFieldName.indexOf(".") + 1);
+	}
 }
