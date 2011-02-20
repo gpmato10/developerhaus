@@ -1,5 +1,9 @@
 package developerhaus.repository.jdbc;
 
+import java.lang.reflect.Field;
+
+import developerhaus.repository.jdbc.exception.SqlBuilderException;
+
 public class RepositoryUtils {
 	
 	public static String toColumn(String... columns) {
@@ -35,5 +39,19 @@ public class RepositoryUtils {
 	public static String getColumnName(String domainFieldName){
 		
 		return domainFieldName.substring(domainFieldName.indexOf(".") + 1);
+	}
+	
+	public static String getAliasToColumn(String domainFiledName, Object target, Class cla){
+		
+		Field f;
+		String alaisMappedKey = null;
+		try {
+			f = cla.getField(domainFiledName.toUpperCase());
+			alaisMappedKey = (String) f.get(target);
+		} catch (Exception e) {
+			throw new SqlBuilderException("도메인 속성명의 대문자로 정의된 공통속성명이 Repository에 정의되어 있어야 합니다. / domainFiledName : " + domainFiledName, e);
+		}
+		
+		return alaisMappedKey;
 	}
 }
