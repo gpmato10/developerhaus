@@ -203,7 +203,8 @@ public class SqlBuilder {
 			Field f = mappedClass.getField(mappedKey.toUpperCase());
 			String alaisMappedKey = (String) f.get(defaultTableStrategy);
 			
-			sql.append(criterion.getKey());
+//			sql.append(criterion.getKey());
+			sql.append(alaisMappedKey);
 			sql.append(" ");
 			sql.append(criterion.getOperator());
 			sql.append(" ");

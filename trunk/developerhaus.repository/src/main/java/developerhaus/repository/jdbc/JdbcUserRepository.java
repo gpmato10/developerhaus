@@ -120,10 +120,4 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 			return new User(seq, name, id, password, point, null);
 		}
 	};
-	
-	public static void main(String[] args) {
-		
-		JdbcUserRepository r = new JdbcUserRepository();
-		r.get(3);
-	}
 }
