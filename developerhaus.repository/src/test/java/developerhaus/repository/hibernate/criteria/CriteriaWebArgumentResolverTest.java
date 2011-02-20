@@ -23,6 +23,8 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
+import developerhaus.repository.criteria.HibernateCriterionOperator;
+import developerhaus.repository.resolver.CriteriaWebArgumentResolver;
 import developerhaus.user.UserController;
 
 /**
@@ -46,9 +48,9 @@ public class CriteriaWebArgumentResolverTest {
 		req.setMethod("GET");
 		
 		req.addParameter("param.name", "박");
-		req.addParameter("param.op.name", CriterionOperator.LIKE.getName());
+		req.addParameter("param.op.name", HibernateCriterionOperator.LIKE.getName());
 		req.addParameter("param.id", "want813");
-		req.addParameter("param.op.id", CriterionOperator.EQ.getName());
+		req.addParameter("param.op.id", HibernateCriterionOperator.EQ.getName());
 
 		req.addParameter("order.seq", "DESC");		
 		
@@ -61,15 +63,15 @@ public class CriteriaWebArgumentResolverTest {
 		List<Order> orderList = cr.getOrderList();
 		assertEquals(orderList.size(), 1);
 		
-		Criterion<String, String, CriterionOperator> criterion = criterionList.get(0);
+		Criterion<String, String, HibernateCriterionOperator> criterion = criterionList.get(0);
 		assertEquals(criterion.getKey(), "name");
 		assertEquals(criterion.getValue(), "박");
-		assertEquals(criterion.getOperator(), CriterionOperator.LIKE);
+		assertEquals(criterion.getOperator(), HibernateCriterionOperator.LIKE);
 		
 		criterion = criterionList.get(1);
 		assertEquals(criterion.getKey(), "id");
 		assertEquals(criterion.getValue(), "want813");
-		assertEquals(criterion.getOperator(), CriterionOperator.EQ);
+		assertEquals(criterion.getOperator(), HibernateCriterionOperator.EQ);
 		
 		Order order = orderList.get(0);
 		assertEquals(order.getProperty(), "seq");

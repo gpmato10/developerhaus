@@ -1,4 +1,4 @@
-package developerhaus.repository.hibernate.criteria;
+package developerhaus.repository.hibernate;
 
 import developerhaus.repository.api.criteria.Criterion;
 /**

@@ -10,6 +10,7 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
+import developerhaus.repository.criteria.HibernateCriterionOperator;
 
 /**
  * HibernateCriteriaUtils
@@ -31,7 +32,7 @@ public class HibernateCriteriaUtils {
 	public static DetachedCriteria getHibernateCriteria(Class targetClass, Criteria criteria) {
 		DetachedCriteria hcriteria = DetachedCriteria.forClass(targetClass);
 		List<Criterion> criterionList = criteria.getCriterionList();
-		for(Criterion<?, ?, CriterionOperator> criterion : criterionList) {
+		for(Criterion<String, HibernateCriterionOperator, ?> criterion : criterionList) {
 			hcriteria.add(getHibernateCriterion(targetClass, criterion));
 		}
 		List<Order> orderList = criteria.getOrderList();
@@ -52,17 +53,17 @@ public class HibernateCriteriaUtils {
 	 * @param Criterion
 	 * @return org.hibernate.criterion.Criterion
 	 */
-	private static org.hibernate.criterion.Criterion getHibernateCriterion(Class targetClass, Criterion<?, ?, CriterionOperator> criterion) {
+	private static org.hibernate.criterion.Criterion getHibernateCriterion(Class targetClass, Criterion<String, HibernateCriterionOperator, ?> criterion) {
 		org.hibernate.criterion.Criterion hCriterion = null;
-		CriterionOperator operator = criterion.getOperator();
-		if(operator.equals(CriterionOperator.EQ)) {
-			hCriterion = Restrictions.eq((String)criterion.getKey(), criterion.getValue());
-		} else if(operator.equals(CriterionOperator.LIKE)) {
-			hCriterion = Restrictions.ilike((String)criterion.getKey(), "%"+criterion.getValue()+"%");
-		} else if(operator.equals(CriterionOperator.LIKE_RIGHT)) {
-			hCriterion = Restrictions.ilike((String)criterion.getKey(), "%"+criterion.getValue());
-		} else if(operator.equals(CriterionOperator.LIKE_LEFT)) {
-			hCriterion = Restrictions.ilike((String)criterion.getKey(), criterion.getValue()+"%");
+		HibernateCriterionOperator operator = criterion.getOperator();
+		if(operator.equals(HibernateCriterionOperator.EQ)) {
+			hCriterion = Restrictions.eq(criterion.getKey(), criterion.getValue());
+		} else if(operator.equals(HibernateCriterionOperator.LIKE)) {
+			hCriterion = Restrictions.ilike(criterion.getKey(), "%"+criterion.getValue()+"%");
+		} else if(operator.equals(HibernateCriterionOperator.LIKE_RIGHT)) {
+			hCriterion = Restrictions.ilike(criterion.getKey(), "%"+criterion.getValue());
+		} else if(operator.equals(HibernateCriterionOperator.LIKE_LEFT)) {
+			hCriterion = Restrictions.ilike(criterion.getKey(), criterion.getValue()+"%");
 		}
 		return hCriterion;
 	}

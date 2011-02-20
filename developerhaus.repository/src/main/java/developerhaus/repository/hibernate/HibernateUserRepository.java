@@ -2,9 +2,14 @@ package developerhaus.repository.hibernate;
 
 import java.util.List;
 
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+
 import developerhaus.domain.User;
 import developerhaus.domain.UserPoint;
 import developerhaus.repository.api.criteria.Criteria;
+import developerhaus.repository.hibernate.criteria.HibernateCriteriaUtils;
 import developerhaus.repository.UserRepository;
 
 /**
@@ -32,9 +37,12 @@ public class HibernateUserRepository extends GenericHibernateSupportRepository<U
 	}
 
 	@Override
-	public List<UserPoint> getUserPointList() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<UserPoint> getUserPointList(Criteria criteria) {
+		//DetachedCriteria hcriteria = HibernateCriteriaUtils.getHibernateCriteria(targetClass, criteria);
+		DetachedCriteria hcriteria = DetachedCriteria.forClass(UserPoint.class);
+		DetachedCriteria pcriteria = hcriteria.createCriteria("userSeq");
+		pcriteria.add(Restrictions.eq("seq", 1));
+		return hibernateTemplate.findByCriteria(hcriteria);
 	}
 
 }
