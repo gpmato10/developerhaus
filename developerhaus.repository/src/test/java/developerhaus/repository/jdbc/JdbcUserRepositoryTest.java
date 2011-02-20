@@ -2,8 +2,11 @@ package developerhaus.repository.jdbc;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.Field;
+
 import javax.activation.DataSource;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,13 +33,40 @@ public class JdbcUserRepositoryTest {
 	@Autowired
 	private UserRepository userRepository;
 	
+	
 	@Test
 	public void getCount() throws Exception {
-		org.junit.runners.BlockJUnit4ClassRunner b;
 		Integer id = 3;
 		User user = userRepository.get(id);
 		
 		System.out.println(user);
 	}
+	
+	@Ignore
+	@Test
+	public void getList() throws Exception {
+		
+		Criteria criteria = new DefaultCriteria();
+		criteria.add(new SingleValueCriterion<String, CriterionOperator, String>("name", CriterionOperator.LIKE, "희"));
+	}
+	
+	@Ignore
+	@Test
+	public void filedTest() throws Exception {
+		
+//		Criteria criteria = new DefaultCriteria();
+//		criteria.add(new SingleValueCriterion("seq", CriterionOperator.EQ, id));
+//		
+//		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
+//		String sql = sqlBuilder.selectAll().from().where().build();
+
+		JdbcUserRepository r = new JdbcUserRepository();
+		Class c = JdbcUserRepository.class;
+		
+		Field f = c.getField("name".toUpperCase());
+		System.out.println(f.get(r));
+		
+	}
+	
 
 }

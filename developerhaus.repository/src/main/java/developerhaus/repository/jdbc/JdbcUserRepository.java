@@ -33,7 +33,7 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 	
 	// DB 의존성을 제거하기 위해 DB컬럼명 변화에 상관없이 대표되는 컬럼명 정의
 	// TODO : 쿼리결과 도메인 속성명과 매핑하기 위한 정책 수립(Spring JDBC 붙인 후 다시 생각)
-	public final static String SEQEUNCE = addAliasToColumn(ALIAS, "seq");  		// 시퀀스
+	public final static String SEQ = addAliasToColumn(ALIAS, "seq");  		// 시퀀스
 	public final static String ID = addAliasToColumn(ALIAS, "id");  				// 아이디 
 	public final static String NAME = addAliasToColumn(ALIAS,	"name");  			// 이름
 	public final static String PASSWORD = addAliasToColumn(ALIAS, "password");	// 비밀번호 
@@ -41,20 +41,15 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 
 	protected SimpleJdbcTemplate template;
 	
-	//DataSource dataSource;
-
-	@Resource
 	public void setDataSource(DataSource dataSource) {
 		this.template = new SimpleJdbcTemplate(dataSource);
-
-		//this.dataSource = dataSource;
 	}
 	
 	@Override
 	public User get(Integer id) {
 		
 		Criteria criteria = new DefaultCriteria();
-		criteria.add(new SingleValueCriterion(SEQEUNCE, CriterionOperator.EQ, id));
+		criteria.add(new SingleValueCriterion("seq", CriterionOperator.EQ, id));
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
@@ -65,14 +60,11 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 
 	@Override
 	public List<User> list(Criteria criteria) {
-		MapSqlParameterSource msps=null;
 		
-//		SqlBuilder sqlBuilder = new SqlBuilder(getTableStrategy(), criteria);
 		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
-		String sql = sqlBuilder.selectAll().from().where().build();
-		System.out.println(sql);	
-		//return getDataSource().queryForList(sql, msps);
-		return template.query(sql, userRowMapper, msps);
+		String sql = sqlBuilder.selectAll().from().where().order().build();
+		
+		return template.query(sql, userRowMapper, sqlBuilder.getMapSqlParameterSource());
 	}
 
 	@Override
@@ -105,14 +97,14 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 	public TableStrategy getTableStrategy() {
 		
 		return new DefaultTableStrategy(TABLE_NAME, ALIAS)
-			.setAllColumn(SEQEUNCE, ID, NAME, PASSWORD, POINT);
+			.setAllColumn(SEQ, ID, NAME, PASSWORD, POINT);
 	}
 	
 	private RowMapper<User> userRowMapper = new RowMapper<User>(){
 		
 		public User mapRow(ResultSet resultSet, int i ) throws SQLException{
 			
-			int seq = resultSet.getInt(	getColumnName(SEQEUNCE) );
+			int seq = resultSet.getInt(	getColumnName(SEQ) );
 			String id = resultSet.getString( getColumnName(ID) );
 			String name	= resultSet.getString( getColumnName(NAME) );
 			String password = resultSet.getString( getColumnName(PASSWORD) );
