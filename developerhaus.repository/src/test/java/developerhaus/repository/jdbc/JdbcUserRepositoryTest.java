@@ -23,7 +23,7 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
-import developerhaus.repository.jdbc.criteria.SingleValueCriterion;
+import developerhaus.repository.criteria.SingleValueCriterion;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
