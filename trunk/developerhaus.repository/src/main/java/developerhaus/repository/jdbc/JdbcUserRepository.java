@@ -29,12 +29,6 @@ public class JdbcUserRepository implements UserRepository{
 //	public final static String PASSWORD = addAliasToColumn(ALIAS, "password");	// 비밀번호 
 //	public final static String POINT = addAliasToColumn(ALIAS, "point");  			// 포인트
 
-	public final static String SEQ = "seq";  			// 시퀀스
-	public final static String ID = "id";  				// 아이디 
-	public final static String NAME = "name";  			// 이름
-	public final static String PASSWORD = "password";	// 비밀번호 
-	public final static String POINT = "point";  		// 포인트
-
 	SimpleJdbcTemplate template;
 	
 	UserRowMapper mappedUser = new UserRowMapper();
@@ -50,6 +44,7 @@ public class JdbcUserRepository implements UserRepository{
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(mappedUser, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
+		System.out.println(sql);
 		
 		return template.queryForObject(sql,mappedUser, sqlBuilder.getMapSqlParameterSource());
 
