@@ -5,6 +5,7 @@ import java.util.List;
 import developerhaus.domain.User;
 import developerhaus.domain.UserPoint;
 import developerhaus.repository.api.GenericRepository;
+import developerhaus.repository.api.criteria.Criteria;
 
 /**========================================================
  *파일명         : UserRepository.java
@@ -20,6 +21,6 @@ import developerhaus.repository.api.GenericRepository;
  */
 public interface UserRepository extends GenericRepository<User, Integer> {
 
-	List<UserPoint> getUserPointList();
+	List<UserPoint> getUserPointList(Criteria criteria);
 	
 }
