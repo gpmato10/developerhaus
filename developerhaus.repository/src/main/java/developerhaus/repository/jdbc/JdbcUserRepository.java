@@ -2,17 +2,11 @@ package developerhaus.repository.jdbc;
 
 import static developerhaus.repository.jdbc.RepositoryUtils.*;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.crypto.spec.PSource;
 import javax.sql.DataSource;
 
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 import developerhaus.domain.User;
@@ -22,14 +16,9 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
 import developerhaus.repository.criteria.SingleValueCriterion;
-import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
-import developerhaus.repository.jdbc.strategy.TableStrategy;
-import developerhaus.repository.jdbc.strategy.TableStrategyAware;
+import developerhaus.repository.mapper.UserRowMapper;
 
-public class JdbcUserRepository implements UserRepository, TableStrategyAware{
-	
-	public final static String TABLE_NAME = "USERS";
-	public final static String ALIAS = "user";
+public class JdbcUserRepository implements UserRepository{
 	
 	// DB 의존성을 제거하기 위해 DB컬럼명 변화에 상관없이 대표되는 속성명 정의
 	// 정의된 속성명과 도메인 명의 관계 : 도메인명의 UPPER_CASE가 속성명이여야 한다는 규칙정의 필요
@@ -46,8 +35,9 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 	public final static String PASSWORD = "password";	// 비밀번호 
 	public final static String POINT = "point";  		// 포인트
 
-	protected SimpleJdbcTemplate template;
+	SimpleJdbcTemplate template;
 	
+	UserRowMapper mappedUser = new UserRowMapper();
 	public void setDataSource(DataSource dataSource) {
 		this.template = new SimpleJdbcTemplate(dataSource);
 	}
@@ -58,20 +48,20 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 		Criteria criteria = new DefaultCriteria();
 		criteria.add(new SingleValueCriterion<String, CriterionOperator, Integer>("seq", CriterionOperator.EQ, id));
 		
-		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(mappedUser, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
 		
-		return template.queryForObject(sql, userRowMapper, sqlBuilder.getMapSqlParameterSource());
+		return template.queryForObject(sql,mappedUser, sqlBuilder.getMapSqlParameterSource());
 
 	}
 
 	@Override
 	public List<User> list(Criteria criteria) {
 		
-		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(mappedUser, criteria);
 		String sql = sqlBuilder.selectAll().from().where().order().build();
 		
-		return template.query(sql, userRowMapper, sqlBuilder.getMapSqlParameterSource());
+		return template.query(sql, mappedUser, sqlBuilder.getMapSqlParameterSource());
 	}
 
 	@Override
@@ -79,7 +69,7 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 		
 		MapSqlParameterSource msps=null;
 		Criteria criteria = new DefaultCriteria();
-		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(mappedUser, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
 		sql=" update ";
 		System.out.println(sql);	
@@ -93,31 +83,12 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 		}
 	}
 
-	@Override
-	public List<UserPoint> getUserPointList() {
-		String sql = "select * from userpoint where userid = :id ";
-		//pointRepository.getUserPintList(new Criteria().add(new Criterion("",,"")));
-		return null;//pointRepository.getList(new Criteria().add(new Criterion("",,"")));;
-	}
+
 
 	@Override
-	public TableStrategy getTableStrategy() {
-		
-		return new DefaultTableStrategy(TABLE_NAME, ALIAS)
-			.setAllColumn(SEQ, ID, NAME, PASSWORD, POINT);
+	public List<UserPoint> getUserPointList(Criteria criteria) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-	
-	private RowMapper<User> userRowMapper = new RowMapper<User>(){
-		
-		public User mapRow(ResultSet resultSet, int i ) throws SQLException{
-			
-			int seq = resultSet.getInt(	getColumnName(SEQ) );
-			String id = resultSet.getString( getColumnName(ID) );
-			String name	= resultSet.getString( getColumnName(NAME) );
-			String password = resultSet.getString( getColumnName(PASSWORD) );
-			int point = resultSet.getInt( getColumnName(POINT) );
-			
-			return new User(seq, name, id, password, point, null);
-		}
-	};
+
 }
