@@ -8,16 +8,13 @@
 	<typeAlias alias="User" type="developerhaus.domain.User" />
 	
 	<!-- 단건 조회 -->
-	<select id="findMemberById" parameterClass="java.lang.String" resultClass="User">
+	<select id="get" parameterClass="java.lang.Integer" resultClass="User">
 		SELECT
-		 	SEQ
-		   ,ID
-		   ,NAME
-		   ,PASSWORD
+		 	*
 		FROM
 			USERS
 		WHERE
-			ID = #id#
+			SEQ = #id#
 	</select>
 
 </sqlMap>	
