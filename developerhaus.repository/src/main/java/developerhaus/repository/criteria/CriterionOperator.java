@@ -1,4 +1,4 @@
-package developerhaus.repository.jdbc.criteria;
+package developerhaus.repository.criteria;
 
 public enum CriterionOperator {
 

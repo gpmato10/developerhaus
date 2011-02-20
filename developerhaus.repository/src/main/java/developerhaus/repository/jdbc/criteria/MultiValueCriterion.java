@@ -1,6 +1,7 @@
 package developerhaus.repository.jdbc.criteria;
 
 import developerhaus.repository.api.criteria.Criterion;
+import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.jdbc.exception.CriteriaException;
 
 

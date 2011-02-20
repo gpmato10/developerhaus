@@ -1,4 +1,4 @@
-package developerhaus.repository.jdbc.criteria;
+package developerhaus.repository.criteria;
 
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
