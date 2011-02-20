@@ -11,28 +11,23 @@ import developerhaus.repository.jdbc2.DomainTableMapperStrategy;
  * @author sunghee, Park
  * 
  */
-public class User implements DomainTableMapperStrategy, Serializable  {
+public class User implements Serializable  {
 	
-	public static final String TABLE_NAME = "USERS";
-
-	public static final String KEY = "id";
-	public User(int seq2, String id2, String name2, String password2,
-			String point2) {
-		// TODO Auto-generated constructor stub
-	}
 	public User(){
 		
 	}
 
-	@Override
-	public String getKey() {
-		return KEY;
+	public User(int seq, String name, String id, String password, int point,
+			List<UserPoint> userPointList) {
+		super();
+		this.seq = seq;
+		this.name = name;
+		this.id = id;
+		this.password = password;
+		this.point = point;
+		this.userPointList = userPointList;
 	}
 
-	@Override
-	public String getTableName() {
-		return TABLE_NAME;
-	}
 	private int seq;
 	private String name;
 	private String id;
@@ -82,9 +77,14 @@ public class User implements DomainTableMapperStrategy, Serializable  {
 	public int getPoint() {
 		return point;
 	}
-	
-	
-	
-	
-	
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("User [seq=").append(seq).append(", name=").append(name)
+				.append(", id=").append(id).append(", password=")
+				.append(password).append(", point=").append(point)
+				.append(", userPointList=").append(userPointList).append("]");
+		return builder.toString();
+	}
 }

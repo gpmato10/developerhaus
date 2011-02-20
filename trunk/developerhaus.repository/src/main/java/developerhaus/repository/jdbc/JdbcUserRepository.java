@@ -1,12 +1,13 @@
 package developerhaus.repository.jdbc;
 
-import static developerhaus.repository.jdbc.RepositoryUtils.addAliasToColumn;
+import static developerhaus.repository.jdbc.RepositoryUtils.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.crypto.spec.PSource;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -51,10 +52,17 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 	
 	@Override
 	public User get(Integer id) {
-		String sql = "select * from user where id = :id "; 
-//		Student student = JDBC구현체.get(sql, Student.class, msps);
-		//return template.queryForObject(sql, User.class, msps);
-		return template.queryForObject(sql, userRowMapper, id);
+		
+		Criteria criteria = new DefaultCriteria();
+		criteria.add(new SingleValueCriterion(SEQEUNCE, CriterionOperator.EQ, id));
+		
+		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
+		String sql = sqlBuilder.selectAll().from().where().build();
+		
+		System.out.println(sql);
+		System.out.println(sqlBuilder.getMapSqlParameterSource().getValues());
+		
+		return template.queryForObject(sql, userRowMapper, sqlBuilder.getMapSqlParameterSource());
 
 	}
 
@@ -104,14 +112,22 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 	}
 	
 	private RowMapper<User> userRowMapper = new RowMapper<User>(){
+		
 		public User mapRow(ResultSet resultSet, int i ) throws SQLException{
-			int seq = resultSet.getInt("seq");
-			String id = resultSet.getString("id");
-			String name	= resultSet.getString("name");
-			String password = resultSet.getString("password");
-			String point = resultSet.getString("poinst");
-			return new User(seq,id,name,password,point);
+			
+			int seq = resultSet.getInt(	getColumnName(SEQEUNCE) );
+			String id = resultSet.getString( getColumnName(ID) );
+			String name	= resultSet.getString( getColumnName(NAME) );
+			String password = resultSet.getString( getColumnName(PASSWORD) );
+			int point = resultSet.getInt( getColumnName(POINT) );
+			
+			return new User(seq, name, id, password, point, null);
 		}
 	};
-
+	
+	public static void main(String[] args) {
+		
+		JdbcUserRepository r = new JdbcUserRepository();
+		r.get(3);
+	}
 }
