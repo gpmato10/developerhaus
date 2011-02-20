@@ -38,6 +38,7 @@ public class HibernateUserRepositoryTest {
 	}
 	
 	@Test
+	@Ignore
 	public void getUserPointList() throws Exception {
 		Criterion<String, HibernateCriterionOperator, Integer> criterion = new SingleValueCriterion<String, HibernateCriterionOperator, Integer>("userSeq", HibernateCriterionOperator.EQ, new Integer(1));	
 		Order order = new DefaultOrder("regDt", OrderType.DESC);
@@ -94,19 +95,19 @@ public class HibernateUserRepositoryTest {
 	}
 
 	@Test
-	@Ignore
 	public void updateAndGet() throws Exception {
 		User user = new User();
-		user.setSeq(2);
+		user.setSeq(1);
 		user.setName("박성희");
-		user.setId("want815");
+		user.setId("want813");
 		user.setPassword("5555");
 		
 		repository.update(user);
 		
-		int id = 2;
+		int id = 1;
 		User user2 = repository.get(id);
 	
+		System.out.println(user2.getUserPointList());
 		assertUser(user, user2);
 	}
 
