@@ -11,4 +11,8 @@ public class SqlBuilderException extends RuntimeException {
 		super(msg);
 	}
 
+	public SqlBuilderException(String msg, Exception e) {
+		super(msg, e);
+	}
+
 }
