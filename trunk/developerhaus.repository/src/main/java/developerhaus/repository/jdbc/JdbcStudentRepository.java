@@ -8,8 +8,8 @@ import static developerhaus.repository.jdbc.RepositoryUtils.*;
 
 import developerhaus.domain.Student;
 import developerhaus.repository.api.criteria.Criteria;
-import developerhaus.repository.jdbc.criteria.CriterionOperator;
-import developerhaus.repository.jdbc.criteria.DefaultCriteria;
+import developerhaus.repository.criteria.CriterionOperator;
+import developerhaus.repository.criteria.DefaultCriteria;
 import developerhaus.repository.jdbc.criteria.SingleValueCriterion;
 import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStrategyAware;

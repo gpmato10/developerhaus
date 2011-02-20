@@ -7,7 +7,7 @@ import developerhaus.domain.Student;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
-import developerhaus.repository.jdbc.criteria.CriterionOperator;
+import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.jdbc.criteria.JoinCriterion;
 import developerhaus.repository.jdbc.criteria.MultiValueCriterion;
 import developerhaus.repository.jdbc.criteria.SingleValueCriterion;

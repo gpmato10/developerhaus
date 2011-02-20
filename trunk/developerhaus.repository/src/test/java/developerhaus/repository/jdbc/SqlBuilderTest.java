@@ -4,18 +4,16 @@ import static org.junit.Assert.*;
 
 import java.util.Map;
 
-import org.apache.ibatis.ognl.MapElementsAccessor;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 import developerhaus.domain.Student;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.OrderType;
-import developerhaus.repository.jdbc.criteria.CriterionOperator;
-import developerhaus.repository.jdbc.criteria.DefaultCriteria;
-import developerhaus.repository.jdbc.criteria.DefaultOrder;
+import developerhaus.repository.criteria.CriterionOperator;
+import developerhaus.repository.criteria.DefaultCriteria;
+import developerhaus.repository.criteria.DefaultOrder;
 import developerhaus.repository.jdbc.criteria.JoinCriterion;
 import developerhaus.repository.jdbc.criteria.MultiValueCriterion;
 import developerhaus.repository.jdbc.criteria.SingleValueCriterion;

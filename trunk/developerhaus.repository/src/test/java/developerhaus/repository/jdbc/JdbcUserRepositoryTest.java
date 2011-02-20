@@ -18,8 +18,8 @@ import developerhaus.domain.User;
 import developerhaus.repository.UserRepository;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
-import developerhaus.repository.jdbc.criteria.CriterionOperator;
-import developerhaus.repository.jdbc.criteria.DefaultCriteria;
+import developerhaus.repository.criteria.CriterionOperator;
+import developerhaus.repository.criteria.DefaultCriteria;
 import developerhaus.repository.jdbc.criteria.SingleValueCriterion;
 
 
@@ -32,7 +32,7 @@ public class JdbcUserRepositoryTest {
 	
 	@Test
 	public void getCount() throws Exception {
-		
+		org.junit.runners.BlockJUnit4ClassRunner b;
 		Integer id = 3;
 		User user = userRepository.get(id);
 		
