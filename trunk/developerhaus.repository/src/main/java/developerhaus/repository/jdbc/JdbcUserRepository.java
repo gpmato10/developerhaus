@@ -59,9 +59,6 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
 		
-		System.out.println(sql);
-		System.out.println(sqlBuilder.getMapSqlParameterSource().getValues());
-		
 		return template.queryForObject(sql, userRowMapper, sqlBuilder.getMapSqlParameterSource());
 
 	}
