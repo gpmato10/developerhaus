@@ -3,7 +3,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="org.hsqldb.jdbcDriver"></property>
 		<property name="url" value="jdbc:hsqldb:hsql://127.0.0.1/lecture"></property>
 		<property name="username" value="sa"></property>
@@ -17,8 +18,8 @@
 			value="developerhaus/repository/ibatis/Ibatis-SqlMapConfig.xml" />
 	</bean>
 	
-	<bean id="userDao" class="developerhaus.repository.ibatis.dao.UserDaoImpl">
+	<bean id="ibatisUserRepository" class="developerhaus.repository.ibatis.IbatisUserRepository">
 		<property name="sqlMapClient" ref="sqlMapClient" />
 	</bean>
-
+	
 </beans>
