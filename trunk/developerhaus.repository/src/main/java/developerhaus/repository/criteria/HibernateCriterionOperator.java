@@ -1,11 +1,11 @@
-package developerhaus.repository.hibernate.criteria;
+package developerhaus.repository.criteria;
 
-public enum CriterionOperator {
+public enum HibernateCriterionOperator {
 	EQ, NOT_EQ, LIKE, LIKE_LEFT, LIKE_RIGHT, NOT_LIKE, GT, GTE, LT
 	, LTE, BETWEEN, NOT_BETWEEN, IN, NOT_IN, OR;
 
-	public static CriterionOperator toOperator(String operatorName) {
-		for (CriterionOperator co : values()) {
+	public static HibernateCriterionOperator toOperator(String operatorName) {
+		for (HibernateCriterionOperator co : values()) {
 			if (co.name().equals(operatorName)) {
 				return co;
 			}

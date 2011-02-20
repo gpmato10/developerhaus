@@ -5,19 +5,21 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 import developerhaus.domain.User;
+import developerhaus.domain.UserPoint;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
-import developerhaus.repository.hibernate.criteria.CriterionOperator;
-import developerhaus.repository.hibernate.criteria.DefaultCriteria;
-import developerhaus.repository.hibernate.criteria.DefaultCriterion;
-import developerhaus.repository.hibernate.criteria.DefaultOrder;
+import developerhaus.repository.criteria.HibernateCriterionOperator;
+import developerhaus.repository.criteria.DefaultCriteria;
+import developerhaus.repository.criteria.DefaultOrder;
+import developerhaus.repository.criteria.SingleValueCriterion;
 
 public class HibernateUserRepositoryTest {	
 	HibernateUserRepository repository;
@@ -36,8 +38,25 @@ public class HibernateUserRepositoryTest {
 	}
 	
 	@Test
+	public void getUserPointList() throws Exception {
+		Criterion<String, HibernateCriterionOperator, Integer> criterion = new SingleValueCriterion<String, HibernateCriterionOperator, Integer>("userSeq", HibernateCriterionOperator.EQ, new Integer(1));	
+		Order order = new DefaultOrder("regDt", OrderType.DESC);
+		
+		Criteria criteria = new DefaultCriteria();
+		criteria.add(criterion);
+		criteria.add(order);
+		
+		List<UserPoint> list = repository.getUserPointList(criteria);
+		UserPoint userPoint = list.get(0);
+		System.out.println("userPoint:"+userPoint);
+		assertNotNull(list);
+		assertEquals(list.size(), 3);
+	}
+	
+	@Test
+	@Ignore
 	public void paging() throws Exception {
-		Criterion<String, String, CriterionOperator> criterion = new DefaultCriterion("name", "박", CriterionOperator.LIKE_LEFT);		
+		Criterion<String, HibernateCriterionOperator, String> criterion = new SingleValueCriterion("name", HibernateCriterionOperator.LIKE_LEFT, "박");		
 		Order order = new DefaultOrder("name", OrderType.DESC);
 		
 		Criteria criteria = new DefaultCriteria();
@@ -54,9 +73,10 @@ public class HibernateUserRepositoryTest {
 	}
 	
 	@Test
+	@Ignore
 	public void getCount() throws Exception {
-		Criterion<String, String, CriterionOperator> criterion = new DefaultCriterion("name", "박", CriterionOperator.LIKE_LEFT);		
-		Criterion<String, String, CriterionOperator> criterion2 = new DefaultCriterion("name", "희", CriterionOperator.LIKE_RIGHT);
+		Criterion<String, HibernateCriterionOperator, String> criterion = new SingleValueCriterion("name", HibernateCriterionOperator.LIKE_LEFT, "박");		
+		Criterion<String, HibernateCriterionOperator, String> criterion2 = new SingleValueCriterion("name", HibernateCriterionOperator.LIKE_RIGHT, "희");
 		/*Criterion<String, String, CriterionOperator> criterion3 = new DefaultCriterion(CriterionOperator.OR, criterion, criterion2, criterion2);
 		*/
 		Order order = new DefaultOrder("name", OrderType.DESC);
@@ -74,6 +94,7 @@ public class HibernateUserRepositoryTest {
 	}
 
 	@Test
+	@Ignore
 	public void updateAndGet() throws Exception {
 		User user = new User();
 		user.setSeq(2);

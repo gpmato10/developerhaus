@@ -21,6 +21,7 @@ import developerhaus.domain.UserPoint;
 import developerhaus.repository.UserRepository;
 import developerhaus.repository.api.GenericRepository;
 import developerhaus.repository.api.criteria.Criteria;
+import developerhaus.repository.mapper.UserRowMapper;
 import static org.apache.ibatis.jdbc.SelectBuilder.*;
 //import static org.mybatis.jdbc.SqlBuilder.*;
 
@@ -31,7 +32,7 @@ public class MybatisUserRepository extends GenericMybatisSupportRepository<User,
 	public void setSqlSessionTemplate(SqlSessionTemplate sqlSessionTemplate) {
 		this.sqlSessionTemplate = sqlSessionTemplate;
 	}
-
+	
 	public interface UserMapper {
 		@SelectProvider(method="getQuery", type = MybatisUserRepository.class)
 		public User get(Integer id);
@@ -53,8 +54,9 @@ public class MybatisUserRepository extends GenericMybatisSupportRepository<User,
 	public String getQuery(Integer id) {
 		BEGIN();
 		SELECT("*");
-		FROM("USERS");
-		WHERE("SEQ = #{id}");
+		FROM(UserRowMapper.TABLE_NAME);
+		//WHERE("SEQ = #{id}");
+		WHERE(UserRowMapper.SEQ + " = #{id}");
 		System.out.println(" >>>>>>>>>>>>>>>>> getQuery : "+id);
 		return SQL();
 	}
@@ -73,7 +75,7 @@ public class MybatisUserRepository extends GenericMybatisSupportRepository<User,
 
 	
 	@Override
-	public List<UserPoint> getUserPointList() {
+	public List<UserPoint> getUserPointList(Criteria criteria) {
 		// TODO Auto-generated method stub
 		return null;
 	}

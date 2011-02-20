@@ -25,7 +25,7 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
-import developerhaus.repository.hibernate.criteria.CriterionOperator;
+import developerhaus.repository.criteria.HibernateCriterionOperator;
 import developerhaus.repository.hibernate.criteria.HibernateCriteriaUtils;
 /**
  * 하이버네이트 Repository
@@ -35,8 +35,8 @@ import developerhaus.repository.hibernate.criteria.HibernateCriteriaUtils;
  */
 public class GenericHibernateSupportRepository<D, I extends Serializable> implements GenericRepository<D, I> {
 	
-	private HibernateTemplate hibernateTemplate;
-	private Class<D> targetClass;
+	protected HibernateTemplate hibernateTemplate;
+	protected Class<D> targetClass;
 	
 
 	public GenericHibernateSupportRepository() {
@@ -56,7 +56,7 @@ public class GenericHibernateSupportRepository<D, I extends Serializable> implem
 	}
 	@Override
 	public boolean update(D domain) {
-		hibernateTemplate.update(domain);		
+		hibernateTemplate.update(domain);
 		return true;
 	}
 	
