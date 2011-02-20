@@ -2,13 +2,16 @@ package developerhaus.repository.jdbc;
 
 import static developerhaus.repository.jdbc.RepositoryUtils.addAliasToColumn;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 import developerhaus.domain.User;
@@ -36,33 +39,23 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 	public final static String POINT = addAliasToColumn(ALIAS, "point");  			// 포인트
 
 	protected SimpleJdbcTemplate template;
+	
 	//DataSource dataSource;
 
 	@Resource
 	public void setDataSource(DataSource dataSource) {
 		this.template = new SimpleJdbcTemplate(dataSource);
+
 		//this.dataSource = dataSource;
 	}
 	
 	@Override
 	public User get(Integer id) {
-		Criteria criteria = new DefaultCriteria();
-		criteria.add(new SingleValueCriterion(
-								this.SEQEUNCE, 
-								CriterionOperator.EQ, 
-								id)
-					);
-		
-		MapSqlParameterSource msps=null;
-		
-//		SqlBuilder sqlBuilder = new SqlBuilder(getTableStrategy(), criteria);
-		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
-		String sql = sqlBuilder.selectAll().from().where().build();
-		System.out.println(sql);
-		
-//		이렇게 구현해 주세요.
+		String sql = "select * from user where id = :id "; 
 //		Student student = JDBC구현체.get(sql, Student.class, msps);
-		return template.queryForObject(sql, User.class, msps);
+		//return template.queryForObject(sql, User.class, msps);
+		return template.queryForObject(sql, userRowMapper, id);
+
 	}
 
 	@Override
@@ -74,15 +67,17 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 		String sql = sqlBuilder.selectAll().from().where().build();
 		System.out.println(sql);	
 		//return getDataSource().queryForList(sql, msps);
-		return template.query(sql, new BeanPropertyRowMapper<User>(User.class), msps);
+		return template.query(sql, userRowMapper, msps);
 	}
 
 	@Override
 	public boolean update(User domain) {
+		
 		MapSqlParameterSource msps=null;
 		Criteria criteria = new DefaultCriteria();
 		SqlBuilder sqlBuilder = new SqlBuilder(this, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
+		sql=" update ";
 		System.out.println(sql);	
 		
 		
@@ -96,7 +91,9 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 
 	@Override
 	public List<UserPoint> getUserPointList() {
-		return null;
+		String sql = "select * from userpoint where userid = :id ";
+		//pointRepository.getUserPintList(new Criteria().add(new Criterion("",,"")));
+		return null;//pointRepository.getList(new Criteria().add(new Criterion("",,"")));;
 	}
 
 	@Override
@@ -105,5 +102,16 @@ public class JdbcUserRepository implements UserRepository, TableStrategyAware{
 		return new DefaultTableStrategy(TABLE_NAME, ALIAS)
 			.setAllColumn(SEQEUNCE, ID, NAME, PASSWORD, POINT);
 	}
+	
+	private RowMapper<User> userRowMapper = new RowMapper<User>(){
+		public User mapRow(ResultSet resultSet, int i ) throws SQLException{
+			int seq = resultSet.getInt("seq");
+			String id = resultSet.getString("id");
+			String name	= resultSet.getString("name");
+			String password = resultSet.getString("password");
+			String point = resultSet.getString("poinst");
+			return new User(seq,id,name,password,point);
+		}
+	};
 
 }
