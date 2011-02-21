@@ -15,7 +15,7 @@ import developerhaus.repository.jdbc.strategy.TableStrategyAware;
 
 public class UserPointRowMapper implements RowMapper<UserPoint>,TableStrategyAware{
 
-	public final static String TABLE_NAME = "point";
+	public final static String TABLE_NAME = "USER_POINT";
 	public final static String ALIAS = "point";
 	
 	private String USERPOINTSEQ = "user_point_seq";

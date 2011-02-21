@@ -22,7 +22,7 @@ public class UserRowMapper implements RowMapper<User>,TableStrategyAware{
 	private String SEQ = "seq";  		// 시퀀스
 	private String ID =  "id";  				// 아이디 
 	private String NAME = 	"name";  			// 이름
-	private String PASSWORD = "password";	// 비밀번호 
+	private final String PASSWORD = "password";	// 비밀번호 
 	private String POINT =  "point";  			// 포인트
 	
 	@Override
