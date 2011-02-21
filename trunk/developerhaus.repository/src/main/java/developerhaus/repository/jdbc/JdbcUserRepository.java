@@ -2,6 +2,7 @@ package developerhaus.repository.jdbc;
 
 import static developerhaus.repository.jdbc.RepositoryUtils.*;
 
+
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -40,7 +41,7 @@ public class JdbcUserRepository implements UserRepository{
 	public User get(Integer id) {
 		
 		Criteria criteria = new DefaultCriteria();
-		criteria.add(new SingleValueCriterion<String, CriterionOperator, Integer>("seq", CriterionOperator.EQ, id));
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>("seq", CriterionOperator.EQ, id));
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(mappedUser, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();

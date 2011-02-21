@@ -14,6 +14,16 @@ public class UserPoint {
 	private int point;
 	private String pointType;
 	private String regDt;
+	
+	public UserPoint(int userPointSeq, int userSeq, int point,
+			String pointType, String regDt) {
+		this.userPointSeq = userPointSeq;
+		this.userSeq = userSeq;
+		this.point = point;
+		this.pointType = pointType;
+		this.regDt = regDt;
+	}
+
 	/**
 	 * @return the userSeq
 	 */
