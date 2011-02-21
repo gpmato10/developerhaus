@@ -55,7 +55,7 @@ public class JdbcUserRepositoryTest {
 	public void getList() throws Exception {
 		
 		Criteria criteria = new DefaultCriteria();
-		criteria.add(new SingleValueCriterion<String, CriterionOperator, String>("name", CriterionOperator.LIKE, "희"));
+		criteria.add(new SingleValueCriterion<CriterionOperator, String>("name", CriterionOperator.LIKE, "희"));
 	}
 	
 	@Ignore
