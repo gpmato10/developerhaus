@@ -1,8 +1,5 @@
 package developerhaus.repository.jdbc;
 
-import java.lang.reflect.Field;
-
-import org.apache.ibatis.ognl.MapElementsAccessor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 import developerhaus.domain.Student;
@@ -31,20 +28,20 @@ public class SqlBuilder {
 	 * 기준이되는 테이블의 메타정보를 갖는 테이블전략객체
 	 * 단일 테이블은 물론, 여러 테이블과 조인등에 항상 기준이 된다. 
 	 */
+	private TableStrategyAware tableStrategyAware;
 	private TableStrategy defaultTableStrategy;
 	
 	private Criteria criteria;
-	private TableStrategy[] tableStrategys;
+	private TableStrategyAware[] tableStrategyAwares;
 	
 	private int parameterOrder;
 	
-	private Class mappedClass;
 	
 	public SqlBuilder(TableStrategyAware tableStrategyAware) {
 		this.sql = new StringBuilder();
+		this.tableStrategyAware = tableStrategyAware;
 		this.defaultTableStrategy = tableStrategyAware.getTableStrategy();
 		this.parameterOrder = 1;
-		mappedClass=tableStrategyAware.getClass();
 	}
 	
 
@@ -54,9 +51,9 @@ public class SqlBuilder {
 	}
 
 
-	public SqlBuilder(TableStrategyAware tableStrategyAware, Criteria criteria, TableStrategy... tableStrategys) {
+	public SqlBuilder(TableStrategyAware tableStrategyAware, Criteria criteria, TableStrategyAware... tableStrategyAwares) {
 		this(tableStrategyAware, criteria);
-		this.tableStrategys = tableStrategys;
+		this.tableStrategyAwares = tableStrategyAwares;
 	}
 	
 
@@ -68,23 +65,30 @@ public class SqlBuilder {
 		return sql.toString();
 	}
 	
+	public boolean useMultiTable(){
+		return (tableStrategyAwares != null) && (tableStrategyAwares.length > 0);
+	}
+	
 	public SqlBuilder selectAll() {
 		
-		StringBuffer selectBuffer = new StringBuffer();
+		boolean useMultiTable = this.useMultiTable();
 		
+		StringBuffer selectBuffer = new StringBuffer();
 		String[] allColumn = defaultTableStrategy.getAllColumn();
+		
 		if(allColumn != null){
-			selectBuffer.append(RepositoryUtils.toColumn(allColumn));
-			
-			if(tableStrategys != null){
-				for(int i = 0; i < tableStrategys.length; i++){
+			if(useMultiTable){
+				selectBuffer.append(RepositoryUtils.toColumn(defaultTableStrategy.getAliasName(), allColumn));
+				
+				for(int i = 0; i < tableStrategyAwares.length; i++){
 					
-					allColumn = tableStrategys[i].getAllColumn();
-					if(allColumn != null){
-						selectBuffer.append(" ,");
-						selectBuffer.append(RepositoryUtils.toColumn(allColumn));
-					}
+					TableStrategy tableStrategy = tableStrategyAwares[i].getTableStrategy(); 
+					selectBuffer.append(" ,");
+					selectBuffer.append(RepositoryUtils.toColumn(tableStrategy.getAliasName(),	tableStrategy.getAllColumn()));
 				}
+
+			} else {
+				selectBuffer.append(RepositoryUtils.toColumn(allColumn));
 			}
 			
 			this.select(selectBuffer.toString());
@@ -106,18 +110,19 @@ public class SqlBuilder {
 		sql.append(" FROM ");
 		sql.append(" ");
 		sql.append(defaultTableStrategy.getTableName());
-		sql.append(" ");
-		sql.append(defaultTableStrategy.getAliasName());
-		sql.append(" ");
 		
-		if(tableStrategys != null){
-			for(int i = 0; i < tableStrategys.length; i++){
+		if(this.useMultiTable()){
+			sql.append(" ");
+			sql.append(defaultTableStrategy.getAliasName());
+			
+			for(int i = 0; i < tableStrategyAwares.length; i++){
 				sql.append(", ");
-				sql.append(tableStrategys[i].getTableName());
+				sql.append(tableStrategyAwares[i].getTableStrategy().getTableName());
 				sql.append(" ");
-				sql.append(tableStrategys[i].getAliasName());
+				sql.append(tableStrategyAwares[i].getTableStrategy().getAliasName());
 			}
 		}
+		sql.append(" ");
 		
 		return this;
 	}
@@ -157,7 +162,7 @@ public class SqlBuilder {
 		if(criterion instanceof MultiValueCriterion){
 			
 			String mappedKey = ((MultiValueCriterion)criterion).getKey();
-			Object[] values = (Object[]) criterion.getValue();
+			Object[] values = ((MultiValueCriterion)criterion).getValues();
 			
 			if(CriterionOperator.BETWEEN.equals(criterion.getOperator()) || CriterionOperator.NOT_BETWEEN.equals(criterion.getOperator())){
 				
@@ -192,16 +197,8 @@ public class SqlBuilder {
 			
 		} else if(criterion instanceof SingleValueCriterion){
 			
-			
-//			JdbcUserRepository r = new JdbcUserRepository();
-//			Class c = JdbcUserRepository.class;
-//			
-//			Field f = c.getField("name".toUpperCase());
-//			System.out.println(f.get(r));
-			
-			String mappedKey = 	(String) criterion.getKey();
-			Field f = mappedClass.getField(mappedKey.toUpperCase());
-			String alaisMappedKey = (String) f.get(defaultTableStrategy);
+			String mappedKey = 	((SingleValueCriterion)criterion).getKey();
+			String alaisMappedKey = RepositoryUtils.getColumnName(mappedKey, tableStrategyAware);
 			
 //			sql.append(criterion.getKey());
 			sql.append(alaisMappedKey);
@@ -217,7 +214,7 @@ public class SqlBuilder {
 		
 	}
 	
-	
+	@SuppressWarnings("rawtypes")
 	public MapSqlParameterSource getMapSqlParameterSource(){
 		
 		MapSqlParameterSource msps = new MapSqlParameterSource();
@@ -227,8 +224,9 @@ public class SqlBuilder {
 			
 			if(criterion instanceof MultiValueCriterion){
 				
+				
 				String mappedKey = ((MultiValueCriterion)criterion).getKey();
-				Object[] values = (Object[]) criterion.getValue();
+				Object[] values = ((MultiValueCriterion)criterion).getValues();
 				
 				for(int i = 0; i < values.length; i++){
 					msps.addValue(mappedKey + "_" + (parameterOrder++), values[i]);
@@ -236,7 +234,7 @@ public class SqlBuilder {
 					
 			} else if(criterion instanceof SingleValueCriterion){
 				
-				String mappedKey = (String)criterion.getKey();
+				String mappedKey = ((SingleValueCriterion)criterion).getKey();
 				
 				if(CriterionOperator.LIKE.equals(criterion.getOperator())){
 					msps.addValue(mappedKey + "_" + (parameterOrder++), "%" + criterion.getValue() + "%");
@@ -268,7 +266,8 @@ public class SqlBuilder {
 				} else {
 					isFirst = false;
 				}
-				sql.append(order.getProperty());
+				
+				sql.append(RepositoryUtils.getColumnName(order.getProperty(), tableStrategyAware));
 				sql.append(" ");
 				sql.append(order.getType());
 			}
