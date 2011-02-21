@@ -28,8 +28,8 @@ import developerhaus.repository.mapper.UserRowMapper;
 public class SqlBuilderTest {
 	
 	private TableStrategyAware studentTableStrategyAware;
-	private UserRowMapper userRowMapper;
-	private UserPointRowMapper userPointRowMapper;
+	private TableStrategyAware userRowMapper;
+	private TableStrategyAware userPointRowMapper;
 	
 	@Before
 	public void setUp(){
@@ -74,10 +74,15 @@ public class SqlBuilderTest {
 		
 		Criteria criteria = new DefaultCriteria();
 		criteria.add( new SingleValueCriterion<CriterionOperator, String>(
+								userRowMapper,
 								"password", 
 								CriterionOperator.EQ, 
 								"1111") );
-		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>("point", CriterionOperator.GT, 0));
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(
+								userRowMapper,
+								"point", 
+								CriterionOperator.GT, 
+								0));
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(userRowMapper, criteria);
 		
@@ -86,14 +91,17 @@ public class SqlBuilderTest {
 		
 		Criteria criteria3 = new DefaultCriteria();
 		criteria3.add(new SingleValueCriterion<CriterionOperator, String>(
+								userRowMapper,
 								"name", 
 								CriterionOperator.LIKE, 
 								"희"));
 		criteria3.add(new SingleValueCriterion<CriterionOperator, String>(
+								userRowMapper,
 								"name", 
 								CriterionOperator.LIKE_LEFT, 
 								"성희"));
 		criteria3.add(new SingleValueCriterion<CriterionOperator, String>(
+								userRowMapper,
 								"name", 
 								CriterionOperator.LIKE_RIGHT, 
 								"박성"));
@@ -104,15 +112,18 @@ public class SqlBuilderTest {
 //		
 		Criteria criteria4 = new DefaultCriteria();
 		criteria4.add(new MultiValueCriterion<CriterionOperator, String>(
+							userRowMapper,
 							"password", 
 							CriterionOperator.IN, 
 							"1111", "3333"));	
 		criteria4.add(new MultiValueCriterion<CriterionOperator, Integer>(
+							userRowMapper,
 							"point", 
 							CriterionOperator.BETWEEN, 
 							2, 3));
 		
 		criteria4.add(new MultiValueCriterion<CriterionOperator, String>(
+							userRowMapper,
 							"name", 
 							CriterionOperator.NOT_IN, "강동원", "박희희"));
 		SqlBuilder sqlBuilder4 = new SqlBuilder(userRowMapper, criteria4);
@@ -134,12 +145,14 @@ public class SqlBuilderTest {
 		this.oneSelectValidCheck(sql, "oneTableSelectBuildWithOrder");
 		
 		criteria.add(new SingleValueCriterion<CriterionOperator, String>(
+								userRowMapper,
 								"name", 
 								CriterionOperator.EQ,
 								"박희희")
 					);
 		
 		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(
+								userRowMapper,
 								"point",
 								CriterionOperator.GTE,
 								2)
@@ -158,6 +171,8 @@ public class SqlBuilderTest {
 		
 		Criteria criteria = new DefaultCriteria();
 		criteria.add(new JoinCriterion(userRowMapper, "seq", userPointRowMapper, "userpointseq"));
+		criteria.add(new JoinCriterion(userRowMapper, "point", userPointRowMapper, "point"));
+		
 		
 //		criteria.add(new SingleValueCriterion<CriterionOperator, String>(userRowMapper, "password", CriterionOperator.EQ, "1111"));
 		
@@ -172,35 +187,6 @@ public class SqlBuilderTest {
 	}
 	
 	
-	@Ignore
-	@Test
-//	TODO : 대소문자를 구분하는지 체크, 실제이름이 아니라 Alias를 이용하여 실제 컬럼명과 매핑
-	public void updateBuild() throws Exception {
-//		INSERT INTO STUDENT(SNO, SNAME, YEAR, DEPT) VALUES(:SNO, :SNAME, :YEAR, :DEPT)
-		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategyAware);
-		
-		Student student = new Student();
-		
-		try {
-			String sql = sqlBuilder.insert(student).build();
-			System.out.println(sql);
-			assertTrue(true);
-		} catch(SqlBuilderException se){
-			fail();
-		}
-		
-//		UPDATE STUDENT set sname = '11' where sno = '1111';
-//		update users u set u.point = 12 where u.seq = 14;
-//		DELETE STUDENT where sno = '1111';
-		
-		Criteria criteria = new DefaultCriteria();
-		criteria.add(new SingleValueCriterion(JdbcStudentRepository.STUDENT_NAME, CriterionOperator.EQ, 11));
-		SqlBuilder sqlBuilder2 = new SqlBuilder(studentTableStrategyAware);
-		
-//		String deleteSql = sqlBuilder2.update().build();
-	}
-	
-//	
 //	@Ignore
 //	@Test
 //	public void userSqlBuild() throws Exception {

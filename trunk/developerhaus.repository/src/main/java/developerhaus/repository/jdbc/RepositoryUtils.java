@@ -55,6 +55,9 @@ public class RepositoryUtils {
 	
 	public static String getColumnName(String domainFiledName, Object target){
 		
+//		// alias를 제거한 도메인명
+//		domainFiledName = getColumnName(domainFiledName);
+		
 		Field f;
 		String alaisMappedKey = null;
 		try {
