@@ -11,19 +11,23 @@
 	  	<property name="name" column="NAME"/>
 	  	<property name="password" column="PASSWORD"/>  
 	  	<property name="point" column="POINT"/>
-	  	<list name="userPointList" table="USER_POINT" inverse="true" lazy="false" fetch="subselect">
-	  		<key column="USER_SEQ" />
-	  		<index column="USER_POINT_SEQ" />
-	  		<one-to-many class="UserPoint" />
-	  	</list>
+<!--	  	<list name="userPointList" table="USER_POINT" inverse="true" lazy="false" fetch="select">-->
+<!--	  		<key column="USER_SEQ" />-->
+<!--	  		<index column="USER_POINT_SEQ" />-->
+<!--	  		<one-to-many class="UserPoint" />-->
+<!--	  	</list>-->
+		<bag name="userPointList" inverse="true" lazy="false">
+			<key column="USER_SEQ"></key>
+			<one-to-many class="UserPoint" />
+		</bag>
   	</class>
   	
   	<class name="UserPoint" table="USER_POINT">
   		<id name="userPointSeq" column="USER_POINT_SEQ">
 			<generator class="increment" />
 		</id>
-	  	<many-to-one name="userSeq" class="User" column="USER_SEQ" />
-  		<!-- property name="userSeq" column="USER_SEQ"/-->
+<!--  		<property name="userSeq" column="USER_SEQ" />-->
+	  	<many-to-one name="mappedUser" class="User" column="USER_SEQ" />
 	  	<property name="point" column="POINT"/>
 	  	<property name="pointType" column="POINT_TYPE"/>  
 	  	<property name="regDt" column="REG_DT"/>  
