@@ -3,6 +3,7 @@ package developerhaus.repository.jdbc;
 import java.lang.reflect.Field;
 
 import developerhaus.repository.jdbc.exception.SqlBuilderException;
+import developerhaus.repository.mapper.UserRowMapper;
 
 public class RepositoryUtils {
 	
@@ -57,12 +58,18 @@ public class RepositoryUtils {
 		Field f;
 		String alaisMappedKey = null;
 		try {
-			f = target.getClass().getField(domainFiledName.toUpperCase());
+			f = target.getClass().getDeclaredField(domainFiledName.toUpperCase());
+			f.setAccessible(true);
+			
 			alaisMappedKey = (String) f.get(target);
 		} catch (Exception e) {
 			throw new SqlBuilderException("도메인 속성명의 대문자로 정의된 공통속성명이 target에 정의되어 있어야 합니다. / domainFiledName : " + domainFiledName, e);
 		}
 		
 		return alaisMappedKey;
+	}
+	
+	public static void main(String[] args) {
+		String alaisMappedKey = RepositoryUtils.getColumnName("name", new UserRowMapper());
 	}
 }
