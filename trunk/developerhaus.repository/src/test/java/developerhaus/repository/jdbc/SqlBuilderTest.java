@@ -21,32 +21,28 @@ import developerhaus.repository.jdbc.exception.SqlBuilderException;
 import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStrategyAware;
+import developerhaus.repository.mapper.UserRowMapper;
 
 
 public class SqlBuilderTest {
 	
 	private TableStrategyAware studentTableStrategyAware;
-	private TableStrategyAware userTableStrategyAware;
+	private UserRowMapper userRowMapper;
 	
 	@Before
 	public void setUp(){
+		
+				
 		studentTableStrategyAware = new TableStrategyAware() {
 			
 			@Override
 			public TableStrategy getTableStrategy() {
 				return new DefaultTableStrategy("STUDENT", "stu")
-				.setAllColumn("stu.SNO", "stu.SNAME", "stu.YEAR", "stu.DEPT");
+				.setAllColumn("sno", "sname", "year", "dept");
 			}
 		};
 		
-		userTableStrategyAware = new TableStrategyAware() {
-			
-			@Override
-			public TableStrategy getTableStrategy() {
-				return new DefaultTableStrategy(JdbcUserRepository.TABLE_NAME, JdbcUserRepository.ALIAS)
-					.setAllColumn(JdbcUserRepository.SEQ, JdbcUserRepository.ID, JdbcUserRepository.NAME, JdbcUserRepository.PASSWORD, JdbcUserRepository.POINT);
-			}
-		};
+		userRowMapper = new UserRowMapper();
 		
 	}
 	
@@ -55,7 +51,7 @@ public class SqlBuilderTest {
 	public void simpleSqlBuild() throws Exception {
 
 		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategyAware);
-		String sql = sqlBuilder.select("t.SNO, t.SNAME, t.YEAR, t.DEP").from().build();
+		String sql = sqlBuilder.select("sno, sname, year, dep").from().build();
 		this.oneSelectValidCheck(sql, "simpleSqlBuild1");
 		
 		
@@ -68,112 +64,94 @@ public class SqlBuilderTest {
 		this.oneSelectValidCheck(sql3, "simpleSqlBuild3");
 	}
 	
-//	@Ignore
-	@Test
-	public void oneTableSelectBuild() throws Exception {
-		
-		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategyAware);
-
-		String sql = sqlBuilder.selectAll().from().build();
-		this.oneSelectValidCheck(sql, "oneTableSelectBuild");
-	}
 	
 	@SuppressWarnings("unchecked")
-	@Ignore
+//	@Ignore
 	@Test
 	public void oneTableSelectBuildWithWhere() throws Exception {
 		
-//		SELECT stu.SNO, stu.SNAME, stu.YEAR, stu.DEPT 
-//			FROM STUDENT stu
-//		  WHERE stu.DEPT = '컴퓨터공학과'
-//		    and stu.YEAR > 2
+//		select seq, id, name, password, point 
+//			from users
+//	      where password = '1111'
+//		    and point > 0
+		
 		
 		Criteria criteria = new DefaultCriteria();
-		criteria.add( new SingleValueCriterion(
-								"dept", 
+		criteria.add( new SingleValueCriterion<CriterionOperator, String>(
+								"password", 
 								CriterionOperator.EQ, 
-								"컴퓨터공학과") );
-		criteria.add(new SingleValueCriterion("year", CriterionOperator.GT, 2));
+								"1111") );
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>("point", CriterionOperator.GT, 0));
 		
-		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategyAware, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(userRowMapper, criteria);
 		
 		String sql = sqlBuilder.selectAll().from().where().build();
 		this.oneSelectValidCheck(sql, "oneTableSelectBuildWithWhere", sqlBuilder.getMapSqlParameterSource().getValues());
 		
-		Criteria criteria2 = new DefaultCriteria();
-		criteria2.add(new SingleValueCriterion(
-								JdbcStudentRepository.STUDENT_NUMBER, 
-								CriterionOperator.EQ, 
-								"60022416"));
-		SqlBuilder sqlBuilder2 = new SqlBuilder(studentTableStrategyAware, criteria2);
-		String sql2 = sqlBuilder2.selectAll().from().where().build();
-		this.oneSelectValidCheck(sql2, "oneTableSelectBuildWithWhere2", sqlBuilder2.getMapSqlParameterSource().getValues());
-		
-		
 		Criteria criteria3 = new DefaultCriteria();
-		criteria3.add(new SingleValueCriterion(
-								JdbcStudentRepository.DEPARTMENT, 
+		criteria3.add(new SingleValueCriterion<CriterionOperator, String>(
+								"name", 
 								CriterionOperator.LIKE, 
-								"공학"));
-		criteria3.add(new SingleValueCriterion(
-								JdbcStudentRepository.DEPARTMENT, 
+								"희"));
+		criteria3.add(new SingleValueCriterion<CriterionOperator, String>(
+								"name", 
 								CriterionOperator.LIKE_LEFT, 
-								"컴퓨터"));
-		criteria3.add(new SingleValueCriterion(
-								JdbcStudentRepository.DEPARTMENT, 
+								"성희"));
+		criteria3.add(new SingleValueCriterion<CriterionOperator, String>(
+								"name", 
 								CriterionOperator.LIKE_RIGHT, 
-								"공학과"));
-		SqlBuilder sqlBuilder3 = new SqlBuilder(studentTableStrategyAware, criteria3);
+								"박성"));
+		
+		SqlBuilder sqlBuilder3 = new SqlBuilder(userRowMapper, criteria3);
 		String sql3 = sqlBuilder3.selectAll().from().where().build();
 		this.oneSelectValidCheck(sql3, "oneTableSelectBuildWithWhere3", sqlBuilder3.getMapSqlParameterSource().getValues());
-		
+//		
 		Criteria criteria4 = new DefaultCriteria();
-		criteria4.add(new MultiValueCriterion(
-							JdbcStudentRepository.DEPARTMENT, 
+		criteria4.add(new MultiValueCriterion<CriterionOperator, String>(
+							"password", 
 							CriterionOperator.IN, 
-							"컴퓨터공학과", "전자공학과", "산업시스템공학과"));	
-		criteria4.add(new MultiValueCriterion(
-							JdbcStudentRepository.YEAR, 
+							"1111", "3333"));	
+		criteria4.add(new MultiValueCriterion<CriterionOperator, Integer>(
+							"point", 
 							CriterionOperator.BETWEEN, 
 							2, 3));
 		
-		criteria4.add(new MultiValueCriterion(
-							JdbcStudentRepository.STUDENT_NUMBER, 
-							CriterionOperator.NOT_IN, "123", "456"));
-		SqlBuilder sqlBuilder4 = new SqlBuilder(studentTableStrategyAware, criteria4);
+		criteria4.add(new MultiValueCriterion<CriterionOperator, String>(
+							"name", 
+							CriterionOperator.NOT_IN, "강동원", "박희희"));
+		SqlBuilder sqlBuilder4 = new SqlBuilder(userRowMapper, criteria4);
 		String sql4 = sqlBuilder4.selectAll().from().where().build();
 		this.oneSelectValidCheck(sql4, "oneTableSelectBuildWithWhere4", sqlBuilder4.getMapSqlParameterSource().getValues());
 		
-		
 	}
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void oneTableSelectBuildWithOrder() throws Exception {
 		
 		Criteria criteria = new DefaultCriteria();
-		criteria.add(new DefaultOrder(JdbcStudentRepository.DEPARTMENT, OrderType.ASC));
-		criteria.add(new DefaultOrder(JdbcStudentRepository.YEAR, OrderType.DESC));
+		criteria.add(new DefaultOrder("name", OrderType.ASC));
+		criteria.add(new DefaultOrder("seq", OrderType.DESC));
 		
-		SqlBuilder sqlBuilder = new SqlBuilder(studentTableStrategyAware, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(userRowMapper, criteria);
 		String sql = sqlBuilder.selectAll().from().order().build();
 		this.oneSelectValidCheck(sql, "oneTableSelectBuildWithOrder");
 		
-		criteria.add(new SingleValueCriterion(
-								JdbcStudentRepository.STUDENT_NUMBER, 
+		criteria.add(new SingleValueCriterion<CriterionOperator, String>(
+								"name", 
 								CriterionOperator.EQ,
-								"60022416")
+								"박희희")
 					);
 		
-		criteria.add(new SingleValueCriterion(
-								JdbcStudentRepository.DEPARTMENT,
-								CriterionOperator.LIKE,
-								"공학")
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(
+								"point",
+								CriterionOperator.GTE,
+								2)
 					);
 		
-		SqlBuilder sqlBuilder2 = new SqlBuilder(studentTableStrategyAware, criteria);
+		SqlBuilder sqlBuilder2 = new SqlBuilder(userRowMapper, criteria);
 		String sql2 = sqlBuilder2.selectAll().from().where().order().build();
-		this.oneSelectValidCheck(sql2, "oneTableSelectBuildWithOrder2");
+		this.oneSelectValidCheck(sql2, "oneTableSelectBuildWithOrder2", sqlBuilder2.getMapSqlParameterSource().getValues());
 		
 	}
 	
@@ -194,7 +172,7 @@ public class SqlBuilderTest {
 		SqlBuilder sqlBuilder = new SqlBuilder(
 									studentRepository,
 									criteria,
-									universityRepository.getTableStrategy());
+									userRowMapper);
 	
 		String sql = sqlBuilder.selectAll().from().where().build();
 		this.oneSelectValidCheck(sql, "twoTableSelectBuild", sqlBuilder.getMapSqlParameterSource().getValues());
@@ -230,28 +208,28 @@ public class SqlBuilderTest {
 //		String deleteSql = sqlBuilder2.update().build();
 	}
 	
-	
-	@Ignore
-	@Test
-	public void userSqlBuild() throws Exception {
-		
-		String userId = "want813";
-		
-		SqlBuilder sqlBuilder = new SqlBuilder(userTableStrategyAware);
-		
-		String sql = sqlBuilder.selectAll().from().build();
-		this.oneSelectValidCheck(sql, "userSqlBuild");
-		
-		Criteria criteria = new DefaultCriteria();
-		criteria.add(new SingleValueCriterion(JdbcUserRepository.ID, CriterionOperator.EQ, userId));
-		criteria.add(new DefaultOrder(JdbcUserRepository.SEQ, OrderType.DESC));
-		
-		SqlBuilder sqlBuilder2 = new SqlBuilder(userTableStrategyAware, criteria);
-		
-		String sql2 = sqlBuilder2.selectAll().from().where().order().build();
-		this.oneSelectValidCheck(sql2, "userSqlBuild2", sqlBuilder2.getMapSqlParameterSource().getValues());
-		
-	}
+//	
+//	@Ignore
+//	@Test
+//	public void userSqlBuild() throws Exception {
+//		
+//		String userId = "want813";
+//		
+//		SqlBuilder sqlBuilder = new SqlBuilder(userTableStrategyAware);
+//		
+//		String sql = sqlBuilder.selectAll().from().build();
+//		this.oneSelectValidCheck(sql, "userSqlBuild");
+//		
+//		Criteria criteria = new DefaultCriteria();
+//		criteria.add(new SingleValueCriterion(JdbcUserRepository.ID, CriterionOperator.EQ, userId));
+//		criteria.add(new DefaultOrder(JdbcUserRepository.SEQ, OrderType.DESC));
+//		
+//		SqlBuilder sqlBuilder2 = new SqlBuilder(userTableStrategyAware, criteria);
+//		
+//		String sql2 = sqlBuilder2.selectAll().from().where().order().build();
+//		this.oneSelectValidCheck(sql2, "userSqlBuild2", sqlBuilder2.getMapSqlParameterSource().getValues());
+//		
+//	}
 	
 	
 	/**
