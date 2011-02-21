@@ -1,21 +1,26 @@
 package developerhaus.repository.criteria;
 
 import developerhaus.repository.api.criteria.Criterion;
+import developerhaus.repository.jdbc.RepositoryUtils;
+import developerhaus.repository.jdbc.strategy.TableStrategyAware;
 
-public class JoinCriterion implements Criterion<String, String, CriterionOperator> {
+public class JoinCriterion<O> implements Criterion<String, O, String> {
 	
 
 	private String join;
 	
-	public JoinCriterion(String leftKey, String rightKey){
-		this.join = leftKey + CriterionOperator.EQ + rightKey;
+	public JoinCriterion(TableStrategyAware leftTableStrategyAware, String leftKey, TableStrategyAware rightTableStrategyAware, String rightKey){
+		this.join = RepositoryUtils.addAliasToColumn(leftTableStrategyAware.getTableStrategy().getAliasName(), leftKey)
+					+ CriterionOperator.EQ 
+					+ RepositoryUtils.addAliasToColumn(rightTableStrategyAware.getTableStrategy().getAliasName(), rightKey)
+					;
 	}
 
 	@Override
 	public String getValue() {
 		return this.join;
 	}
-	
+
 	@Override
 	public String getKey() {
 		throw new UnsupportedOperationException();
@@ -23,9 +28,8 @@ public class JoinCriterion implements Criterion<String, String, CriterionOperato
 
 	@Override
 	public void setKey(String key) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException();		
 	}
-
 
 	@Override
 	public void setValue(String value) {
@@ -33,12 +37,12 @@ public class JoinCriterion implements Criterion<String, String, CriterionOperato
 	}
 
 	@Override
-	public CriterionOperator getOperator() {
+	public O getOperator() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setOperator(CriterionOperator operator) {
+	public void setOperator(O operator) {
 		throw new UnsupportedOperationException();
 	}
 }

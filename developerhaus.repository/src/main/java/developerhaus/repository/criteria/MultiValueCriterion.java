@@ -1,7 +1,9 @@
 package developerhaus.repository.criteria;
 
 import developerhaus.repository.api.criteria.Criterion;
+import developerhaus.repository.jdbc.RepositoryUtils;
 import developerhaus.repository.jdbc.exception.CriteriaException;
+import developerhaus.repository.jdbc.strategy.TableStrategyAware;
 
 
 /**
@@ -10,13 +12,16 @@ import developerhaus.repository.jdbc.exception.CriteriaException;
  * @author jin
  *
  */
-public class MultiValueCriterion implements Criterion<String, Object, CriterionOperator> {
+public class MultiValueCriterion<O, T> implements Criterion<String, O, T> {
 	
 	private String key;
-	private Object[] value;
-	private CriterionOperator operator;
+	private O operator;
+	private T[] values;
 	
-	public MultiValueCriterion(String key, CriterionOperator operator, Object... values){
+	private TableStrategyAware tableStrategyAware;
+
+	// MultiValue를 위해 만든 Criterion으로 생성시 복수의 값을 받도록 처리해야 한다.
+	public MultiValueCriterion(String key, O operator, T... values){
 		
 		if(!(CriterionOperator.BETWEEN.equals(operator) 
 				|| CriterionOperator.NOT_BETWEEN.equals(operator) 
@@ -43,36 +48,57 @@ public class MultiValueCriterion implements Criterion<String, Object, CriterionO
 		
 		this.key = key;
 		this.operator = operator;
-		this.value = values;
+		this.values = values;
+	}
+
+	public MultiValueCriterion(TableStrategyAware tableStrategyAware, String key, O operator, T... values){
+		this(key, operator, values);
+		this.tableStrategyAware = tableStrategyAware;
 	}
 
 	@Override
 	public String getKey() {
+		if(tableStrategyAware != null){
+			return RepositoryUtils.addAliasToColumn(tableStrategyAware.getTableStrategy().getAliasName(), key);
+		}
+			
 		return key;
 	}
+
 
 	@Override
 	public void setKey(String key) {
 		this.key = key;
 	}
 
-	@Override
-	public Object getValue() {
-		return value;
+	
+	public T[] getValues() {
+		
+		return this.values;
 	}
+	
 
 	@Override
-	public void setValue(Object value) {
-		this.value = (Object[]) value;
+	public T getValue() {
+		throw new UnsupportedOperationException("하나 이상의 값을 반환하기 위해 T getValues() 메소드 호출");
 	}
+	
 
 	@Override
-	public CriterionOperator getOperator() {
-		return operator;
+	public void setValue(T value) {
+		throw new UnsupportedOperationException("하나 이상의 값을 반환하기 위해 T getValues() 메소드 호출");
+		
 	}
 
+
 	@Override
-	public void setOperator(CriterionOperator operator) {
+	public O getOperator() {
+		return this.operator;
+	}
+
+
+	@Override
+	public void setOperator(O operator) {
 		this.operator = operator;
 	}
 }
