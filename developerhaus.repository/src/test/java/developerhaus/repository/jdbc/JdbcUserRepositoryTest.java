@@ -33,14 +33,22 @@ public class JdbcUserRepositoryTest {
 	@Autowired
 	private UserRepository userRepository;
 	
-	
 	@Test
-	public void getCount() throws Exception {
+	public void getUser() throws Exception {
 		Integer id = 3;
 		User user = userRepository.get(id);
 		
 		System.out.println(user);
 	}
+	
+	@Ignore
+	@Test
+	public void getUserPoint() throws Exception {
+		
+		
+		
+	}
+	
 	
 	@Ignore
 	@Test
