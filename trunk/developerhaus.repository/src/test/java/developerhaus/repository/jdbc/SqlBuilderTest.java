@@ -21,6 +21,7 @@ import developerhaus.repository.jdbc.exception.SqlBuilderException;
 import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStrategyAware;
+import developerhaus.repository.mapper.UserPointRowMapper;
 import developerhaus.repository.mapper.UserRowMapper;
 
 
@@ -28,6 +29,7 @@ public class SqlBuilderTest {
 	
 	private TableStrategyAware studentTableStrategyAware;
 	private UserRowMapper userRowMapper;
+	private UserPointRowMapper userPointRowMapper;
 	
 	@Before
 	public void setUp(){
@@ -43,7 +45,7 @@ public class SqlBuilderTest {
 		};
 		
 		userRowMapper = new UserRowMapper();
-		
+		userPointRowMapper = new UserPointRowMapper();
 	}
 	
 //	@Ignore
@@ -69,12 +71,6 @@ public class SqlBuilderTest {
 //	@Ignore
 	@Test
 	public void oneTableSelectBuildWithWhere() throws Exception {
-		
-//		select seq, id, name, password, point 
-//			from users
-//	      where password = '1111'
-//		    and point > 0
-		
 		
 		Criteria criteria = new DefaultCriteria();
 		criteria.add( new SingleValueCriterion<CriterionOperator, String>(
@@ -155,24 +151,20 @@ public class SqlBuilderTest {
 		
 	}
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void twoTableSelectBuild() throws Exception {
 		
-		JdbcStudentRepository studentRepository = new JdbcStudentRepository();
-		JdbcUniversityRepository universityRepository = new JdbcUniversityRepository();
 		
 		Criteria criteria = new DefaultCriteria();
-		criteria.add(new JoinCriterion(
-						JdbcStudentRepository.UNIVERSITY_ID, 
-						JdbcUniversityRepository.UNIVERSITY_ID));
+		criteria.add(new JoinCriterion(userRowMapper, "seq", userPointRowMapper, "userpointseq"));
 		
-		criteria.add(new SingleValueCriterion(JdbcStudentRepository.YEAR, CriterionOperator.EQ, 1));
+//		criteria.add(new SingleValueCriterion<CriterionOperator, String>(userRowMapper, "password", CriterionOperator.EQ, "1111"));
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(
-									studentRepository,
+									userRowMapper,
 									criteria,
-									userRowMapper);
+									userPointRowMapper);
 	
 		String sql = sqlBuilder.selectAll().from().where().build();
 		this.oneSelectValidCheck(sql, "twoTableSelectBuild", sqlBuilder.getMapSqlParameterSource().getValues());
