@@ -5,7 +5,7 @@
 *마지막변경일자 : 2011. 1. 25.
 *마지막변경자   : want
 =========================================================*/
-package developerhaus.repository.hibernate.criteria;
+package developerhaus.repository.resolver;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -23,6 +23,7 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
+import developerhaus.repository.criteria.DefaultCriteria;
 import developerhaus.repository.criteria.HibernateCriterionOperator;
 import developerhaus.repository.resolver.CriteriaWebArgumentResolver;
 import developerhaus.user.UserController;
