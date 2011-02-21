@@ -5,7 +5,7 @@ import developerhaus.repository.api.criteria.Criterion;
 
 //<String, Object, CriterionOperator>
 
-public class SingleValueCriterion<String, O, T> implements Criterion<String, O, T>{
+public class SingleValueCriterion<O, T> implements Criterion<String, O, T>{
 	
 	private String key;
 	private O operator;
