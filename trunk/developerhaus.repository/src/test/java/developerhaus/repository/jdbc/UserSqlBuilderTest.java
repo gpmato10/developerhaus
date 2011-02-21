@@ -11,6 +11,7 @@ import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
 import developerhaus.repository.criteria.SingleValueCriterion;
 import developerhaus.repository.jdbc.strategy.TableStrategyAware;
+import developerhaus.repository.mapper.UserRowMapper;
 
 public class UserSqlBuilderTest {
 	
@@ -18,11 +19,11 @@ public class UserSqlBuilderTest {
 	@Test
 	public void simpleBuild() throws Exception {
 		
-		TableStrategyAware userTsa = new JdbcUserRepository();
+		TableStrategyAware userTsa = new UserRowMapper();
 		Integer id = 3;
 		
 		Criteria criteria = new DefaultCriteria();
-		criteria.add(new SingleValueCriterion<String, CriterionOperator, Integer>("seq", CriterionOperator.EQ, id));
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>("seq", CriterionOperator.EQ, id));
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(userTsa, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
