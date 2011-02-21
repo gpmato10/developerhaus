@@ -33,7 +33,7 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 		while(parameterNames.hasNext()) {
 			paramName = parameterNames.next();
 			if(paramName.startsWith("param.") && !paramName.startsWith("param.op")) {
-				Criterion criterion = new SingleValueCriterion<String, HibernateCriterionOperator, String>(getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
+				Criterion criterion = new SingleValueCriterion<HibernateCriterionOperator, String>(getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
 				criteria.add(criterion);
 			} else if(paramName.startsWith("order")) {
 				Order order = new DefaultOrder(getParamKey(paramName), getOrderType(req, paramName));
