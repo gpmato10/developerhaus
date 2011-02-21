@@ -1,7 +1,5 @@
 package developerhaus.repository.jdbc;
 
-import static developerhaus.repository.jdbc.RepositoryUtils.*;
-
 
 import java.util.List;
 
@@ -30,9 +28,9 @@ public class JdbcUserRepository implements UserRepository{
 //	public final static String PASSWORD = addAliasToColumn(ALIAS, "password");	// 비밀번호 
 //	public final static String POINT = addAliasToColumn(ALIAS, "point");  			// 포인트
 
-	SimpleJdbcTemplate template;
+	private SimpleJdbcTemplate template;
+	private UserRowMapper mappedUser = new UserRowMapper();
 	
-	UserRowMapper mappedUser = new UserRowMapper();
 	public void setDataSource(DataSource dataSource) {
 		this.template = new SimpleJdbcTemplate(dataSource);
 	}
@@ -46,9 +44,19 @@ public class JdbcUserRepository implements UserRepository{
 		SqlBuilder sqlBuilder = new SqlBuilder(mappedUser, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
 		System.out.println(sql);
+		System.out.println(sqlBuilder.getMapSqlParameterSource().getValues());
 		
 		return template.queryForObject(sql,mappedUser, sqlBuilder.getMapSqlParameterSource());
 
+	}
+	
+	@Override
+	public UserPoint getUserPoint(Integer userPointSeq) {
+		
+		Criteria criteria = new DefaultCriteria();
+		
+		
+		return null;
 	}
 
 	@Override
@@ -86,5 +94,5 @@ public class JdbcUserRepository implements UserRepository{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 }
