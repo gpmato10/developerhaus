@@ -40,9 +40,9 @@ public class HibernateUserRepositoryTest {
 	@Test
 	@Ignore
 	public void getUserPointList() throws Exception {
-		Criterion<String, HibernateCriterionOperator, Integer> criterion = new SingleValueCriterion<String, HibernateCriterionOperator, Integer>("userSeq", HibernateCriterionOperator.EQ, new Integer(1));	
+		Criterion<String, HibernateCriterionOperator, Integer> criterion = new SingleValueCriterion<HibernateCriterionOperator, Integer>("userSeq", HibernateCriterionOperator.EQ, new Integer(1));	
 		Order order = new DefaultOrder("regDt", OrderType.DESC);
-		
+
 		Criteria criteria = new DefaultCriteria();
 		criteria.add(criterion);
 		criteria.add(order);
