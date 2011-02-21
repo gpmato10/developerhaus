@@ -17,6 +17,9 @@ public class UserPoint {
 	// hibernate 에서 필요
 	private User mappedUser;
 	
+	public UserPoint() {
+	}
+	
 	public UserPoint(int userPointSeq, int userSeq, int point,
 			String pointType, String regDt) {
 		this.userPointSeq = userPointSeq;
