@@ -25,15 +25,12 @@ public class GenericIbatisSupportRepository<D, I extends Serializable> implement
 
 	@Override
 	public List<D> list(Criteria criteria) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlMapClientTemplate.queryForList("getList", criteria);			
 	}
 
 	@Override
 	public boolean update(D domain) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	
+		sqlMapClientTemplate.update("update", domain);
+		return true;
+	}	
 }
