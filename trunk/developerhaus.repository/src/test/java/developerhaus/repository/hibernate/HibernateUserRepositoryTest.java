@@ -33,12 +33,12 @@ public class HibernateUserRepositoryTest {
 	}
 	
 	@Test
+	@Ignore
 	public void joinSite() throws Exception {
 		// 회원 가입시 포인트를 100 준다.... 
 	}
 	
 	@Test
-	@Ignore
 	public void getUserPointList() throws Exception {
 		Criterion<String, HibernateCriterionOperator, Integer> criterion = new SingleValueCriterion<HibernateCriterionOperator, Integer>("userSeq", HibernateCriterionOperator.EQ, new Integer(1));	
 		Order order = new DefaultOrder("regDt", OrderType.DESC);
@@ -52,12 +52,13 @@ public class HibernateUserRepositoryTest {
 		System.out.println("userPoint:"+userPoint);
 		assertNotNull(list);
 		assertEquals(list.size(), 3);
+		System.out.println("list.size():"+list.size());
 	}
 	
 	@Test
 	@Ignore
 	public void paging() throws Exception {
-		Criterion<String, HibernateCriterionOperator, String> criterion = new SingleValueCriterion("name", HibernateCriterionOperator.LIKE_LEFT, "박");		
+		Criterion<String, HibernateCriterionOperator, String> criterion = new SingleValueCriterion<HibernateCriterionOperator, String>("name", HibernateCriterionOperator.LIKE_LEFT, "박");		
 		Order order = new DefaultOrder("name", OrderType.DESC);
 		
 		Criteria criteria = new DefaultCriteria();
@@ -76,8 +77,8 @@ public class HibernateUserRepositoryTest {
 	@Test
 	@Ignore
 	public void getCount() throws Exception {
-		Criterion<String, HibernateCriterionOperator, String> criterion = new SingleValueCriterion("name", HibernateCriterionOperator.LIKE_LEFT, "박");		
-		Criterion<String, HibernateCriterionOperator, String> criterion2 = new SingleValueCriterion("name", HibernateCriterionOperator.LIKE_RIGHT, "희");
+		Criterion<String, HibernateCriterionOperator, String> criterion = new SingleValueCriterion<HibernateCriterionOperator, String>("name", HibernateCriterionOperator.LIKE_LEFT, "박");		
+		Criterion<String, HibernateCriterionOperator, String> criterion2 = new SingleValueCriterion<HibernateCriterionOperator, String>("name", HibernateCriterionOperator.LIKE_RIGHT, "희");
 		/*Criterion<String, String, CriterionOperator> criterion3 = new DefaultCriterion(CriterionOperator.OR, criterion, criterion2, criterion2);
 		*/
 		Order order = new DefaultOrder("name", OrderType.DESC);
