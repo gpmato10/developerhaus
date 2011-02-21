@@ -34,7 +34,7 @@ public class JdbcStudentRepository implements StudentRepository, TableStrategyAw
 //		SELECT  stu.num, stu.name, stu.year, stu.dept, stu.univId FROM  STUDENT stu  WHERE stu.num = :stu.num, 
 		
 		Criteria criteria = new DefaultCriteria();
-		criteria.add(new SingleValueCriterion(
+		criteria.add(new SingleValueCriterion<CriterionOperator, String>(
 								JdbcStudentRepository.STUDENT_NUMBER, 
 								CriterionOperator.EQ, 
 								id)
