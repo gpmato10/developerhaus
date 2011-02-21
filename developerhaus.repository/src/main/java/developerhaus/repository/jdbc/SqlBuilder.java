@@ -166,7 +166,7 @@ public class SqlBuilder {
 			
 			if(CriterionOperator.BETWEEN.equals(criterion.getOperator()) || CriterionOperator.NOT_BETWEEN.equals(criterion.getOperator())){
 				
-				sql.append(criterion.getKey());
+				sql.append(mappedKey);
 				sql.append(" ");
 				sql.append(criterion.getOperator());
 				sql.append(" ");
@@ -176,7 +176,7 @@ public class SqlBuilder {
 				
 			} else if( (CriterionOperator.IN.equals(criterion.getOperator()) || CriterionOperator.NOT_IN.equals(criterion.getOperator()))){ 
 				
-				sql.append(criterion.getKey());
+				sql.append(mappedKey);
 				sql.append(" ");
 				sql.append(criterion.getOperator());
 				sql.append(" ");
@@ -198,10 +198,8 @@ public class SqlBuilder {
 		} else if(criterion instanceof SingleValueCriterion){
 			
 			String mappedKey = 	((SingleValueCriterion)criterion).getKey();
-			String alaisMappedKey = RepositoryUtils.getColumnName(mappedKey, tableStrategyAware);
 			
-//			sql.append(criterion.getKey());
-			sql.append(alaisMappedKey);
+			sql.append(mappedKey);
 			sql.append(" ");
 			sql.append(criterion.getOperator());
 			sql.append(" ");
