@@ -16,11 +16,12 @@ public class SingleValueCriterion<O, T> implements Criterion<String, O, T>{
 	// Criterion의 주체가 되는 테이블 정보를 유지
 	private TableStrategyAware tableStrategyAware;
 	
-//	public SingleValueCriterion(String key, O operator, T value) {
-//		this.key = key;
-//		this.operator = operator;
-//		this.value = value;
-//	}
+	// hibernate 에서 필요
+	public SingleValueCriterion(String key, O operator, T value) {
+		this.key = key;
+		this.operator = operator;
+		this.value = value;
+	}
 	
 	public SingleValueCriterion(TableStrategyAware tableStrategyAware, String key, O operator, T value) {
 //		this(key, operator, value);

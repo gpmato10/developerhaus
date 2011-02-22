@@ -20,6 +20,9 @@ import developerhaus.repository.criteria.SingleValueCriterion;
  * 
  * @author sunghee, Park
  * 
+ * param.{fieldName} = {value}
+ * param.op.{fieldName} = {operator}
+ * order.{fieldName} = {orderType}
  */
 public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 
@@ -33,7 +36,7 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 		while(parameterNames.hasNext()) {
 			paramName = parameterNames.next();
 			if(paramName.startsWith("param.") && !paramName.startsWith("param.op")) {
-				Criterion criterion = new SingleValueCriterion<HibernateCriterionOperator, String>(getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
+				Criterion<String, HibernateCriterionOperator, String> criterion = new SingleValueCriterion<HibernateCriterionOperator, String>(getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
 				criteria.add(criterion);
 			} else if(paramName.startsWith("order")) {
 				Order order = new DefaultOrder(getParamKey(paramName), getOrderType(req, paramName));
