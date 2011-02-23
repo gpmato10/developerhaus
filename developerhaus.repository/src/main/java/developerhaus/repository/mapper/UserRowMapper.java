@@ -19,7 +19,7 @@ public class UserRowMapper implements RowMapper<User>,TableStrategyAware{
 	// DB 의존성을 제거하기 위해 DB컬럼명 변화에 상관없이 대표되는 컬럼명 정의
 	// TODO : 쿼리결과 도메인 속성명과 매핑하기 위한 정책 수립(Spring JDBC 붙인 후 다시 생각)
 	
-	private String SEQ = "seq";  		// 시퀀스
+	private String SEQ = "seq";  				// 시퀀스
 	private String ID =  "id";  				// 아이디 
 	private String NAME = 	"name";  			// 이름
 	private final String PASSWORD = "password";	// 비밀번호 
@@ -40,7 +40,13 @@ public class UserRowMapper implements RowMapper<User>,TableStrategyAware{
 	public TableStrategy getTableStrategy() {
 		
 		return new DefaultTableStrategy(TABLE_NAME, ALIAS)
-			.setAllColumn(SEQ, ID, NAME,PASSWORD);
+			.setAllColumn(SEQ, ID, NAME,PASSWORD, POINT);
+	}
+
+	@Override
+	public TableStrategy getTableStrategy(String alias) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
