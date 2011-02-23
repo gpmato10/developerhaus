@@ -23,6 +23,7 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
+import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
 import developerhaus.repository.criteria.HibernateCriterionOperator;
 import developerhaus.repository.criteria.JoinCriterion;
@@ -50,12 +51,12 @@ public class CriteriaWebArgumentResolverTest {
 		req.setMethod("GET");
 		
 		req.addParameter("param.name", "박");
-		req.addParameter("param.op.name", HibernateCriterionOperator.LIKE.getName());
+		req.addParameter("param.op.name", CriterionOperator.LIKE.getName());
 		
 		req.addParameter("param.dm.name", "user");
 		
 		req.addParameter("param.id", "want813");
-		req.addParameter("param.op.id", HibernateCriterionOperator.EQ.getName());
+		req.addParameter("param.op.id", CriterionOperator.EQ.getName());
 
 		req.addParameter("order.seq", "DESC");		
 		
