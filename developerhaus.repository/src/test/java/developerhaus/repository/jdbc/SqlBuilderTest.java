@@ -9,6 +9,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import developerhaus.domain.Student;
+import developerhaus.domain.User;
+import developerhaus.domain.UserPoint;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.OrderType;
 import developerhaus.repository.criteria.CriterionOperator;
@@ -28,27 +30,18 @@ import developerhaus.repository.mapper.UserRowMapper;
 public class SqlBuilderTest {
 	
 	private TableStrategyAware studentTableStrategyAware;
+//	private TableStrategyAware userRowMapper;
 	private TableStrategyAware userRowMapper;
 	private TableStrategyAware userPointRowMapper;
 	
 	@Before
 	public void setUp(){
 		
-				
-		studentTableStrategyAware = new TableStrategyAware() {
-			
-			@Override
-			public TableStrategy getTableStrategy() {
-				return new DefaultTableStrategy("STUDENT", "stu")
-				.setAllColumn("sno", "sname", "year", "dept");
-			}
-		};
-		
-		userRowMapper = new UserRowMapper();
-		userPointRowMapper = new UserPointRowMapper();
+		userRowMapper = new User();
+		userPointRowMapper = new UserPoint();
 	}
 	
-//	@Ignore
+	@Ignore
 	@Test
 	public void simpleSqlBuild() throws Exception {
 
@@ -68,7 +61,7 @@ public class SqlBuilderTest {
 	
 	
 	@SuppressWarnings("unchecked")
-//	@Ignore
+	@Ignore
 	@Test
 	public void oneTableSelectBuildWithWhere() throws Exception {
 		
@@ -132,7 +125,7 @@ public class SqlBuilderTest {
 		
 	}
 	
-//	@Ignore
+	@Ignore
 	@Test
 	public void oneTableSelectBuildWithOrder() throws Exception {
 		
@@ -172,6 +165,7 @@ public class SqlBuilderTest {
 		Criteria criteria = new DefaultCriteria();
 		criteria.add(new JoinCriterion(userRowMapper, "seq", userPointRowMapper, "userpointseq"));
 		criteria.add(new JoinCriterion(userRowMapper, "point", userPointRowMapper, "point"));
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(userRowMapper, "point", CriterionOperator.GTE, 2));
 		
 		
 //		criteria.add(new SingleValueCriterion<CriterionOperator, String>(userRowMapper, "password", CriterionOperator.EQ, "1111"));
