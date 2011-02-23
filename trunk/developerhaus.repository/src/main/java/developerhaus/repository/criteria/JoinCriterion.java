@@ -9,6 +9,11 @@ public class JoinCriterion<O> implements Criterion<String, O, String> {
 
 	private String join;
 	
+	private TableStrategyAware leftTableStrategyAware;
+	private String leftKey;
+	private TableStrategyAware rightTableStrategyAware;
+	private String rightKey;
+	
 	public JoinCriterion(TableStrategyAware leftTableStrategyAware, String leftKey, TableStrategyAware rightTableStrategyAware, String rightKey){
 		
 		
@@ -50,5 +55,42 @@ public class JoinCriterion<O> implements Criterion<String, O, String> {
 	@Override
 	public void setOperator(O operator) {
 		throw new UnsupportedOperationException();
+	}
+
+	
+	
+	
+	
+	public TableStrategyAware getLeftTableStrategyAware() {
+		return leftTableStrategyAware;
+	}
+
+	public void setLeftTableStrategyAware(TableStrategyAware leftTableStrategyAware) {
+		this.leftTableStrategyAware = leftTableStrategyAware;
+	}
+
+	public String getLeftKey() {
+		return leftKey;
+	}
+
+	public void setLeftKey(String leftKey) {
+		this.leftKey = leftKey;
+	}
+
+	public TableStrategyAware getRightTableStrategyAware() {
+		return rightTableStrategyAware;
+	}
+
+	public void setRightTableStrategyAware(
+			TableStrategyAware rightTableStrategyAware) {
+		this.rightTableStrategyAware = rightTableStrategyAware;
+	}
+
+	public String getRightKey() {
+		return rightKey;
+	}
+
+	public void setRightKey(String rightKey) {
+		this.rightKey = rightKey;
 	}
 }

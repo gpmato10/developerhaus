@@ -51,8 +51,7 @@ public class CriteriaWebArgumentResolverTest {
 		req.setMethod("GET");
 		
 		req.addParameter("param.name", "박");
-		req.addParameter("param.op.name", CriterionOperator.LIKE.getName());
-		
+		req.addParameter("param.op.name", CriterionOperator.LIKE.getName());		
 		req.addParameter("param.dm.name", "user");
 		
 		req.addParameter("param.id", "want813");
