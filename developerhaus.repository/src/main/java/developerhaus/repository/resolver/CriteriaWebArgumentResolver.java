@@ -42,13 +42,15 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 		while(parameterNames.hasNext()) {
 			paramName = parameterNames.next();
 			if(paramName.startsWith("param.") && !paramName.startsWith("param.op") && !paramName.startsWith("param.dm")) {
+				// domain 체크해서 생성자 분기하기...
+				// 하이버네이트는 어쩌지.. ㅠㅠ 그 도메인을 가지는 criteria 를 가지고 있다가... 들어오면 다시 세팅해줘야 하나..
 				Criterion<String, CriterionOperator, String> criterion = new SingleValueCriterion<CriterionOperator, String>(getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
 				criteria.add(criterion);
 			} else if(paramName.startsWith("join")) {
-				System.out.println("getLeftDomain(paramName):"+getLeftDomain(paramName));
-				System.out.println("getLeftKey(paramName):"+getLeftKey(paramName));
-				System.out.println("getRightDomain(paramName):"+getRightDomain(req, paramName));
-				System.out.println("getRightKey(paramName):"+getRightKey(req, paramName));
+//				System.out.println("getLeftDomain(paramName):"+getLeftDomain(paramName));
+//				System.out.println("getLeftKey(paramName):"+getLeftKey(paramName));
+//				System.out.println("getRightDomain(paramName):"+getRightDomain(req, paramName));
+//				System.out.println("getRightKey(paramName):"+getRightKey(req, paramName));
 				Criterion criterion = new JoinCriterion<CriterionOperator>(getLeftDomain(paramName), getLeftKey(paramName), getRightDomain(req, paramName), getRightKey(req, paramName));
 				criteria.add(criterion);
 			} else if(paramName.startsWith("order")) {
