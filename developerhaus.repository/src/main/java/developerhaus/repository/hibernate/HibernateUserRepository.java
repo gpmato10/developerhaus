@@ -39,10 +39,13 @@ public class HibernateUserRepository extends GenericHibernateSupportRepository<U
 	@Override
 	public List<UserPoint> getUserPointList(Criteria criteria) {
 		//DetachedCriteria hcriteria = HibernateCriteriaUtils.getHibernateCriteria(targetClass, criteria);
+		// hibernateutils 에 구현 필요
 		DetachedCriteria hcriteria = DetachedCriteria.forClass(UserPoint.class);
 		DetachedCriteria pcriteria = hcriteria.createCriteria("mappedUser");
 		pcriteria.add(Restrictions.eq("id", "want813"));
 		return hibernateTemplate.findByCriteria(hcriteria);
 	}
+	
+
 
 }
