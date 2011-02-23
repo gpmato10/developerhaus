@@ -15,6 +15,17 @@ public enum CriterionOperator {
     public String toString() {
         return this.operatorText;
     }
+	public String getName(){
+		return name();
+	}
+	public static CriterionOperator toOperator(String operatorName) {
+		for (CriterionOperator co : values()) {
+			if (co.name().equals(operatorName)) {
+				return co;
+			}
+		}
+		return null;
+	}
 //
 //    public String getOperatorText() {
 //        return operatorText;

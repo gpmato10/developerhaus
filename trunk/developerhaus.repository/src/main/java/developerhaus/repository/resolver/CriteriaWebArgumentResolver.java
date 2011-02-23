@@ -1,7 +1,6 @@
 package developerhaus.repository.resolver;
 
 import java.util.Iterator;
-import java.util.StringTokenizer;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebArgumentResolver;
@@ -11,7 +10,7 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
-import developerhaus.repository.criteria.HibernateCriterionOperator;
+import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
 import developerhaus.repository.criteria.DefaultOrder;
 import developerhaus.repository.criteria.JoinCriterion;
@@ -43,14 +42,14 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 		while(parameterNames.hasNext()) {
 			paramName = parameterNames.next();
 			if(paramName.startsWith("param.") && !paramName.startsWith("param.op") && !paramName.startsWith("param.dm")) {
-				Criterion<String, HibernateCriterionOperator, String> criterion = new SingleValueCriterion<HibernateCriterionOperator, String>(getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
+				Criterion<String, CriterionOperator, String> criterion = new SingleValueCriterion<CriterionOperator, String>(getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
 				criteria.add(criterion);
 			} else if(paramName.startsWith("join")) {
 				System.out.println("getLeftDomain(paramName):"+getLeftDomain(paramName));
 				System.out.println("getLeftKey(paramName):"+getLeftKey(paramName));
 				System.out.println("getRightDomain(paramName):"+getRightDomain(req, paramName));
 				System.out.println("getRightKey(paramName):"+getRightKey(req, paramName));
-				Criterion criterion = new JoinCriterion<HibernateCriterionOperator>(getLeftDomain(paramName), getLeftKey(paramName), getRightDomain(req, paramName), getRightKey(req, paramName));
+				Criterion criterion = new JoinCriterion<CriterionOperator>(getLeftDomain(paramName), getLeftKey(paramName), getRightDomain(req, paramName), getRightKey(req, paramName));
 				criteria.add(criterion);
 			} else if(paramName.startsWith("order")) {
 				Order order = new DefaultOrder(getParamKey(paramName), getOrderType(req, paramName));
@@ -113,9 +112,9 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 	 * @param paramName
 	 * @return CriterionOperator
 	 */
-	private HibernateCriterionOperator getOperator(NativeWebRequest req, String paramName) {
+	private CriterionOperator getOperator(NativeWebRequest req, String paramName) {
 		String operatorName = getParamValue(req, "param.op."+getParamKey(paramName));
-		HibernateCriterionOperator operator = HibernateCriterionOperator.toOperator(operatorName);
+		CriterionOperator operator = CriterionOperator.toOperator(operatorName);
 		return operator;
 	}
 
