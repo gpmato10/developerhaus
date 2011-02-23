@@ -29,7 +29,8 @@ public class JdbcUserRepository implements UserRepository{
 //	public final static String POINT = addAliasToColumn(ALIAS, "point");  			// 포인트
 
 	private SimpleJdbcTemplate template;
-	private UserRowMapper mappedUser = new UserRowMapper();
+//	private UserRowMapper mappedUser = new UserRowMapper();
+	private User user = new User();
 	
 	public void setDataSource(DataSource dataSource) {
 		this.template = new SimpleJdbcTemplate(dataSource);
@@ -41,7 +42,7 @@ public class JdbcUserRepository implements UserRepository{
 		Criteria criteria = new DefaultCriteria();
 		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>("seq", CriterionOperator.EQ, id));
 		
-		SqlBuilder sqlBuilder = new SqlBuilder(mappedUser, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(user, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
 		System.out.println(sql);
 		System.out.println(sqlBuilder.getMapSqlParameterSource().getValues());
@@ -50,7 +51,7 @@ public class JdbcUserRepository implements UserRepository{
 
 	}
 	
-	@Override
+//	@Override
 	public UserPoint getUserPoint(Integer userPointSeq) {
 		
 		Criteria criteria = new DefaultCriteria();
