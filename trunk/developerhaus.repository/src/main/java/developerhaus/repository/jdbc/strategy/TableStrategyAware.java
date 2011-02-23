@@ -9,4 +9,7 @@ package developerhaus.repository.jdbc.strategy;
 public interface TableStrategyAware {
 	
 	TableStrategy getTableStrategy();
+	
+	TableStrategy getTableStrategy(String alias);
+	
 }
