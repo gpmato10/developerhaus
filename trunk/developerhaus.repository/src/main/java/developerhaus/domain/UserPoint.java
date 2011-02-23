@@ -1,13 +1,43 @@
 
 package developerhaus.domain;
 
+import java.io.Serializable;
+
+import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
+import developerhaus.repository.jdbc.strategy.TableStrategy;
+import developerhaus.repository.jdbc.strategy.TableStrategyAware;
+
 /**
  * User Point History 클래스
  * 
  * @author sunghee, Park
  * 
  */
-public class UserPoint {
+public class UserPoint implements Serializable, TableStrategyAware {
+	
+	public final static String TABLE_NAME = "USER_POINT";
+	public final static String ALIAS = "point";
+	
+	public final static String USERPOINTSEQ = "user_point_seq";
+	public final static String USERSEQ = "user_seq";
+	public final static String POINT = "point3";
+	public final static String POINTTYPE = "point_type";
+	public final static String REGDT = "reg_dt";
+	
+	@Override
+	public TableStrategy getTableStrategy() {
+		
+		return this.getTableStrategy(ALIAS);
+	}
+	
+	@Override
+	public TableStrategy getTableStrategy(String alias) {
+		
+		return new DefaultTableStrategy(TABLE_NAME, alias)
+		.setAllColumn(USERPOINTSEQ, USERSEQ, POINT,POINTTYPE,REGDT);
+	}
+	
+	
 
 	private int userPointSeq;
 	private int userSeq;
