@@ -1,7 +1,9 @@
 
 package developerhaus.repository.hibernate.criteria;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -12,6 +14,7 @@ import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
 import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.JoinCriterion;
+import developerhaus.repository.criteria.SingleValueCriterion;
 
 /**
  * HibernateCriteriaUtils
@@ -32,13 +35,36 @@ public class HibernateCriteriaUtils {
 	 * @return DetachedCriteria
 	 */
 	public static DetachedCriteria getHibernateCriteria(Class targetClass, Criteria criteria) {
+		Map<String, DetachedCriteria> jCriteriaMap = new HashMap<String, DetachedCriteria>(); // join 이 되는 criteria 를 담는다.
+		
 		DetachedCriteria hcriteria = DetachedCriteria.forClass(targetClass);
 		List<Criterion> criterionList = criteria.getCriterionList();
 		for(Criterion<String, CriterionOperator, ?> criterion : criterionList) {
 			if(criterion instanceof JoinCriterion<?>) {
-				//hcriteria.createCriteria(associationPath);
+				// new User(), seq, new UserPoint(), userSeq
+				JoinCriterion<CriterionOperator> joinCriterion = (JoinCriterion<CriterionOperator>) criterion;
+				// mappedUser 는 어떻게 얻어낼 것인가? 상수로 관리?? map ?? 가져다 쓸것을 생각하면 userPoint 만으로 해야 하는데...
+				// TableStrategyAware 로 넘어오는 문제.. 캐스팅... userPoint 는 어떻게 알아낼 것인가
+				//joinCriterion.getRightTableStrategyAware().getClass();
+				String associationPath = "mappedUserSeq"; // getMappedName(joinCriterion.getRightKey()); 
+				// class 정보로 하려면... 같은 테이블을 2번 조인할 수 없다...
+				DetachedCriteria jcriteria = hcriteria.createCriteria(associationPath);
+				jCriteriaMap.put(associationPath, jcriteria);
 			} else {
-				hcriteria.add(getHibernateCriterion(targetClass, criterion));
+				SingleValueCriterion<CriterionOperator, String> sCriterion = (SingleValueCriterion) criterion;
+				if(sCriterion.getTableStrategyAware()!=null) { 
+					// domain 정보가 있다면 해당 joinCriteria 에 담아야 하고
+					// 그 criteria 에 criterion 도 만들어야 한다.
+					String associationPath = "mappedUserSeq"; 
+					if(jCriteriaMap.containsKey(associationPath)) { // userPoint 만으로 어떻게 알아낸담...
+						jCriteriaMap.get(associationPath).add(getHibernateCriterion(sCriterion.getTableStrategyAware().getClass(), criterion));
+					} else { // 무조건 true 가 나와야 하지만..
+						hcriteria.add(getHibernateCriterion(sCriterion.getTableStrategyAware().getClass(), criterion));
+					}
+				} else {
+					hcriteria.add(getHibernateCriterion(targetClass, criterion));
+				}
+				
 			}
 		}
 		List<Order> orderList = criteria.getOrderList();
