@@ -26,6 +26,7 @@ public class SingleValueCriterion<O, T> implements Criterion<String, O, T>{
 	public SingleValueCriterion(TableStrategyAware tableStrategyAware, String key, O operator, T value) {
 //		this(key, operator, value);
 		this.key = key;
+		this.tableStrategyAware = tableStrategyAware;
 		
 		key = RepositoryUtils.getColumnName(key, tableStrategyAware);
 		key = RepositoryUtils.addAliasToColumn(tableStrategyAware.getTableStrategy().getAliasName(), key);
