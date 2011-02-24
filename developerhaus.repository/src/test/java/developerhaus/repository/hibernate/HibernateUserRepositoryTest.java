@@ -16,9 +16,11 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
-import developerhaus.repository.criteria.HibernateCriterionOperator;
+import developerhaus.repository.criteria.CriterionOperator;
+import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
 import developerhaus.repository.criteria.DefaultOrder;
+import developerhaus.repository.criteria.JoinCriterion;
 import developerhaus.repository.criteria.SingleValueCriterion;
 
 public class HibernateUserRepositoryTest {	
@@ -40,10 +42,12 @@ public class HibernateUserRepositoryTest {
 	
 	@Test
 	public void getUserPointList() throws Exception {
-		Criterion<String, HibernateCriterionOperator, Integer> criterion = new SingleValueCriterion<HibernateCriterionOperator, Integer>("userSeq", HibernateCriterionOperator.EQ, new Integer(1));	
+		Criterion jcriterion = new JoinCriterion(new User(), "seq", new UserPoint(), "userSeq");
+		Criterion<String, CriterionOperator, String> criterion = new SingleValueCriterion<CriterionOperator, String>(new User(), "id", CriterionOperator.EQ, "want813");
 		Order order = new DefaultOrder("regDt", OrderType.DESC);
 
 		Criteria criteria = new DefaultCriteria();
+		criteria.add(jcriterion);
 		criteria.add(criterion);
 		criteria.add(order);
 		
@@ -58,7 +62,7 @@ public class HibernateUserRepositoryTest {
 	@Test
 	@Ignore
 	public void paging() throws Exception {
-		Criterion<String, HibernateCriterionOperator, String> criterion = new SingleValueCriterion<HibernateCriterionOperator, String>("name", HibernateCriterionOperator.LIKE_LEFT, "박");		
+		Criterion<String, CriterionOperator, String> criterion = new SingleValueCriterion<CriterionOperator, String>("name", CriterionOperator.LIKE_LEFT, "박");		
 		Order order = new DefaultOrder("name", OrderType.DESC);
 		
 		Criteria criteria = new DefaultCriteria();
@@ -77,8 +81,8 @@ public class HibernateUserRepositoryTest {
 	@Test
 	@Ignore
 	public void getCount() throws Exception {
-		Criterion<String, HibernateCriterionOperator, String> criterion = new SingleValueCriterion<HibernateCriterionOperator, String>("name", HibernateCriterionOperator.LIKE_LEFT, "박");		
-		Criterion<String, HibernateCriterionOperator, String> criterion2 = new SingleValueCriterion<HibernateCriterionOperator, String>("name", HibernateCriterionOperator.LIKE_RIGHT, "희");
+		Criterion<String, CriterionOperator, String> criterion = new SingleValueCriterion<CriterionOperator, String>("name", CriterionOperator.LIKE_LEFT, "박");		
+		Criterion<String, CriterionOperator, String> criterion2 = new SingleValueCriterion<CriterionOperator, String>("name", CriterionOperator.LIKE_RIGHT, "희");
 		/*Criterion<String, String, CriterionOperator> criterion3 = new DefaultCriterion(CriterionOperator.OR, criterion, criterion2, criterion2);
 		*/
 		Order order = new DefaultOrder("name", OrderType.DESC);
@@ -96,6 +100,7 @@ public class HibernateUserRepositoryTest {
 	}
 
 	@Test
+	@Ignore
 	public void updateAndGet() throws Exception {
 		User user = new User();
 		user.setSeq(1);

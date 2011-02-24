@@ -27,7 +27,7 @@
 			<generator class="increment" />
 		</id>
 <!--  		<property name="userSeq" column="USER_SEQ" />-->
-	  	<many-to-one name="mappedUser" class="User" column="USER_SEQ" />
+	  	<many-to-one name="mappedUserSeq" class="User" column="USER_SEQ" />
 	  	<property name="point" column="POINT"/>
 	  	<property name="pointType" column="POINT_TYPE"/>  
 	  	<property name="regDt" column="REG_DT"/>  

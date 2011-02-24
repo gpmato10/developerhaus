@@ -24,6 +24,9 @@ public class UserPoint implements Serializable, TableStrategyAware {
 	public final static String POINTTYPE = "point_type";
 	public final static String REGDT = "reg_dt";
 	
+	// hibernate 에서 join 시 (subCriteria) 필요
+	// public final static String MAPPED_USERSEQ = "mappedUser";
+	
 	@Override
 	public TableStrategy getTableStrategy() {
 		
@@ -45,7 +48,7 @@ public class UserPoint implements Serializable, TableStrategyAware {
 	private String pointType;
 	private String regDt;
 	// hibernate 에서 필요
-	private User mappedUser;
+	private User mappedUserSeq;
 	
 	public UserPoint() {
 	}
@@ -89,11 +92,11 @@ public class UserPoint implements Serializable, TableStrategyAware {
 	public int getUserSeq() {
 		return userSeq;
 	}
-	public void setMappedUser(User mappedUser) {
-		this.mappedUser = mappedUser;
+	public void setMappedUserSeq(User mappedUserSeq) {
+		this.mappedUserSeq = mappedUserSeq;
 	}
-	public User getMappedUser() {
-		return mappedUser;
+	public User getMappedUserSeq() {
+		return mappedUserSeq;
 	}
 	
 }
