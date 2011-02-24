@@ -43,14 +43,14 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 			paramName = parameterNames.next();
 			if(paramName.startsWith("param.") && !paramName.startsWith("param.op") && !paramName.startsWith("param.dm")) {
 				// domain 체크해서 생성자 분기하기...
-				// 하이버네이트는 어쩌지.. ㅠㅠ 그 도메인을 가지는 criteria 를 가지고 있다가... 들어오면 다시 세팅해줘야 하나..
-				Criterion<String, CriterionOperator, String> criterion = new SingleValueCriterion<CriterionOperator, String>(getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
+				Criterion<String, CriterionOperator, String> criterion = null;
+				if(hasDomainName(req, paramName)) {
+					criterion = new SingleValueCriterion<CriterionOperator, String>(getTableStrategy(req, paramName), getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
+				} else {			
+					criterion = new SingleValueCriterion<CriterionOperator, String>(getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
+				}
 				criteria.add(criterion);
 			} else if(paramName.startsWith("join")) {
-//				System.out.println("getLeftDomain(paramName):"+getLeftDomain(paramName));
-//				System.out.println("getLeftKey(paramName):"+getLeftKey(paramName));
-//				System.out.println("getRightDomain(paramName):"+getRightDomain(req, paramName));
-//				System.out.println("getRightKey(paramName):"+getRightKey(req, paramName));
 				Criterion criterion = new JoinCriterion<CriterionOperator>(getLeftDomain(paramName), getLeftKey(paramName), getRightDomain(req, paramName), getRightKey(req, paramName));
 				criteria.add(criterion);
 			} else if(paramName.startsWith("order")) {
@@ -65,6 +65,29 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 	 * @param req
 	 * @param paramName
 	 * @return
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
+	 */
+	private TableStrategyAware getTableStrategy(NativeWebRequest req, String paramName) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+		String domainName = getParamValue(req, "param.dm."+getParamKey(paramName));
+		return getDomainObject(toCamelCase(domainName));
+	}
+
+	/**
+	 * param.dm.{fieldName} 이 있는지 확인한다.
+	 * @param req
+	 * @param paramName
+	 * @return
+	 */
+	private boolean hasDomainName(NativeWebRequest req, String paramName) {
+		return getParamValue(req, "param.dm."+getParamKey(paramName)) == null ? false : true;
+	}
+
+	/**
+	 * @param req
+	 * @param paramName
+	 * @return
 	 */
 	private String getRightKey(NativeWebRequest req, String paramName) {
 		String paramValue = getParamValue(req, paramName);
@@ -73,6 +96,7 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 	}
 
 	/**
+	 * userPoint.userSeq -> userPoint -> new UserPoint()
 	 * @param paramName
 	 * @return
 	 */

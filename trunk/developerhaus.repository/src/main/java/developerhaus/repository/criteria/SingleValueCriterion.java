@@ -25,14 +25,15 @@ public class SingleValueCriterion<O, T> implements Criterion<String, O, T>{
 	
 	public SingleValueCriterion(TableStrategyAware tableStrategyAware, String key, O operator, T value) {
 //		this(key, operator, value);
+		this.key = key;
 		
 		key = RepositoryUtils.getColumnName(key, tableStrategyAware);
 		key = RepositoryUtils.addAliasToColumn(tableStrategyAware.getTableStrategy().getAliasName(), key);
 		
-		this.key = key;
+		
 		this.operator = operator;
 		this.value = value;
-		this.tableStrategyAware = tableStrategyAware;
+		this.setTableStrategyAware(tableStrategyAware);
 	}
 
 	@Override
@@ -64,5 +65,19 @@ public class SingleValueCriterion<O, T> implements Criterion<String, O, T>{
 	@Override
 	public void setOperator(O operator) {
 		this.operator = operator;
+	}
+
+	/**
+	 * @param tableStrategyAware the tableStrategyAware to set
+	 */
+	public void setTableStrategyAware(TableStrategyAware tableStrategyAware) {
+		this.tableStrategyAware = tableStrategyAware;
+	}
+
+	/**
+	 * @return the tableStrategyAware
+	 */
+	public TableStrategyAware getTableStrategyAware() {
+		return tableStrategyAware;
 	}
 }
