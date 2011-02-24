@@ -71,7 +71,7 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 	 */
 	private TableStrategyAware getTableStrategy(NativeWebRequest req, String paramName) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		String domainName = getParamValue(req, "param.dm."+getParamKey(paramName));
-		return getDomainObject(toCamelCase(domainName));
+		return getDomainObject(toPascalCase(domainName));
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 	 * @throws InstantiationException 
 	 */
 	private TableStrategyAware getDomainObject(String domainName) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		Class<?> clazz = Class.forName(BASE_DOMAIN_PACKAGE+"."+toCamelCase(domainName));
+		Class<?> clazz = Class.forName(BASE_DOMAIN_PACKAGE+"."+toPascalCase(domainName));
 		return (TableStrategyAware) clazz.newInstance();
 	}
 	/**
@@ -192,7 +192,7 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 	 * @param string
 	 * @return
 	 */
-	private String toCamelCase(String str) {
+	private String toPascalCase(String str) {
 		char firstChar = str.charAt(0);
 		if (Character.isLowerCase(firstChar)) {
 			str = ""+Character.toUpperCase(firstChar) + str.substring(1);
