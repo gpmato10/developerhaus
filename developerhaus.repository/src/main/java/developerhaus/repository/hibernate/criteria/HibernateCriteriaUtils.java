@@ -16,6 +16,7 @@ import developerhaus.repository.api.criteria.OrderType;
 import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.JoinCriterion;
 import developerhaus.repository.criteria.SingleValueCriterion;
+import developerhaus.repository.jdbc.strategy.TableStrategy;
 
 /**
  * HibernateCriteriaUtils
@@ -38,7 +39,7 @@ public class HibernateCriteriaUtils {
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
-	public static DetachedCriteria getHibernateCriteria(Class targetClass, Criteria criteria) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public static DetachedCriteria getHibernateCriteria(Class targetClass, Criteria criteria) {
 		Map<String, DetachedCriteria> jCriteriaMap = new HashMap<String, DetachedCriteria>(); // join 이 되는 criteria 를 담는다.
 		
 		DetachedCriteria hcriteria = DetachedCriteria.forClass(targetClass);
@@ -59,15 +60,8 @@ public class HibernateCriteriaUtils {
 				if(sCriterion.getTableStrategyAware()!=null) { 
 					// domain 정보가 있다면 해당 joinCriteria 에 담아야 하고
 					// 그 criteria 에 criterion 도 만들어야 한다.
-					Class clazz = Class.forName("developerhaus.domain."+toPascalCase(sCriterion.getTableStrategyAware().getTableStrategy().getAliasName()));
-					Field fields[] = targetClass.getDeclaredFields();
-					String associationPath = "";
-					for(int i=0;i<fields.length;i++) {
-						if(fields[i].getType().getName().equals(clazz.getName())) {
-							associationPath = fields[i].getName();
-						}
-					}
-//					System.out.println(" 2 associationPath : "+associationPath);
+					
+					String associationPath = getMappedName(targetClass, sCriterion.getTableStrategyAware().getTableStrategy());//					System.out.println(" 2 associationPath : "+associationPath);
 					if(jCriteriaMap.containsKey(associationPath)) { // userPoint 만으로 어떻게 알아낸담...
 						jCriteriaMap.get(associationPath).add(getHibernateCriterion(sCriterion.getTableStrategyAware().getClass(), criterion));
 					} else { // 무조건 true 가 나와야 하지만..
@@ -92,6 +86,24 @@ public class HibernateCriteriaUtils {
 		return hcriteria;
 	}
 	
+	private static String getMappedName(Class targetClass, TableStrategy tableStrategy) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName("developerhaus.domain."+toPascalCase(tableStrategy.getAliasName()));
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Field fields[] = targetClass.getDeclaredFields();
+		String associationPath = "";
+		for(int i=0;i<fields.length;i++) {
+			if(fields[i].getType().getName().equals(clazz.getName())) {
+				associationPath = fields[i].getName();
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * @param rightKey
 	 * @return
