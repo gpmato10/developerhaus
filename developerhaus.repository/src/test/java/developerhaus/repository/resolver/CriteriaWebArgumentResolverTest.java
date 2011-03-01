@@ -29,6 +29,7 @@ import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
 import developerhaus.repository.criteria.HibernateCriterionOperator;
 import developerhaus.repository.criteria.JoinCriterion;
+import developerhaus.repository.criteria.MultiValueCriterion;
 import developerhaus.repository.criteria.SingleValueCriterion;
 import developerhaus.repository.resolver.CriteriaWebArgumentResolver;
 import developerhaus.user.UserController;
@@ -59,17 +60,24 @@ public class CriteriaWebArgumentResolverTest {
 		
 		req.addParameter("param.id", "want813");
 		req.addParameter("param.op.id", CriterionOperator.EQ.getName());
+		
+		
 
 		req.addParameter("order.seq", "DESC");		
 		
 		req.addParameter("join.user.seq", "userPoint.userSeq");
+		
+		req.addParameter("param.multi", "1");
+		req.addParameter("param.multi", "2");
+		req.addParameter("param.multi", "3");
+		req.addParameter("param.op.multi", CriterionOperator.IN.getName());
 		
 		Criteria cr = (DefaultCriteria) resolver.resolveArgument(mp, new ServletWebRequest(req));
 		
 		assertNotNull(cr);
 		
 		List<Criterion> criterionList = cr.getCriterionList();
-		assertEquals(criterionList.size(), 3);
+		assertEquals(criterionList.size(), 4);
 		List<Order> orderList = cr.getOrderList();
 		assertEquals(orderList.size(), 1);
 		
@@ -89,9 +97,14 @@ public class CriteriaWebArgumentResolverTest {
 		assertEquals(criterion.getOperator(), CriterionOperator.EQ);
 		
 		criterion = criterionList.get(2);
-		System.out.println(criterion instanceof JoinCriterion);
+		//System.out.println(criterion instanceof JoinCriterion);
 		assertEquals(criterion instanceof JoinCriterion, true);
 		
+		criterion = criterionList.get(3);
+		//System.out.println(criterion instanceof MultiValueCriterion);
+		assertEquals(criterion instanceof MultiValueCriterion, true);
+		MultiValueCriterion<CriterionOperator, String> mcriterion = (MultiValueCriterion) criterion;
+		assertEquals(mcriterion.getValues().length, 3);
 		
 		
 		Order order = orderList.get(0);
