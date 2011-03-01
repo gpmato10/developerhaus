@@ -23,7 +23,6 @@ public class JoinCriterion<O> implements Criterion<String, O, String> {
 		leftKey =  RepositoryUtils.getColumnName(leftKey, leftTableStrategyAware);
 		rightKey = RepositoryUtils.getColumnName(rightKey, rightTableStrategyAware);
 		
-		
 		this.join = RepositoryUtils.addAliasToColumn(leftTableStrategyAware.getTableStrategy().getAliasName(), leftKey)
 					+ CriterionOperator.EQ 
 					+ RepositoryUtils.addAliasToColumn(rightTableStrategyAware.getTableStrategy().getAliasName(), rightKey)
