@@ -20,7 +20,7 @@ public class UserPoint implements Serializable, TableStrategyAware {
 	
 	public final static String USERPOINTSEQ = "user_point_seq";
 	public final static String USERSEQ = "user_seq";
-	public final static String POINT = "point3";
+	public final static String POINT = "point";
 	public final static String POINTTYPE = "point_type";
 	public final static String REGDT = "reg_dt";
 	
@@ -39,7 +39,6 @@ public class UserPoint implements Serializable, TableStrategyAware {
 		return new DefaultTableStrategy(TABLE_NAME, alias)
 		.setAllColumn(USERPOINTSEQ, USERSEQ, POINT,POINTTYPE,REGDT);
 	}
-	
 	
 
 	private int userPointSeq;

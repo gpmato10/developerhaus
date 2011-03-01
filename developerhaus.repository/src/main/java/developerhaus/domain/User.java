@@ -25,7 +25,7 @@ public class User implements Serializable, TableStrategyAware {
 	public final static String ID =  "id";  				// 아이디 
 	public final static String NAME = 	"name";  			// 이름
 	public final static String PASSWORD = "password";	// 비밀번호 
-	public final static String POINT =  "point2";  			// 포인트
+	public final static String POINT =  "point";  			// 포인트
 	
 	@Override
 	public TableStrategy getTableStrategy() {
