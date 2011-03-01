@@ -10,6 +10,7 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.criteria.CriterionOperator;
+import developerhaus.repository.criteria.DefaultOrder;
 import developerhaus.repository.criteria.JoinCriterion;
 import developerhaus.repository.criteria.MultiValueCriterion;
 import developerhaus.repository.criteria.SingleValueCriterion;
@@ -87,15 +88,18 @@ public class SqlBuilder {
 	
 	public SqlBuilder selectAll() {
 		
+		StringBuffer selectBuffer = new StringBuffer();
 		String[] allColumn = defaultTableStrategy.getAllColumn();
 		if(allColumn != null){
-			sql.append(RepositoryUtils.toColumn(defaultTableStrategy.getAliasName(), allColumn));
+			selectBuffer.append(RepositoryUtils.toColumn(defaultTableStrategy.getAliasName(), allColumn));
 			
 			for(TableStrategy ts : tableStrategyMap.values()){
 				
-				sql.append(" ,");
-				sql.append(RepositoryUtils.toColumn(ts.getAliasName(),	ts.getAllColumn()));
+				selectBuffer.append(" ,");
+				selectBuffer.append(RepositoryUtils.toColumn(ts.getAliasName(),	ts.getAllColumn()));
 			}
+			
+			this.select(selectBuffer.toString());
 		
 		} else {
 			this.select(" * ");
@@ -266,7 +270,11 @@ public class SqlBuilder {
 					isFirst = false;
 				}
 				
-				sql.append(RepositoryUtils.getColumnName(order.getProperty(), tableStrategyAware));
+				if(order instanceof DefaultOrder){
+					sql.append(((DefaultOrder)order).getMappedProperty());
+				} else {
+					sql.append(order.getProperty());
+				}
 				sql.append(" ");
 				sql.append(order.getType());
 			}
