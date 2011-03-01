@@ -24,6 +24,7 @@ import developerhaus.repository.jdbc.strategy.TableStrategyAware;
  * @author sunghee, Park
  * 
  * param.{fieldName} = {value}
+ * param.{fieldName} = {value} // multiValue 일 때
  * param.op.{fieldName} = {operator}
  * param.dm.{fieldName} = {domainName}
  * order.{fieldName} = {orderType}
