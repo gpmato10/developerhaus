@@ -31,14 +31,14 @@ public class SqlBuilderTest {
 	
 	private TableStrategyAware studentTableStrategyAware;
 //	private TableStrategyAware userRowMapper;
-	private TableStrategyAware userRowMapper;
-	private TableStrategyAware userPointRowMapper;
+	private TableStrategyAware user;
+	private TableStrategyAware userPoint;
 	
 	@Before
 	public void setUp(){
 		
-		userRowMapper = new User();
-		userPointRowMapper = new UserPoint();
+		user = new User();
+		userPoint = new UserPoint();
 	}
 	
 	@Ignore
@@ -67,59 +67,59 @@ public class SqlBuilderTest {
 		
 		Criteria criteria = new DefaultCriteria();
 		criteria.add( new SingleValueCriterion<CriterionOperator, String>(
-								userRowMapper,
+								user,
 								"password", 
 								CriterionOperator.EQ, 
 								"1111") );
 		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(
-								userRowMapper,
+								user,
 								"point", 
 								CriterionOperator.GT, 
 								0));
 		
-		SqlBuilder sqlBuilder = new SqlBuilder(userRowMapper, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(user, criteria);
 		
 		String sql = sqlBuilder.selectAll().from().where().build();
 		this.oneSelectValidCheck(sql, "oneTableSelectBuildWithWhere", sqlBuilder.getMapSqlParameterSource().getValues());
 		
 		Criteria criteria3 = new DefaultCriteria();
 		criteria3.add(new SingleValueCriterion<CriterionOperator, String>(
-								userRowMapper,
+								user,
 								"name", 
 								CriterionOperator.LIKE, 
 								"희"));
 		criteria3.add(new SingleValueCriterion<CriterionOperator, String>(
-								userRowMapper,
+								user,
 								"name", 
 								CriterionOperator.LIKE_LEFT, 
 								"성희"));
 		criteria3.add(new SingleValueCriterion<CriterionOperator, String>(
-								userRowMapper,
+								user,
 								"name", 
 								CriterionOperator.LIKE_RIGHT, 
 								"박성"));
 		
-		SqlBuilder sqlBuilder3 = new SqlBuilder(userRowMapper, criteria3);
+		SqlBuilder sqlBuilder3 = new SqlBuilder(user, criteria3);
 		String sql3 = sqlBuilder3.selectAll().from().where().build();
 		this.oneSelectValidCheck(sql3, "oneTableSelectBuildWithWhere3", sqlBuilder3.getMapSqlParameterSource().getValues());
 //		
 		Criteria criteria4 = new DefaultCriteria();
 		criteria4.add(new MultiValueCriterion<CriterionOperator, String>(
-							userRowMapper,
+							user,
 							"password", 
 							CriterionOperator.IN, 
 							"1111", "3333"));	
 		criteria4.add(new MultiValueCriterion<CriterionOperator, Integer>(
-							userRowMapper,
+							user,
 							"point", 
 							CriterionOperator.BETWEEN, 
 							2, 3));
 		
 		criteria4.add(new MultiValueCriterion<CriterionOperator, String>(
-							userRowMapper,
+							user,
 							"name", 
 							CriterionOperator.NOT_IN, "강동원", "박희희"));
-		SqlBuilder sqlBuilder4 = new SqlBuilder(userRowMapper, criteria4);
+		SqlBuilder sqlBuilder4 = new SqlBuilder(user, criteria4);
 		String sql4 = sqlBuilder4.selectAll().from().where().build();
 		this.oneSelectValidCheck(sql4, "oneTableSelectBuildWithWhere4", sqlBuilder4.getMapSqlParameterSource().getValues());
 		
@@ -133,25 +133,25 @@ public class SqlBuilderTest {
 		criteria.add(new DefaultOrder("name", OrderType.ASC));
 		criteria.add(new DefaultOrder("seq", OrderType.DESC));
 		
-		SqlBuilder sqlBuilder = new SqlBuilder(userRowMapper, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(user, criteria);
 		String sql = sqlBuilder.selectAll().from().order().build();
 		this.oneSelectValidCheck(sql, "oneTableSelectBuildWithOrder");
 		
 		criteria.add(new SingleValueCriterion<CriterionOperator, String>(
-								userRowMapper,
+								user,
 								"name", 
 								CriterionOperator.EQ,
 								"박희희")
 					);
 		
 		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(
-								userRowMapper,
+								user,
 								"point",
 								CriterionOperator.GTE,
 								2)
 					);
 		
-		SqlBuilder sqlBuilder2 = new SqlBuilder(userRowMapper, criteria);
+		SqlBuilder sqlBuilder2 = new SqlBuilder(user, criteria);
 		String sql2 = sqlBuilder2.selectAll().from().where().order().build();
 		this.oneSelectValidCheck(sql2, "oneTableSelectBuildWithOrder2", sqlBuilder2.getMapSqlParameterSource().getValues());
 		
@@ -163,19 +163,17 @@ public class SqlBuilderTest {
 		
 		
 		Criteria criteria = new DefaultCriteria();
-		criteria.add(new JoinCriterion(userRowMapper, "seq", userPointRowMapper, "userpointseq"));
-		criteria.add(new JoinCriterion(userRowMapper, "point", userPointRowMapper, "point"));
-		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(userRowMapper, "point", CriterionOperator.GTE, 2));
-		
-		
-//		criteria.add(new SingleValueCriterion<CriterionOperator, String>(userRowMapper, "password", CriterionOperator.EQ, "1111"));
+		criteria.add(new JoinCriterion<CriterionOperator>(user, "seq", userPoint, "userpointseq"));
+		criteria.add(new JoinCriterion<CriterionOperator>(user, "point", userPoint, "point"));
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(user, "point", CriterionOperator.GTE, 2));
+		criteria.add(new DefaultOrder(user, "point", OrderType.DESC));
+		criteria.add(new DefaultOrder(userPoint, "point", OrderType.ASC));
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(
-									userRowMapper,
-									criteria,
-									userPointRowMapper);
+									user,
+									criteria);
 	
-		String sql = sqlBuilder.selectAll().from().where().build();
+		String sql = sqlBuilder.selectAll().from().where().order().build();
 		this.oneSelectValidCheck(sql, "twoTableSelectBuild", sqlBuilder.getMapSqlParameterSource().getValues());
 		
 	}
