@@ -19,6 +19,8 @@ public class JoinCriterion<O> implements Criterion<String, O, String> {
 		
 		this.leftKey = leftKey;
 		this.rightKey = rightKey;
+		this.leftTableStrategyAware = leftTableStrategyAware;
+		this.rightTableStrategyAware = rightTableStrategyAware;
 		
 		leftKey =  RepositoryUtils.getColumnName(leftKey, leftTableStrategyAware);
 		rightKey = RepositoryUtils.getColumnName(rightKey, rightTableStrategyAware);

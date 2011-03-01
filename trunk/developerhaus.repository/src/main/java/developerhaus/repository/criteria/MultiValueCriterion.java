@@ -99,6 +99,14 @@ public class MultiValueCriterion<O, T> implements Criterion<String, O, T> {
 		this.operator = operator;
 	}
 	
+	public TableStrategyAware getTableStrategyAware() {
+		return tableStrategyAware;
+	}
+
+	public void setTableStrategyAware(TableStrategyAware tableStrategyAware) {
+		this.tableStrategyAware = tableStrategyAware;
+	}
+
 	public String getMappedKey(){
 		String mappedKey = RepositoryUtils.getColumnName(key, tableStrategyAware);
 		mappedKey = RepositoryUtils.addAliasToColumn(tableStrategyAware.getTableStrategy().getAliasName(), mappedKey);
