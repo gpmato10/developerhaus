@@ -24,19 +24,13 @@ public class SingleValueCriterion<O, T> implements Criterion<String, O, T>{
 	}
 	
 	public SingleValueCriterion(TableStrategyAware tableStrategyAware, String key, O operator, T value) {
-//		this(key, operator, value);
-		this.key = key;
+		this(key, operator, value);
 		this.tableStrategyAware = tableStrategyAware;
 		
-		key = RepositoryUtils.getColumnName(key, tableStrategyAware);
-		key = RepositoryUtils.addAliasToColumn(tableStrategyAware.getTableStrategy().getAliasName(), key);
-		
-		
-		this.operator = operator;
-		this.value = value;
-		this.setTableStrategyAware(tableStrategyAware);
+//		key = RepositoryUtils.getColumnName(key, tableStrategyAware);
+//		key = RepositoryUtils.addAliasToColumn(tableStrategyAware.getTableStrategy().getAliasName(), key);
 	}
-
+	
 	@Override
 	public String getKey() {
 		return key;
@@ -80,5 +74,12 @@ public class SingleValueCriterion<O, T> implements Criterion<String, O, T>{
 	 */
 	public TableStrategyAware getTableStrategyAware() {
 		return tableStrategyAware;
+	}
+	
+	public String getMappedKey(){
+		String mappedKey = RepositoryUtils.getColumnName(key, tableStrategyAware);
+		mappedKey = RepositoryUtils.addAliasToColumn(tableStrategyAware.getTableStrategy().getAliasName(), mappedKey);
+		
+		return mappedKey;
 	}
 }
