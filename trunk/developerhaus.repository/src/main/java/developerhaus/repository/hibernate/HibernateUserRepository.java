@@ -38,19 +38,8 @@ public class HibernateUserRepository extends GenericHibernateSupportRepository<U
 
 	@Override
 	public List<UserPoint> getUserPointList(Criteria criteria) {
-		DetachedCriteria hcriteria = null;
-		try {
-			hcriteria = HibernateCriteriaUtils.getHibernateCriteria(UserPoint.class, criteria);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		DetachedCriteria hcriteria = HibernateCriteriaUtils.getHibernateCriteria(UserPoint.class, criteria);
+		
 		// hibernateutils 에 구현 필요
 //		DetachedCriteria hcriteria = DetachedCriteria.forClass(UserPoint.class);
 //		DetachedCriteria pcriteria = hcriteria.createCriteria("mappedUser");
