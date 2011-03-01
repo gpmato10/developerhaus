@@ -1,5 +1,8 @@
 package developerhaus.repository.jdbc;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 import developerhaus.domain.Student;
@@ -32,7 +35,7 @@ public class SqlBuilder {
 	private TableStrategy defaultTableStrategy;
 	
 	private Criteria criteria;
-	private TableStrategyAware[] tableStrategyAwares;
+	private Map<String, TableStrategy> tableStrategyMap = new HashMap<String, TableStrategy>();
 	
 	private int parameterOrder;
 	
@@ -48,14 +51,30 @@ public class SqlBuilder {
 	public SqlBuilder(TableStrategyAware tableStrategyAware, Criteria criteria) {
 		this(tableStrategyAware);
 		this.criteria = criteria;
-	}
+		
+		for(Criterion criterion : criteria.getCriterionList()){
+			if(criterion instanceof JoinCriterion){
 
+				TableStrategy leftTableStrategy = ((JoinCriterion) criterion).getLeftTableStrategyAware().getTableStrategy();
+				TableStrategy rightTableStrategy = ((JoinCriterion) criterion).getRightTableStrategyAware().getTableStrategy();
+			
+				tableStrategyMap.put(leftTableStrategy.getAliasName(), leftTableStrategy);
+				tableStrategyMap.put(rightTableStrategy.getAliasName(), rightTableStrategy);
 
-	public SqlBuilder(TableStrategyAware tableStrategyAware, Criteria criteria, TableStrategyAware... tableStrategyAwares) {
-		this(tableStrategyAware, criteria);
-		this.tableStrategyAwares = tableStrategyAwares;
+			} else if(criterion instanceof MultiValueCriterion) {
+				
+				TableStrategy tableStrategy = ((MultiValueCriterion) criterion).getTableStrategyAware().getTableStrategy();
+				tableStrategyMap.put(tableStrategy.getAliasName(), tableStrategy);
+
+			} else if(criterion instanceof SingleValueCriterion) {
+				
+				TableStrategy tableStrategy = ((SingleValueCriterion) criterion).getTableStrategyAware().getTableStrategy();
+				tableStrategyMap.put(tableStrategy.getAliasName(), tableStrategy);
+			}
+			
+			tableStrategyMap.remove(defaultTableStrategy.getAliasName());
+		}
 	}
-	
 
 	/**
 	 * 구성된 쿼리 반환
@@ -65,33 +84,19 @@ public class SqlBuilder {
 		return sql.toString();
 	}
 	
-	public boolean useMultiTable(){
-		return (tableStrategyAwares != null) && (tableStrategyAwares.length > 0);
-	}
 	
 	public SqlBuilder selectAll() {
 		
-		boolean useMultiTable = this.useMultiTable();
-		
-		StringBuffer selectBuffer = new StringBuffer();
 		String[] allColumn = defaultTableStrategy.getAllColumn();
-		
 		if(allColumn != null){
-			if(useMultiTable){
-				selectBuffer.append(RepositoryUtils.toColumn(defaultTableStrategy.getAliasName(), allColumn));
-				
-				for(int i = 0; i < tableStrategyAwares.length; i++){
-					
-					TableStrategy tableStrategy = tableStrategyAwares[i].getTableStrategy(); 
-					selectBuffer.append(" ,");
-					selectBuffer.append(RepositoryUtils.toColumn(tableStrategy.getAliasName(),	tableStrategy.getAllColumn()));
-				}
-
-			} else {
-				selectBuffer.append(RepositoryUtils.toColumn(allColumn));
-			}
+			sql.append(RepositoryUtils.toColumn(defaultTableStrategy.getAliasName(), allColumn));
 			
-			this.select(selectBuffer.toString());
+			for(TableStrategy ts : tableStrategyMap.values()){
+				
+				sql.append(" ,");
+				sql.append(RepositoryUtils.toColumn(ts.getAliasName(),	ts.getAllColumn()));
+			}
+		
 		} else {
 			this.select(" * ");
 		}
@@ -110,17 +115,14 @@ public class SqlBuilder {
 		sql.append(" FROM ");
 		sql.append(" ");
 		sql.append(defaultTableStrategy.getTableName());
+		sql.append(" ");
+		sql.append(defaultTableStrategy.getAliasName());
 		
-		if(this.useMultiTable()){
+		for(TableStrategy ts : tableStrategyMap.values()){
+			sql.append(", ");
+			sql.append(ts.getTableName());
 			sql.append(" ");
-			sql.append(defaultTableStrategy.getAliasName());
-			
-			for(int i = 0; i < tableStrategyAwares.length; i++){
-				sql.append(", ");
-				sql.append(tableStrategyAwares[i].getTableStrategy().getTableName());
-				sql.append(" ");
-				sql.append(tableStrategyAwares[i].getTableStrategy().getAliasName());
-			}
+			sql.append(ts.getAliasName());
 		}
 		sql.append(" ");
 		
@@ -146,7 +148,6 @@ public class SqlBuilder {
 			try {
 				createQueryStringByCriteria(criterion);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -161,7 +162,7 @@ public class SqlBuilder {
 		// Operation 종류 체크 및 value 개수 체크는 생성자 호출시 검증
 		if(criterion instanceof MultiValueCriterion){
 			
-			String mappedKey = ((MultiValueCriterion)criterion).getKey();
+			String mappedKey = ((MultiValueCriterion)criterion).getMappedKey();
 			Object[] values = ((MultiValueCriterion)criterion).getValues();
 			
 			if(CriterionOperator.BETWEEN.equals(criterion.getOperator()) || CriterionOperator.NOT_BETWEEN.equals(criterion.getOperator())){
@@ -197,7 +198,7 @@ public class SqlBuilder {
 			
 		} else if(criterion instanceof SingleValueCriterion){
 			
-			String mappedKey = 	((SingleValueCriterion)criterion).getKey();
+			String mappedKey = 	((SingleValueCriterion)criterion).getMappedKey();
 			
 			sql.append(mappedKey);
 			sql.append(" ");
@@ -223,7 +224,7 @@ public class SqlBuilder {
 			if(criterion instanceof MultiValueCriterion){
 				
 				
-				String mappedKey = ((MultiValueCriterion)criterion).getKey();
+				String mappedKey = ((MultiValueCriterion)criterion).getMappedKey();
 				Object[] values = ((MultiValueCriterion)criterion).getValues();
 				
 				for(int i = 0; i < values.length; i++){
@@ -232,7 +233,7 @@ public class SqlBuilder {
 					
 			} else if(criterion instanceof SingleValueCriterion){
 				
-				String mappedKey = ((SingleValueCriterion)criterion).getKey();
+				String mappedKey = ((SingleValueCriterion)criterion).getMappedKey();
 				
 				if(CriterionOperator.LIKE.equals(criterion.getOperator())){
 					msps.addValue(mappedKey + "_" + (parameterOrder++), "%" + criterion.getValue() + "%");
