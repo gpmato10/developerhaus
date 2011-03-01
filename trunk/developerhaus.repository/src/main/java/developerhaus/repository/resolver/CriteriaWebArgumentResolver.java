@@ -14,6 +14,7 @@ import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
 import developerhaus.repository.criteria.DefaultOrder;
 import developerhaus.repository.criteria.JoinCriterion;
+import developerhaus.repository.criteria.MultiValueCriterion;
 import developerhaus.repository.criteria.SingleValueCriterion;
 import developerhaus.repository.jdbc.strategy.TableStrategyAware;
 
@@ -44,10 +45,20 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 			if(paramName.startsWith("param.") && !paramName.startsWith("param.op") && !paramName.startsWith("param.dm")) {
 				// domain 체크해서 생성자 분기하기...
 				Criterion<String, CriterionOperator, String> criterion = null;
-				if(hasDomainName(req, paramName)) {
-					criterion = new SingleValueCriterion<CriterionOperator, String>(getTableStrategy(req, paramName), getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
-				} else {			
-					criterion = new SingleValueCriterion<CriterionOperator, String>(getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
+				if(getOperator(req, paramName).equals(CriterionOperator.IN)) {
+					// MultiValueCriterion
+					if(hasDomainName(req, paramName)) {
+						criterion = new MultiValueCriterion<CriterionOperator, String>(getTableStrategy(req, paramName), getParamKey(paramName), getOperator(req, paramName), getParamValues(req, paramName));
+					} else {			
+						criterion = new MultiValueCriterion<CriterionOperator, String>(getParamKey(paramName), getOperator(req, paramName), getParamValues(req, paramName));
+					}
+				} else {
+					// SingleValueCriterion
+					if(hasDomainName(req, paramName)) {
+						criterion = new SingleValueCriterion<CriterionOperator, String>(getTableStrategy(req, paramName), getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
+					} else {			
+						criterion = new SingleValueCriterion<CriterionOperator, String>(getParamKey(paramName), getOperator(req, paramName), getParamValue(req, paramName));
+					}
 				}
 				criteria.add(criterion);
 			} else if(paramName.startsWith("join")) {
@@ -61,6 +72,7 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 		return criteria;
 	}
 	
+
 	/**
 	 * @param req
 	 * @param paramName
@@ -165,6 +177,9 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 	private String getParamValue(NativeWebRequest req, String paramName) {
 		return req.getParameter(paramName);
 	}
+	private String[] getParamValues(NativeWebRequest req, String paramName) {
+		return req.getParameterValues(paramName);
+	}
 
 	/**
 	 * @param paramName
@@ -184,7 +199,7 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 	 * @throws InstantiationException 
 	 */
 	private TableStrategyAware getDomainObject(String domainName) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		Class<?> clazz = Class.forName(BASE_DOMAIN_PACKAGE+"."+toPascalCase(domainName));
+		Class<?> clazz = Class.forName(BASE_DOMAIN_PACKAGE+"."+toPascalCaseWithPackage(domainName));
 		return (TableStrategyAware) clazz.newInstance();
 	}
 	/**
@@ -199,5 +214,20 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 		}
 		return str;
 	}
+	/*
+	 * 패키지경로가 있을 경우
+	 * @param string
+	 * @return
+	 */
+	private String toPascalCaseWithPackage(String domainName) {
+		String str = domainName;
+		if(domainName.indexOf(".") > -1) {
+			str = domainName.split("[.]")[0]+"."+toPascalCase(domainName.split("[.]")[1]);
+		} else {
+			str = toPascalCase(domainName);
+		}
+		return str;
+	}
+
 
 }
