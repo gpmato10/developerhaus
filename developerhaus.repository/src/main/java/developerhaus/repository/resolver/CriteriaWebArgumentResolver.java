@@ -45,7 +45,10 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 			if(paramName.startsWith("param.") && !paramName.startsWith("param.op") && !paramName.startsWith("param.dm")) {
 				// domain 체크해서 생성자 분기하기...
 				Criterion<String, CriterionOperator, String> criterion = null;
-				if(getOperator(req, paramName).equals(CriterionOperator.IN)) {
+				if(getOperator(req, paramName).equals(CriterionOperator.IN)
+						|| getOperator(req, paramName).equals(CriterionOperator.NOT_IN)
+						|| getOperator(req, paramName).equals(CriterionOperator.BETWEEN)
+						|| getOperator(req, paramName).equals(CriterionOperator.NOT_BETWEEN)) {
 					// MultiValueCriterion
 					if(hasDomainName(req, paramName)) {
 						criterion = new MultiValueCriterion<CriterionOperator, String>(getTableStrategy(req, paramName), getParamKey(paramName), getOperator(req, paramName), getParamValues(req, paramName));
