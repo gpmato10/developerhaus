@@ -28,6 +28,7 @@ import developerhaus.repository.jdbc.strategy.TableStrategyAware;
  * param.op.{fieldName} = {operator}
  * param.dm.{fieldName} = {domainName}
  * order.{fieldName} = {orderType}
+ * order.{domainName}.{fieldName} = {orderType}
  * join.{domainName}.{fieldName} = {domainName}.{fieldName}
  */
 public class CriteriaWebArgumentResolver implements WebArgumentResolver {
@@ -69,13 +70,30 @@ public class CriteriaWebArgumentResolver implements WebArgumentResolver {
 				Criterion criterion = new JoinCriterion<CriterionOperator>(getLeftDomain(paramName), getLeftKey(paramName), getRightDomain(req, paramName), getRightKey(req, paramName));
 				criteria.add(criterion);
 			} else if(paramName.startsWith("order")) {
-				Order order = new DefaultOrder(getParamKey(paramName), getOrderType(req, paramName));
-				criteria.add(order);
+				Order order = null;
+				if(hasOrderDomainName(paramName)) {
+					order = new DefaultOrder(getLeftDomain(paramName), getLeftKey(paramName), getOrderType(req, paramName));
+					criteria.add(order);
+				} else {
+					order = new DefaultOrder(getParamKey(paramName), getOrderType(req, paramName));
+					criteria.add(order);
+				}				
 			}			
 		}
 		return criteria;
 	}
 	
+
+	/**
+	 * @param req
+	 * @param paramName
+	 * @return
+	 */
+	private boolean hasOrderDomainName(String paramName) {
+		String[] paramNames = paramName.split("[.]");
+		return paramNames.length > 2 ? true : false;
+	}
+
 
 	/**
 	 * @param req
