@@ -21,12 +21,14 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import developerhaus.domain.User;
+import developerhaus.domain.UserPoint;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.api.criteria.Order;
 import developerhaus.repository.api.criteria.OrderType;
 import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
+import developerhaus.repository.criteria.DefaultOrder;
 import developerhaus.repository.criteria.HibernateCriterionOperator;
 import developerhaus.repository.criteria.JoinCriterion;
 import developerhaus.repository.criteria.MultiValueCriterion;
@@ -63,7 +65,8 @@ public class CriteriaWebArgumentResolverTest {
 		
 		
 
-		req.addParameter("order.seq", "DESC");		
+		req.addParameter("order.seq", "DESC");	
+		req.addParameter("order.userPoint.userPointSeq", "ASC");		
 		
 		req.addParameter("join.user.seq", "userPoint.userSeq");
 		
@@ -79,7 +82,7 @@ public class CriteriaWebArgumentResolverTest {
 		List<Criterion> criterionList = cr.getCriterionList();
 		assertEquals(criterionList.size(), 4);
 		List<Order> orderList = cr.getOrderList();
-		assertEquals(orderList.size(), 1);
+		assertEquals(orderList.size(), 2);
 		
 		Criterion<String, String, CriterionOperator> criterion = criterionList.get(0);
 		assertEquals(criterion.getKey(), "name");
@@ -110,6 +113,12 @@ public class CriteriaWebArgumentResolverTest {
 		Order order = orderList.get(0);
 		assertEquals(order.getProperty(), "seq");
 		assertEquals(order.getType(), OrderType.DESC);
+		
+		order = orderList.get(1);
+		DefaultOrder dorder = (DefaultOrder) order;
+		assertEquals(dorder.getTableStrategyAware().getClass().getSimpleName(), UserPoint.class.getSimpleName());
+		assertEquals(order.getProperty(), "userPointSeq");
+		assertEquals(order.getType(), OrderType.ASC);
 		
 	}
 }
