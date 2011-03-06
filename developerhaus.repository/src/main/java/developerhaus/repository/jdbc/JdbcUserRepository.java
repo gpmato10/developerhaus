@@ -28,7 +28,6 @@ public class JdbcUserRepository implements UserRepository{
 	public User get(Integer id) {
 		Criteria criteria = new DefaultCriteria();
 		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(user, "seq", CriterionOperator.EQ, id));
-		criteria.add(new SingleValueCriterion<CriterionOperator, String>(user, "pw", CriterionOperator.EQ, "3333"));
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(user, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
