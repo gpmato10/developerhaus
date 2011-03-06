@@ -3,6 +3,7 @@ package developerhaus.repository.jdbc;
 import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import javax.activation.DataSource;
 
@@ -18,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import developerhaus.domain.User;
+import developerhaus.domain.UserPoint;
 import developerhaus.repository.UserRepository;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
@@ -42,11 +44,21 @@ public class JdbcUserRepositoryTest {
 		System.out.println(user);
 	}
 	
-	@Ignore
 	@Test
-	public void getUserPoint() throws Exception {
+	public void getUserPointList() throws Exception {
 		
+		int userSeq = 1;
 		
+		UserPoint userPoint = new UserPoint();
+		Criteria criteria = new DefaultCriteria();
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(userPoint, "userseq", CriterionOperator.EQ, userSeq));
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(userPoint, "point", CriterionOperator.GT, 0));
+		
+		List<UserPoint> userPointList =	userRepository.getUserPointList(criteria);
+		System.out.println(userPointList);
+		
+		assertEquals(userPointList.size(), 2);
+		assertEquals(userSeq, userPointList.get(0).getUserSeq());
 		
 	}
 	

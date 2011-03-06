@@ -21,8 +21,13 @@ import developerhaus.repository.mapper.UserRowMapper;
 public class JdbcUserRepository implements UserRepository{
 	
 	private SimpleJdbcTemplate template;
-	private UserRowMapper mappedUser = new UserRowMapper();
+//	private UserRowMapper mappedUser = new UserRowMapper();
 	private User user = new User();
+	private UserPoint userPoint = new UserPoint();
+	
+	public void setDataSource(DataSource dataSource) {
+		this.template = new SimpleJdbcTemplate(dataSource);
+	}
 	
 	@Override
 	public User get(Integer id) {
@@ -34,38 +39,24 @@ public class JdbcUserRepository implements UserRepository{
 		System.out.println(sql);
 		System.out.println(sqlBuilder.getMapSqlParameterSource().getValues());
 		
-		return template.queryForObject(sql,new GeneralBeanPropertyRowMapper<User>(User.class), sqlBuilder.getMapSqlParameterSource());
+		return template.queryForObject(sql, new GeneralBeanPropertyRowMapper<User>(User.class), sqlBuilder.getMapSqlParameterSource());
 	}
 	
 
 	@Override
 	public List<User> list(Criteria criteria) {
-		SqlBuilder sqlBuilder = new SqlBuilder(mappedUser, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(user, criteria);
 		String sql = sqlBuilder.selectAll().from().where().order().build();
-		return template.query(sql, mappedUser, sqlBuilder.getMapSqlParameterSource());
+		return template.query(sql, new GeneralBeanPropertyRowMapper<User>(User.class), sqlBuilder.getMapSqlParameterSource());
 	}
 	
-	public void setDataSource(DataSource dataSource) {
-		this.template = new SimpleJdbcTemplate(dataSource);
-	}
-	
-//	@Override
-	public UserPoint getUserPoint(Integer userPointSeq) {
-		
-		BeanPropertyRowMapper<User> rowMapper;
-		
-		Criteria criteria = new DefaultCriteria();
-		
-		return null;
-	}
-
 
 	@Override
 	public boolean update(User domain) {
 		
 		MapSqlParameterSource msps=null;
 		Criteria criteria = new DefaultCriteria();
-		SqlBuilder sqlBuilder = new SqlBuilder(mappedUser, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(user, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
 		sql=" update ";
 		System.out.println(sql);	
@@ -80,11 +71,18 @@ public class JdbcUserRepository implements UserRepository{
 	}
 
 
-
 	@Override
 	public List<UserPoint> getUserPointList(Criteria criteria) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		SqlBuilder sqlBuilder = new SqlBuilder(userPoint, criteria);
+		
+		String sql = sqlBuilder.selectAll().from().where().order().build();
+		System.out.println(sql);
+		System.out.println(sqlBuilder.getMapSqlParameterSource().getValues());
+		
+//		return template.queryForObject(sql, new GeneralBeanPropertyRowMapper<User>(User.class), sqlBuilder.getMapSqlParameterSource());
+		
+		return template.query(sql, new GeneralBeanPropertyRowMapper<UserPoint>(UserPoint.class), sqlBuilder.getMapSqlParameterSource());
 	}
 	
 }

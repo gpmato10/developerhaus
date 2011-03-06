@@ -201,13 +201,25 @@ public class SqlBuilderTest {
 //		
 //	}
 	
+	@Test
+	public void userPointTest() throws Exception {
+		
+		Criteria criteria = new DefaultCriteria();
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(userPoint, "userseq", CriterionOperator.EQ, 1));
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(userPoint, "point", CriterionOperator.GT, 0));
+		
+		SqlBuilder sqlBuilder = new SqlBuilder(userPoint, criteria);
+		
+		String sql = sqlBuilder.selectAll().from().where().order().build();
+		this.oneSelectValidCheck(sql, "userPointTest", sqlBuilder.getMapSqlParameterSource().getValues());
+		
+	}
+	
 	
 	/**
 	 * 단일 테이블의 조회 쿼리일경우 위치에 대한 간단한 검증
 	 * @param sql
 	 */
-	
-	
 	private void oneSelectValidCheck(String sql, String name){
 		this.oneSelectValidCheck(sql, name, null);
 	}
