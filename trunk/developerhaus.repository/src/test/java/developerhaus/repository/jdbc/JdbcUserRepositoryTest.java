@@ -38,6 +38,7 @@ public class JdbcUserRepositoryTest {
 		Integer id = 3;
 		User user = userRepository.get(id);
 		
+		assertNotNull(user);
 		System.out.println(user);
 	}
 	
