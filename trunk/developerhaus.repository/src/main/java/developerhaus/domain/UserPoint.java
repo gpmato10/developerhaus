@@ -97,5 +97,15 @@ public class UserPoint implements Serializable, TableStrategyAware {
 	public User getMappedUserSeq() {
 		return mappedUserSeq;
 	}
-	
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("UserPoint [userPointSeq=").append(userPointSeq)
+				.append(", userSeq=").append(userSeq).append(", point=")
+				.append(point).append(", pointType=").append(pointType)
+				.append(", regDt=").append(regDt).append(", mappedUserSeq=")
+				.append(mappedUserSeq).append("]");
+		return builder.toString();
+	}
 }
