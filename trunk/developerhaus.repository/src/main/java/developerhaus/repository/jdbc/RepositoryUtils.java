@@ -54,23 +54,31 @@ public class RepositoryUtils {
 	}
 	
 	public static String getColumnName(String domainFiledName, Object target){
-		
-//		// alias를 제거한 도메인명
-//		domainFiledName = getColumnName(domainFiledName);
-		
 		Field f;
 		String alaisMappedKey = null;
 		try {
 			f = target.getClass().getDeclaredField(domainFiledName.toUpperCase());
-			f.setAccessible(true);
-			
 			alaisMappedKey = (String) f.get(target);
 		} catch (Exception e) {
-			throw new SqlBuilderException("도메인 속성명의 대문자로 정의된 공통속성명이 target에 정의되어 있어야 합니다. / domainFiledName : " + domainFiledName, e);
+			throw new SqlBuilderException("도메인 속성명의 대문자로 정의된 도메인-테이블 매핑 속성명이 target에 정의되어 있어야 합니다. / 도메인-테이블 매핑 속성명 : " + domainFiledName, e);
 		}
-		
 		return alaisMappedKey;
 	}
+	
+//	public static String getColumnName(String domainFiledName, Object target){
+//		Field f;
+//		String alaisMappedKey = null;
+//		try {
+//			f = target.getClass().getDeclaredField(domainFiledName.toUpperCase());
+//			f.setAccessible(true);
+//			
+//			alaisMappedKey = (String) f.get(target);
+//		} catch (Exception e) {
+//			throw new SqlBuilderException("도메인 속성명의 대문자로 정의된 공통속성명이 target에 정의되어 있어야 합니다. / domainFiledName : " + domainFiledName, e);
+//		}
+//		
+//		return alaisMappedKey;
+//	}
 	
 	public static void main(String[] args) {
 		String alaisMappedKey = RepositoryUtils.getColumnName("name", new UserRowMapper());

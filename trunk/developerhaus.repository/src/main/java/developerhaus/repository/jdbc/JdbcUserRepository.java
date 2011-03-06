@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
@@ -19,55 +20,46 @@ import developerhaus.repository.mapper.UserRowMapper;
 
 public class JdbcUserRepository implements UserRepository{
 	
-	// DB 의존성을 제거하기 위해 DB컬럼명 변화에 상관없이 대표되는 속성명 정의
-	// 정의된 속성명과 도메인 명의 관계 : 도메인명의 UPPER_CASE가 속성명이여야 한다는 규칙정의 필요
-	// TODO : 쿼리결과 도메인 속성명과 매핑하기 위한 정책 수립(Spring JDBC 붙인 후 다시 생각)
-//	public final static String SEQ = addAliasToColumn(ALIAS, "seq");  		// 시퀀스
-//	public final static String ID = addAliasToColumn(ALIAS, "id");  				// 아이디 
-//	public final static String NAME = addAliasToColumn(ALIAS,	"name");  			// 이름
-//	public final static String PASSWORD = addAliasToColumn(ALIAS, "password");	// 비밀번호 
-//	public final static String POINT = addAliasToColumn(ALIAS, "point");  			// 포인트
-
 	private SimpleJdbcTemplate template;
-//	private UserRowMapper mappedUser = new UserRowMapper();
+	private UserRowMapper mappedUser = new UserRowMapper();
 	private User user = new User();
-	
-	public void setDataSource(DataSource dataSource) {
-		this.template = new SimpleJdbcTemplate(dataSource);
-	}
 	
 	@Override
 	public User get(Integer id) {
-		
 		Criteria criteria = new DefaultCriteria();
-		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>("seq", CriterionOperator.EQ, id));
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(user, "seq", CriterionOperator.EQ, id));
+		criteria.add(new SingleValueCriterion<CriterionOperator, String>(user, "pw", CriterionOperator.EQ, "3333"));
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(user, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
 		System.out.println(sql);
 		System.out.println(sqlBuilder.getMapSqlParameterSource().getValues());
 		
-		return template.queryForObject(sql,mappedUser, sqlBuilder.getMapSqlParameterSource());
+		return template.queryForObject(sql,new GeneralBeanPropertyRowMapper<User>(User.class), sqlBuilder.getMapSqlParameterSource());
+	}
+	
 
+	@Override
+	public List<User> list(Criteria criteria) {
+		SqlBuilder sqlBuilder = new SqlBuilder(mappedUser, criteria);
+		String sql = sqlBuilder.selectAll().from().where().order().build();
+		return template.query(sql, mappedUser, sqlBuilder.getMapSqlParameterSource());
+	}
+	
+	public void setDataSource(DataSource dataSource) {
+		this.template = new SimpleJdbcTemplate(dataSource);
 	}
 	
 //	@Override
 	public UserPoint getUserPoint(Integer userPointSeq) {
 		
-		Criteria criteria = new DefaultCriteria();
+		BeanPropertyRowMapper<User> rowMapper;
 		
+		Criteria criteria = new DefaultCriteria();
 		
 		return null;
 	}
 
-	@Override
-	public List<User> list(Criteria criteria) {
-		
-		SqlBuilder sqlBuilder = new SqlBuilder(mappedUser, criteria);
-		String sql = sqlBuilder.selectAll().from().where().order().build();
-		
-		return template.query(sql, mappedUser, sqlBuilder.getMapSqlParameterSource());
-	}
 
 	@Override
 	public boolean update(User domain) {
