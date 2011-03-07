@@ -91,7 +91,6 @@ public class HibernateCriteriaUtils {
 		try {
 			clazz = Class.forName("developerhaus.domain."+toPascalCase(tableStrategy.getAliasName()));
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Field fields[] = targetClass.getDeclaredFields();
@@ -101,7 +100,7 @@ public class HibernateCriteriaUtils {
 				associationPath = fields[i].getName();
 			}
 		}
-		return null;
+		return associationPath;
 	}
 
 	/**
@@ -109,7 +108,6 @@ public class HibernateCriteriaUtils {
 	 * @return
 	 */
 	private static String getMappedName(String rightKey) {
-		System.out.println("rightKey:"+rightKey);
 		return "mapped"+toPascalCase(rightKey);
 	}
 
