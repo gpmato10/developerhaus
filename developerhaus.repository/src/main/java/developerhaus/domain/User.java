@@ -3,6 +3,18 @@ package developerhaus.domain;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.LockMode;
+
+import developerhaus.repository.UserRepository;
+import developerhaus.repository.api.criteria.Criteria;
+import developerhaus.repository.api.criteria.Criterion;
+import developerhaus.repository.api.criteria.Order;
+import developerhaus.repository.api.criteria.OrderType;
+import developerhaus.repository.criteria.CriterionOperator;
+import developerhaus.repository.criteria.DefaultCriteria;
+import developerhaus.repository.criteria.DefaultOrder;
+import developerhaus.repository.criteria.JoinCriterion;
+import developerhaus.repository.criteria.SingleValueCriterion;
 import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStrategyAware;
@@ -16,6 +28,8 @@ import developerhaus.repository.jdbc2.DomainTableMapperStrategy;
  */
 public class User implements Serializable, TableStrategyAware {
 	
+	private UserRepository userRepository;
+	
 	public final static String TABLE_NAME = "USERS";
 	public final static String ALIAS = "user";
 	// DB 의존성을 제거하기 위해 DB컬럼명 변화에 상관없이 대표되는 컬럼명 정의
@@ -27,9 +41,12 @@ public class User implements Serializable, TableStrategyAware {
 	public final static String PASSWORD = "password";	// 비밀번호 
 	public final static String POINT =  "point";  			// 포인트
 	
+	public void setUserRepository(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
+	
 	@Override
 	public TableStrategy getTableStrategy() {
-		
 		return this.getTableStrategy(ALIAS);
 	}
 	
@@ -91,8 +108,23 @@ public class User implements Serializable, TableStrategyAware {
 		this.userPointList = userPointList;
 	}
 	public List<UserPoint> getUserPointList() {
-		return userPointList;
+		if(this.userPointList == null) {
+			Criteria criteria = new DefaultCriteria();
+			
+			Criterion jcriterion = new JoinCriterion(new User(), "seq", new UserPoint(), "userSeq");
+			Criterion<String, CriterionOperator, Integer> criterion = new SingleValueCriterion<CriterionOperator, Integer>(new User(), "seq", CriterionOperator.EQ, this.seq);
+			Order order = new DefaultOrder("regDt", OrderType.DESC);
+
+			criteria.add(jcriterion);
+			criteria.add(criterion);
+			criteria.add(order);
+			
+			this.userPointList = userRepository.getUserPointList(criteria);;
+		}
+		return this.userPointList;
 	}
+	
+	
 	/**
 	 * @param point the point to set
 	 */

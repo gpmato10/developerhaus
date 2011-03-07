@@ -27,7 +27,7 @@
 		</property>
 	</bean>
 	
-	<bean id="hibernateUserRepository" class="developerhaus.repository.hibernate.HibernateUserRepository">
+	<bean id="userRepository" class="developerhaus.repository.hibernate.HibernateUserRepository">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
