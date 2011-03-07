@@ -54,10 +54,8 @@ public class MybatisUserRepository extends GenericMybatisSupportRepository<User,
 	public String getQuery(Integer id) {
 		BEGIN();
 		SELECT("*");
-		FROM(UserRowMapper.TABLE_NAME);
-		//WHERE("SEQ = #{id}");
-		//WHERE(UserRowMapper.SEQ + " = #{id}");
-		System.out.println(" >>>>>>>>>>>>>>>>> getQuery : "+id);
+		FROM(User.TABLE_NAME);
+		WHERE(User.SEQ + " = #{id}");
 		return SQL();
 	}
 	
