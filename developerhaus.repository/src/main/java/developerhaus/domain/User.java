@@ -3,8 +3,6 @@ package developerhaus.domain;
 import java.io.Serializable;
 import java.util.List;
 
-import org.hibernate.LockMode;
-
 import developerhaus.repository.UserRepository;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
@@ -18,7 +16,6 @@ import developerhaus.repository.criteria.SingleValueCriterion;
 import developerhaus.repository.jdbc.strategy.DefaultTableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStrategy;
 import developerhaus.repository.jdbc.strategy.TableStrategyAware;
-import developerhaus.repository.jdbc2.DomainTableMapperStrategy;
 
 /**
  * User Domain
