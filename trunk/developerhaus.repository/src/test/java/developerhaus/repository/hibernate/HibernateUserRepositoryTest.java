@@ -31,7 +31,7 @@ public class HibernateUserRepositoryTest {
 	@Before
 	public void setUp() throws Exception {
 		ApplicationContext context = new GenericXmlApplicationContext("/developerhaus/repository/hibernate/applicationContext-hibernate-test.xml");
-		repository = (HibernateUserRepository) context.getBean("hibernateUserRepository");
+		repository = (HibernateUserRepository) context.getBean("userRepository");
 	}
 	
 	@Test
@@ -113,7 +113,6 @@ public class HibernateUserRepositoryTest {
 		int id = 1;
 		User user2 = repository.get(id);
 	
-		System.out.println(user2.getUserPointList());
 		assertUser(user, user2);
 	}
 

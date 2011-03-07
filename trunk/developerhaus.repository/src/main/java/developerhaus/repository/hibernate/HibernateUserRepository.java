@@ -2,15 +2,13 @@ package developerhaus.repository.hibernate;
 
 import java.util.List;
 
-import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 
 import developerhaus.domain.User;
 import developerhaus.domain.UserPoint;
+import developerhaus.repository.UserRepository;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.hibernate.criteria.HibernateCriteriaUtils;
-import developerhaus.repository.UserRepository;
 
 /**
  * 하이버네이트 User Repository
@@ -39,15 +37,8 @@ public class HibernateUserRepository extends GenericHibernateSupportRepository<U
 	@Override
 	public List<UserPoint> getUserPointList(Criteria criteria) {
 		DetachedCriteria hcriteria = HibernateCriteriaUtils.getHibernateCriteria(UserPoint.class, criteria);
-		
-		// hibernateutils 에 구현 필요
-//		DetachedCriteria hcriteria = DetachedCriteria.forClass(UserPoint.class);
-//		DetachedCriteria pcriteria = hcriteria.createCriteria("mappedUser");
-//		pcriteria.add(Restrictions.eq("id", "want813"));
-		System.out.println("hcriteria:"+hcriteria);
 		return hibernateTemplate.findByCriteria(hcriteria);
 	}
-	
 
 
 }

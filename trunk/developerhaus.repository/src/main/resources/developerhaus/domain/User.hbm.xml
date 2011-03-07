@@ -16,10 +16,10 @@
 <!--	  		<index column="USER_POINT_SEQ" />-->
 <!--	  		<one-to-many class="UserPoint" />-->
 <!--	  	</list>-->
-		<bag name="userPointList" inverse="true" lazy="false">
-			<key column="USER_SEQ"></key>
-			<one-to-many class="UserPoint" />
-		</bag>
+<!--		<bag name="userPointList" inverse="true" lazy="true">-->
+<!--			<key column="USER_SEQ"></key>-->
+<!--			<one-to-many class="UserPoint" />-->
+<!--		</bag>-->
   	</class>
   	
   	<class name="UserPoint" table="USER_POINT">
