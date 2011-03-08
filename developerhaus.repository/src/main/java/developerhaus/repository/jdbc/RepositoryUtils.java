@@ -1,8 +1,10 @@
 package developerhaus.repository.jdbc;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 
 import developerhaus.repository.jdbc.exception.SqlBuilderException;
+import developerhaus.repository.jdbc.strategy.TableStrategyAware;
 import developerhaus.repository.mapper.UserRowMapper;
 
 public class RepositoryUtils {
@@ -63,6 +65,20 @@ public class RepositoryUtils {
 			throw new SqlBuilderException("도메인 속성명의 대문자로 정의된 도메인-테이블 매핑 속성명이 target에 정의되어 있어야 합니다. / 도메인-테이블 매핑 속성명 : " + domainFiledName, e);
 		}
 		return alaisMappedKey;
+	}
+	
+	public static TableStrategyAware getDefalutTableStrategyAware(Class clazz){
+		
+		Class targetClass =	(Class) ((ParameterizedType)clazz.getInterfaces()[0].getGenericInterfaces()[0]).getActualTypeArguments()[0];
+		
+		TableStrategyAware returnTsa = null;
+		try {
+			returnTsa = (TableStrategyAware) targetClass.newInstance();
+		} catch (Exception e) {
+			throw new SqlBuilderException("GenericRepository를 구현한 Repository 구현클래스가 아닙니다. class : " + clazz, e);
+		}
+		
+		return returnTsa;
 	}
 	
 //	public static String getColumnName(String domainFiledName, Object target){
