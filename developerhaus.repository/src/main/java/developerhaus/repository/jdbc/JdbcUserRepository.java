@@ -13,8 +13,13 @@ import developerhaus.domain.User;
 import developerhaus.domain.UserPoint;
 import developerhaus.repository.UserRepository;
 import developerhaus.repository.api.criteria.Criteria;
+import developerhaus.repository.api.criteria.Criterion;
+import developerhaus.repository.api.criteria.Order;
+import developerhaus.repository.api.criteria.OrderType;
 import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
+import developerhaus.repository.criteria.DefaultOrder;
+import developerhaus.repository.criteria.JoinCriterion;
 import developerhaus.repository.criteria.SingleValueCriterion;
 import developerhaus.repository.mapper.UserRowMapper;
 
@@ -47,6 +52,8 @@ public class JdbcUserRepository implements UserRepository{
 	public List<User> list(Criteria criteria) {
 		SqlBuilder sqlBuilder = new SqlBuilder(user, criteria);
 		String sql = sqlBuilder.selectAll().from().where().order().build();
+		System.out.println(":sql:"+sql);
+		System.out.println(sqlBuilder.getMapSqlParameterSource().getValues());
 		return template.query(sql, new GeneralBeanPropertyRowMapper<User>(User.class), sqlBuilder.getMapSqlParameterSource());
 	}
 	
@@ -72,7 +79,16 @@ public class JdbcUserRepository implements UserRepository{
 
 
 	@Override
-	public List<UserPoint> getUserPointList(Criteria criteria) {
+	public List<UserPoint> getUserPointList(User user) {
+		Criteria criteria = new DefaultCriteria();
+		
+		Criterion jcriterion = new JoinCriterion(new User(), "seq", new UserPoint(), "userSeq");
+		Criterion<String, CriterionOperator, Integer> criterion = new SingleValueCriterion<CriterionOperator, Integer>(new User(), "seq", CriterionOperator.EQ, user.getSeq());
+		Order order = new DefaultOrder(new UserPoint(), "regDt", OrderType.DESC);
+
+		criteria.add(jcriterion);
+		criteria.add(criterion);
+		criteria.add(order);
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(userPoint, criteria);
 		
@@ -85,4 +101,10 @@ public class JdbcUserRepository implements UserRepository{
 		return template.query(sql, new GeneralBeanPropertyRowMapper<UserPoint>(UserPoint.class), sqlBuilder.getMapSqlParameterSource());
 	}
 	
+	@Override
+	public List<UserPoint> getUserPointListById(String id) {
+		User user = new User();
+		user.setId(id);
+		return getUserPointList(user);
+	}
 }
