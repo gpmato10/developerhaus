@@ -105,18 +105,8 @@ public class User implements Serializable, TableStrategyAware {
 		this.userPointList = userPointList;
 	}
 	public List<UserPoint> getUserPointList() {
-		if(this.userPointList == null) {
-			Criteria criteria = new DefaultCriteria();
-			
-			Criterion jcriterion = new JoinCriterion(new User(), "seq", new UserPoint(), "userSeq");
-			Criterion<String, CriterionOperator, Integer> criterion = new SingleValueCriterion<CriterionOperator, Integer>(new User(), "seq", CriterionOperator.EQ, this.seq);
-			Order order = new DefaultOrder("regDt", OrderType.DESC);
-
-			criteria.add(jcriterion);
-			criteria.add(criterion);
-			criteria.add(order);
-			
-			this.userPointList = userRepository.getUserPointList(criteria);;
+		if(this.userPointList == null) {			
+			this.userPointList = userRepository.getUserPointList(this);
 		}
 		return this.userPointList;
 	}
