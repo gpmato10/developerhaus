@@ -241,9 +241,9 @@ public class SqlBuilder {
 				
 				if(CriterionOperator.LIKE.equals(criterion.getOperator())){
 					msps.addValue(mappedKey + "_" + (parameterOrder++), "%" + criterion.getValue() + "%");
-				} else if(CriterionOperator.LIKE_LEFT.equals(criterion.getOperator())){
-					msps.addValue(mappedKey + "_" + (parameterOrder++), "%" + criterion.getValue());
 				} else if(CriterionOperator.LIKE_RIGHT.equals(criterion.getOperator())){
+					msps.addValue(mappedKey + "_" + (parameterOrder++), "%" + criterion.getValue());
+				} else if(CriterionOperator.LIKE_LEFT.equals(criterion.getOperator())){
 					msps.addValue(mappedKey + "_" + (parameterOrder++), criterion.getValue() + "%");
 				} else {
 					msps.addValue(mappedKey + "_" + (parameterOrder++), criterion.getValue());

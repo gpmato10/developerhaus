@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +53,9 @@ public class RepositoryTest {
 	 */
 	@Test
 	public void list() throws Exception {
-		Criterion<String, CriterionOperator, String> criterion = new SingleValueCriterion<CriterionOperator, String>("id", CriterionOperator.LIKE_LEFT, "mudo");		
+		Criterion<String, CriterionOperator, String> criterion = new SingleValueCriterion<CriterionOperator, String>(new User(), "id", CriterionOperator.LIKE_LEFT, "mudo");		
 		
-		Order order = new DefaultOrder("name", OrderType.DESC);
+		Order order = new DefaultOrder(new User(), "name", OrderType.DESC);
 		
 		Criteria criteria = new DefaultCriteria();
 		criteria.add(criterion);
