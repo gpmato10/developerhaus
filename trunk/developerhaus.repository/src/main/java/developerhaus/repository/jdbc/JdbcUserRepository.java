@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
@@ -21,25 +20,26 @@ import developerhaus.repository.criteria.DefaultCriteria;
 import developerhaus.repository.criteria.DefaultOrder;
 import developerhaus.repository.criteria.JoinCriterion;
 import developerhaus.repository.criteria.SingleValueCriterion;
-import developerhaus.repository.mapper.UserRowMapper;
+import developerhaus.repository.jdbc.strategy.TableStrategyAware;
 
 public class JdbcUserRepository implements UserRepository{
 	
 	private SimpleJdbcTemplate template;
-//	private UserRowMapper mappedUser = new UserRowMapper();
-	private User user = new User();
-	private UserPoint userPoint = new UserPoint();
 	
 	public void setDataSource(DataSource dataSource) {
 		this.template = new SimpleJdbcTemplate(dataSource);
 	}
 	
+	private TableStrategyAware defaultTableStrategyAware = RepositoryUtils.getDefalutTableStrategyAware(getClass());
+	private UserPoint userPoint = new UserPoint();
+	
+	
 	@Override
 	public User get(Integer id) {
 		Criteria criteria = new DefaultCriteria();
-		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(user, "seq", CriterionOperator.EQ, id));
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(defaultTableStrategyAware, "seq", CriterionOperator.EQ, id));
 		
-		SqlBuilder sqlBuilder = new SqlBuilder(user, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(defaultTableStrategyAware, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
 		System.out.println(sql);
 		System.out.println(sqlBuilder.getMapSqlParameterSource().getValues());
@@ -50,7 +50,7 @@ public class JdbcUserRepository implements UserRepository{
 
 	@Override
 	public List<User> list(Criteria criteria) {
-		SqlBuilder sqlBuilder = new SqlBuilder(user, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(defaultTableStrategyAware, criteria);
 		String sql = sqlBuilder.selectAll().from().where().order().build();
 		System.out.println(":sql:"+sql);
 		System.out.println(sqlBuilder.getMapSqlParameterSource().getValues());
@@ -63,7 +63,7 @@ public class JdbcUserRepository implements UserRepository{
 		
 		MapSqlParameterSource msps=null;
 		Criteria criteria = new DefaultCriteria();
-		SqlBuilder sqlBuilder = new SqlBuilder(user, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(defaultTableStrategyAware, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
 		sql=" update ";
 		System.out.println(sql);	
@@ -82,8 +82,8 @@ public class JdbcUserRepository implements UserRepository{
 	public List<UserPoint> getUserPointList(User user) {
 		Criteria criteria = new DefaultCriteria();
 		
-		Criterion jcriterion = new JoinCriterion(new User(), "seq", new UserPoint(), "userSeq");
-		Criterion<String, CriterionOperator, Integer> criterion = new SingleValueCriterion<CriterionOperator, Integer>(new User(), "seq", CriterionOperator.EQ, user.getSeq());
+		Criterion jcriterion = new JoinCriterion(defaultTableStrategyAware, "seq", new UserPoint(), "userSeq");
+		Criterion<String, CriterionOperator, Integer> criterion = new SingleValueCriterion<CriterionOperator, Integer>(defaultTableStrategyAware, "seq", CriterionOperator.EQ, user.getSeq());
 		Order order = new DefaultOrder(new UserPoint(), "regDt", OrderType.DESC);
 
 		criteria.add(jcriterion);
