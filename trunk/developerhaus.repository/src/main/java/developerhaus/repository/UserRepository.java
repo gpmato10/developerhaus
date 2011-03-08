@@ -21,6 +21,7 @@ import developerhaus.repository.api.criteria.Criteria;
  */
 public interface UserRepository extends GenericRepository<User, Integer> {
 
-	List<UserPoint> getUserPointList(Criteria criteria);
+	List<UserPoint> getUserPointList(User user);
+	List<UserPoint> getUserPointListById(String id);
 	
 }

@@ -73,7 +73,13 @@ public class MybatisUserRepository extends GenericMybatisSupportRepository<User,
 
 	
 	@Override
-	public List<UserPoint> getUserPointList(Criteria criteria) {
+	public List<UserPoint> getUserPointList(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public List<UserPoint> getUserPointListById(String id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
