@@ -165,7 +165,8 @@ public class SqlBuilderTest {
 		Criteria criteria = new DefaultCriteria();
 		criteria.add(new JoinCriterion<CriterionOperator>(user, "seq", userPoint, "userpointseq"));
 		criteria.add(new JoinCriterion<CriterionOperator>(user, "point", userPoint, "point"));
-		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(user, "point", CriterionOperator.GTE, 2));
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(user, "seq", CriterionOperator.GTE, 0));
+		criteria.add(new MultiValueCriterion<CriterionOperator, Integer>(user, "point",	CriterionOperator.BETWEEN, 0, 100));
 		criteria.add(new DefaultOrder(user, "point", OrderType.DESC));
 		criteria.add(new DefaultOrder(userPoint, "point", OrderType.ASC));
 		
