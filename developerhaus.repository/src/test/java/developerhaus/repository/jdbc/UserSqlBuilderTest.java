@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import developerhaus.domain.User;
 import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
@@ -19,7 +20,7 @@ public class UserSqlBuilderTest {
 	@Test
 	public void simpleBuild() throws Exception {
 		
-		TableStrategyAware userTsa = new UserRowMapper();
+		TableStrategyAware userTsa = new User();
 		Integer id = 3;
 		
 		Criteria criteria = new DefaultCriteria();

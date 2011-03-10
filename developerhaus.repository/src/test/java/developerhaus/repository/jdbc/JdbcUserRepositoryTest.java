@@ -25,6 +25,7 @@ import developerhaus.repository.api.criteria.Criteria;
 import developerhaus.repository.api.criteria.Criterion;
 import developerhaus.repository.criteria.CriterionOperator;
 import developerhaus.repository.criteria.DefaultCriteria;
+import developerhaus.repository.criteria.JoinCriterion;
 import developerhaus.repository.criteria.SingleValueCriterion;
 
 
@@ -50,12 +51,14 @@ public class JdbcUserRepositoryTest {
 		int userSeq = 1;
 		
 		UserPoint userPoint = new UserPoint();
+		User user = new User();
+		
 		Criteria criteria = new DefaultCriteria();
+		criteria.add(new JoinCriterion<CriterionOperator>(user, "seq", userPoint, "userpointseq"));
 		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(userPoint, "userseq", CriterionOperator.EQ, userSeq));
 		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(userPoint, "point", CriterionOperator.GT, 0));
 		
 		List<UserPoint> userPointList =	userRepository.getUserPointList(criteria);
-		System.out.println(userPointList);
 		
 		assertEquals(userPointList.size(), 2);
 		assertEquals(userSeq, userPointList.get(0).getUserSeq());
