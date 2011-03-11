@@ -37,10 +37,11 @@ public class JdbcUserRepository implements UserRepository{
 	@Override
 	public User get(Integer id) {
 		Criteria criteria = new DefaultCriteria();
-		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>(defaultTableStrategyAware, "seq", CriterionOperator.EQ, id));
+		criteria.add(new SingleValueCriterion<CriterionOperator, Integer>("seq", CriterionOperator.EQ, id));
 		
 		SqlBuilder sqlBuilder = new SqlBuilder(defaultTableStrategyAware, criteria);
 		String sql = sqlBuilder.selectAll().from().where().build();
+		
 		System.out.println(sql);
 		System.out.println(sqlBuilder.getMapSqlParameterSource().getValues());
 		
@@ -52,8 +53,10 @@ public class JdbcUserRepository implements UserRepository{
 	public List<User> list(Criteria criteria) {
 		SqlBuilder sqlBuilder = new SqlBuilder(defaultTableStrategyAware, criteria);
 		String sql = sqlBuilder.selectAll().from().where().order().build();
+		
 		System.out.println(":sql:"+sql);
 		System.out.println(sqlBuilder.getMapSqlParameterSource().getValues());
+		
 		return template.query(sql, new GeneralBeanPropertyRowMapper<User>(User.class), sqlBuilder.getMapSqlParameterSource());
 	}
 	
@@ -82,15 +85,15 @@ public class JdbcUserRepository implements UserRepository{
 	public List<UserPoint> getUserPointList(User user) {
 		Criteria criteria = new DefaultCriteria();
 		
-		Criterion jcriterion = new JoinCriterion(defaultTableStrategyAware, "seq", new UserPoint(), "userSeq");
-		Criterion<String, CriterionOperator, Integer> criterion = new SingleValueCriterion<CriterionOperator, Integer>(defaultTableStrategyAware, "seq", CriterionOperator.EQ, user.getSeq());
+		Criterion jcriterion = new JoinCriterion("seq", new UserPoint(), "userSeq");
+		Criterion<String, CriterionOperator, Integer> criterion = new SingleValueCriterion<CriterionOperator, Integer>("seq", CriterionOperator.EQ, user.getSeq());
 		Order order = new DefaultOrder(new UserPoint(), "regDt", OrderType.DESC);
 
 		criteria.add(jcriterion);
 		criteria.add(criterion);
 		criteria.add(order);
 		
-		SqlBuilder sqlBuilder = new SqlBuilder(userPoint, criteria);
+		SqlBuilder sqlBuilder = new SqlBuilder(defaultTableStrategyAware, criteria);
 		
 		String sql = sqlBuilder.selectAll().from().where().order().build();
 		System.out.println(sql);
@@ -106,5 +109,12 @@ public class JdbcUserRepository implements UserRepository{
 		User user = new User();
 		user.setId(id);
 		return getUserPointList(user);
+	}
+
+
+	@Override
+	public List<UserPoint> getUserPointList(Criteria criteria) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

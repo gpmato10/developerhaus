@@ -29,9 +29,8 @@ public class User implements Serializable, TableStrategyAware {
 	
 	public final static String TABLE_NAME = "USERS";
 	public final static String ALIAS = "user";
-	// DB 의존성을 제거하기 위해 DB컬럼명 변화에 상관없이 대표되는 컬럼명 정의
-	// TODO : 쿼리결과 도메인 속성명과 매핑하기 위한 정책 수립(Spring JDBC 붙인 후 다시 생각)
 	
+	// DB 의존성을 제거하기 위해 DB컬럼명 변화에 상관없이 대표되는 컬럼명 정의
 	public final static String SEQ = "seq";  		// 시퀀스
 	public final static String ID =  "id";  				// 아이디 
 	public final static String NAME = 	"name";  			// 이름

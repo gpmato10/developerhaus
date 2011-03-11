@@ -6,34 +6,54 @@ import developerhaus.repository.jdbc.strategy.TableStrategyAware;
 
 public class JoinCriterion<O> implements Criterion<String, O, String> {
 	
-
-	private String join;
-	
 	private TableStrategyAware leftTableStrategyAware;
 	private String leftKey;
 	private TableStrategyAware rightTableStrategyAware;
 	private String rightKey;
 	
+	
 	public JoinCriterion(TableStrategyAware leftTableStrategyAware, String leftKey, TableStrategyAware rightTableStrategyAware, String rightKey){
-		
 		
 		this.leftKey = leftKey;
 		this.rightKey = rightKey;
 		this.leftTableStrategyAware = leftTableStrategyAware;
 		this.rightTableStrategyAware = rightTableStrategyAware;
 		
-		leftKey =  RepositoryUtils.getColumnName(leftKey, leftTableStrategyAware);
-		rightKey = RepositoryUtils.getColumnName(rightKey, rightTableStrategyAware);
-		
-		this.join = RepositoryUtils.addAliasToColumn(leftTableStrategyAware.getTableStrategy().getAliasName(), leftKey)
-					+ CriterionOperator.EQ 
-					+ RepositoryUtils.addAliasToColumn(rightTableStrategyAware.getTableStrategy().getAliasName(), rightKey)
-					;
+//		leftKey =  RepositoryUtils.getColumnName(leftKey, leftTableStrategyAware);
+//		rightKey = RepositoryUtils.getColumnName(rightKey, rightTableStrategyAware);
+//		
+//		this.join = RepositoryUtils.addAliasToColumn(leftTableStrategyAware.getTableStrategy().getAliasName(), leftKey)
+//					+ CriterionOperator.EQ 
+//					+ RepositoryUtils.addAliasToColumn(rightTableStrategyAware.getTableStrategy().getAliasName(), rightKey)
+//					;
 	}
+
+	public JoinCriterion(String leftKey, TableStrategyAware rightTableStrategyAware, String rightKey){
+		
+		this.leftKey = leftKey;
+		this.rightKey = rightKey;
+		this.rightTableStrategyAware = rightTableStrategyAware;
+	}
+	
+	public JoinCriterion(TableStrategyAware leftTableStrategyAware, String leftKey, String rightKey){
+		
+		this.leftKey = leftKey;
+		this.rightKey = rightKey;
+		this.leftTableStrategyAware = leftTableStrategyAware;
+	}
+	
 
 	@Override
 	public String getValue() {
-		return this.join;
+		
+		String leftKey = RepositoryUtils.getColumnName(this.leftKey, leftTableStrategyAware);
+		String rightKey = RepositoryUtils.getColumnName(this.rightKey, rightTableStrategyAware);
+		String join = RepositoryUtils.addAliasToColumn(leftTableStrategyAware.getTableStrategy().getAliasName(), leftKey)
+						+ CriterionOperator.EQ 
+						+ RepositoryUtils.addAliasToColumn(rightTableStrategyAware.getTableStrategy().getAliasName(), rightKey)
+						; 
+		
+		return join;
 	}
 
 	@Override

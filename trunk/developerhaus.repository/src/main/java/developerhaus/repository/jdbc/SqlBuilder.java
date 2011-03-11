@@ -53,27 +53,64 @@ public class SqlBuilder {
 		this(tableStrategyAware);
 		this.criteria = criteria;
 		
+		// 기본 Table의  조건일 경우 Criterion, Order 생성자에 TableStrategyAware를 세팅하지 않아도 된다.
+		// ex) new SingleValueCriterion(new User(), "id", CriterionOperator.EQ,"abcd") -> new SingleValueCriterion("id", CriterionOperator.EQ,"abcd")  
 		for(Criterion criterion : criteria.getCriterionList()){
 			if(criterion instanceof JoinCriterion){
 
-				TableStrategy leftTableStrategy = ((JoinCriterion) criterion).getLeftTableStrategyAware().getTableStrategy();
-				TableStrategy rightTableStrategy = ((JoinCriterion) criterion).getRightTableStrategyAware().getTableStrategy();
-			
-				tableStrategyMap.put(leftTableStrategy.getAliasName(), leftTableStrategy);
-				tableStrategyMap.put(rightTableStrategy.getAliasName(), rightTableStrategy);
+				TableStrategyAware leftTsa = ((JoinCriterion) criterion).getLeftTableStrategyAware();
+				if(leftTsa == null){
+					((JoinCriterion) criterion).setLeftTableStrategyAware(tableStrategyAware);
+				} else {
+					TableStrategy tableStrategy = leftTsa.getTableStrategy();
+					tableStrategyMap.put(tableStrategy.getAliasName(), tableStrategy);
+				}
+				
+				TableStrategyAware rightTsa = ((JoinCriterion) criterion).getRightTableStrategyAware();
+				if(rightTsa == null){
+					((JoinCriterion) criterion).setRightTableStrategyAware(tableStrategyAware);
+				} else {
+					TableStrategy tableStrategy = rightTsa.getTableStrategy();
+					tableStrategyMap.put(tableStrategy.getAliasName(), tableStrategy);
+				}
+				
+//				TableStrategy leftTableStrategy = ((JoinCriterion) criterion).getLeftTableStrategyAware().getTableStrategy();
+//				TableStrategy rightTableStrategy = ((JoinCriterion) criterion).getRightTableStrategyAware().getTableStrategy();
+//			
+//				tableStrategyMap.put(leftTableStrategy.getAliasName(), leftTableStrategy);
+//				tableStrategyMap.put(rightTableStrategy.getAliasName(), rightTableStrategy);
 
 			} else if(criterion instanceof MultiValueCriterion) {
 				
-				TableStrategy tableStrategy = ((MultiValueCriterion) criterion).getTableStrategyAware().getTableStrategy();
-				tableStrategyMap.put(tableStrategy.getAliasName(), tableStrategy);
+				TableStrategyAware tsa = ((MultiValueCriterion) criterion).getTableStrategyAware();
+				if(tsa == null){
+					((MultiValueCriterion) criterion).setTableStrategyAware(tableStrategyAware);
+				} else {
+					TableStrategy tableStrategy = tsa.getTableStrategy();
+					tableStrategyMap.put(tableStrategy.getAliasName(), tableStrategy);	
+				}
 
 			} else if(criterion instanceof SingleValueCriterion) {
 				
-				TableStrategy tableStrategy = ((SingleValueCriterion) criterion).getTableStrategyAware().getTableStrategy();
-				tableStrategyMap.put(tableStrategy.getAliasName(), tableStrategy);
+				TableStrategyAware tsa = ((SingleValueCriterion) criterion).getTableStrategyAware();
+				if(tsa == null){
+					((SingleValueCriterion) criterion).setTableStrategyAware(tableStrategyAware);
+				} else {
+					TableStrategy tableStrategy = tsa.getTableStrategy();
+					tableStrategyMap.put(tableStrategy.getAliasName(), tableStrategy);
+				}
 			}
 			
 			tableStrategyMap.remove(defaultTableStrategy.getAliasName());
+		}
+		
+		for(Order order : criteria.getOrderList()){
+			if(order instanceof DefaultOrder){
+				DefaultOrder defaultOrder = (DefaultOrder) order;
+				if(defaultOrder.getTableStrategyAware() == null){
+					defaultOrder.setTableStrategyAware(tableStrategyAware);
+				}
+			}
 		}
 	}
 
@@ -159,7 +196,6 @@ public class SqlBuilder {
 		return this;
 	}
 
-//	TODO : Criterion 구현체에 따라 쿼리 생성(현재는 SingleValueCriterion, JoinCriterion만 구현 / Spring JDBC API 생각안함)
 	@SuppressWarnings("rawtypes")
 	private void createQueryStringByCriteria(Criterion criterion) throws Exception {
 		
