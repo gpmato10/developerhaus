@@ -28,8 +28,8 @@ import developerhaus.repository.criteria.SingleValueCriterion;
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(locations="/developerhaus/repository/jdbc/applicationContext-test.xml")
-@ContextConfiguration(locations="/developerhaus/repository/hibernate/applicationContext-hibernate-test.xml")
+@ContextConfiguration(locations="/developerhaus/repository/jdbc/applicationContext-test.xml")
+//@ContextConfiguration(locations="/developerhaus/repository/hibernate/applicationContext-hibernate-test.xml")
 public class RepositoryTest {
 	@Autowired
 	UserRepository repository;
@@ -55,7 +55,7 @@ public class RepositoryTest {
 	public void list() throws Exception {
 		Criterion<String, CriterionOperator, String> criterion = new SingleValueCriterion<CriterionOperator, String>(new User(), "id", CriterionOperator.LIKE_LEFT, "mudo");		
 		
-		Order order = new DefaultOrder(new User(), "name", OrderType.DESC);
+		Order order = new DefaultOrder("name", OrderType.DESC);
 		
 		Criteria criteria = new DefaultCriteria();
 		criteria.add(criterion);
