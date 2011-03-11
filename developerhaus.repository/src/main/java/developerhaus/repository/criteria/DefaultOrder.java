@@ -47,6 +47,10 @@ public class DefaultOrder implements Order {
 		return tableStrategyAware;
 	}
 	
+	public void setTableStrategyAware(TableStrategyAware tableStrategyAware) {
+		this.tableStrategyAware = tableStrategyAware;
+	}
+
 	public String getMappedProperty(){
 		
 		String mappedProperty = RepositoryUtils.getColumnName(property, tableStrategyAware);

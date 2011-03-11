@@ -32,7 +32,6 @@ public class RepositoryUtils {
 		return sb.toString();
 	}
 	
-//	TODO : Alias로 넘어온 컬럼명을 실제 DB에 정의된 컬럼명으로 매핑(Spring에서 사용가능 하도록 ex/ :name), 컬럼정책에 관한 파라미터가 아마 하나 더 넘어와야 한다.
 	public static String toSqlParameterSource(String... columns) {
 		
 		StringBuilder sb = new StringBuilder();

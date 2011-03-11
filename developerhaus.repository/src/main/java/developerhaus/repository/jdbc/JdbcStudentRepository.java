@@ -21,7 +21,6 @@ public class JdbcStudentRepository implements StudentRepository, TableStrategyAw
 	public final static String ALIAS = "stu";
 	
 	// DB 의존성을 제거하기 위해 DB컬럼명 변화에 상관없이 대표되는 컬럼명 정의
-	// TODO : 쿼리결과 도메인 속성명과 매핑하기 위한 정책 수립(Spring JDBC 붙인 후 다시 생각)
 	public final static String STUDENT_NUMBER = addAliasToColumn(ALIAS,	"num");  	// 학번
 	public final static String STUDENT_NAME = addAliasToColumn(ALIAS, "name");  	// 이름
 	public final static String YEAR = addAliasToColumn(ALIAS, "year");  			// 학년
@@ -75,5 +74,11 @@ public class JdbcStudentRepository implements StudentRepository, TableStrategyAw
 
 		return new DefaultTableStrategy(TABLE_NAME, ALIAS)
 					.setAllColumn(STUDENT_NUMBER, STUDENT_NAME, YEAR, DEPARTMENT, UNIVERSITY_ID);
+	}
+
+	@Override
+	public TableStrategy getTableStrategy(String alias) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

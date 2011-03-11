@@ -41,5 +41,10 @@ public class JdbcUniversityRepository implements UniversityRepository, TableStra
 		return new DefaultTableStrategy(TABLE_NAME, ALIAS)
 					.setAllColumn(UNIVERSITY_ID, UNIVERSITY_NAME);
 	}
+	@Override
+	public TableStrategy getTableStrategy(String alias) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

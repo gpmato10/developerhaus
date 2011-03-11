@@ -23,5 +23,6 @@ public interface UserRepository extends GenericRepository<User, Integer> {
 
 	List<UserPoint> getUserPointList(User user);
 	List<UserPoint> getUserPointListById(String id);
+	List<UserPoint> getUserPointList(Criteria criteria);
 	
 }
