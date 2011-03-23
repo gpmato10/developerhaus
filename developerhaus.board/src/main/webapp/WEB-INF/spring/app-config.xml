@@ -7,6 +7,10 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 	
 	<!-- Scans within the base package of the application for @Components to configure as beans -->
-	<context:component-scan base-package="com.developerhaus.board" />
+	<context:component-scan base-package="com.developerhaus">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+	</context:component-scan>
 	
 </beans>
