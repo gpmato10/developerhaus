@@ -31,9 +31,9 @@ public class BoardController {
 		return "board/list";
 	}
 
-	@RequestMapping(value = "/view/{postId}", method = RequestMethod.GET)
-	public String view(@PathVariable("postId") int postId, HttpServletRequest request, Model model) {
-		Board board = boardService.view(postId);
+	@RequestMapping(value = "/view/{postSeq}", method = RequestMethod.GET)
+	public String view(@PathVariable("postSeq") int postSeq, HttpServletRequest request, Model model) {
+		Board board = boardService.view(postSeq);
 		model.addAttribute("board", board);
 		return "board/view";
 	}
@@ -48,8 +48,8 @@ public class BoardController {
 	public String save(Board board, HttpServletRequest request, Model model) {
 		System.out.println("board.getTitle():"+board.getTitle());
 		System.out.println("board.getContents():"+board.getContents());
-		System.out.println("board.getPostId():"+board.getPostId());
-		if(board.getPostId() > 0) {
+		System.out.println("board.getPostSeq():"+board.getPostSeq());
+		if(board.getPostSeq() > 0) {
 			boardService.update(board);
 		} else {
 			boardService.insert(board);
@@ -58,9 +58,9 @@ public class BoardController {
 		return "board/view";
 	}
 	
-	@RequestMapping(value = "/delete/{postId}", method = RequestMethod.GET)
-	public String delete(@PathVariable("postId") int postId, HttpServletRequest request, Model model) {
-		boardService.delete(postId);
+	@RequestMapping(value = "/delete/{postSeq}", method = RequestMethod.GET)
+	public String delete(@PathVariable("postSeq") int postSeq, HttpServletRequest request, Model model) {
+		boardService.delete(postSeq);
 		return list(request, model);
 	}
 }

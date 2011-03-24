@@ -2,18 +2,18 @@ package com.developerhaus.domain;
 
 public class Board {
 
-	private int postId;
+	private int postSeq;
 	private String title;
 	private String contents;
 	private int regUsr;
 	private String regDt;
 	private int modUsr;
 	
-	public int getPostId() {
-		return postId;
+	public int getPostSeq() {
+		return postSeq;
 	}
-	public void setPostId(int postId) {
-		this.postId = postId;
+	public void setPostSeq(int postSeq) {
+		this.postSeq = postSeq;
 	}
 	public String getTitle() {
 		return title;
