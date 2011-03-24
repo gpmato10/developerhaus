@@ -25,7 +25,7 @@ public class BoardDAOJdbc implements BoardDAO {
 	
 	public List<Board> list() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("	SELECT POST_ID, TITLE, CONTENTS, REG_USR, REG_DT, MOD_USR, MOD_DT	");
+		sb.append("	SELECT POST_SEQ, TITLE, CONTENTS, REG_USR, REG_DT, MOD_USR, MOD_DT	");
 		sb.append("	FROM BOARD	");
 		return jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<Board>(Board.class));
 	}
@@ -34,18 +34,18 @@ public class BoardDAOJdbc implements BoardDAO {
 		StringBuffer sb = new StringBuffer();
 		sb.append("	INSERT INTO ");
 		sb.append("	BOARD ");
-		sb.append("	(POST_ID, TITLE, CONTENTS, REG_USR, REG_DT, MOD_USR, MOD_DT)	");
+		sb.append("	(POST_SEQ, TITLE, CONTENTS, REG_USR, REG_DT, MOD_USR, MOD_DT)	");
 		sb.append(" VALUES ");
-		sb.append("	(:postId, :title, :contents, :regUsr, SYSDATE, 0, NULL)");
+		sb.append("	(:postSeq, :title, :contents, :regUsr, SYSDATE, 0, NULL)");
 		return jdbcTemplate.update(sb.toString(), new BeanPropertySqlParameterSource(board));
 	}
 
-	public int delete(int postId) {
+	public int delete(int postSeq) {
 		Board board = new Board();
-		board.setPostId(postId);
+		board.setPostSeq(postSeq);
 		StringBuffer sb = new StringBuffer();
 		sb.append("	DELETE FROM BOARD ");
-		sb.append("	WHERE POST_ID = :postId ");
+		sb.append("	WHERE POST_SEQ = :postSeq ");
 		return jdbcTemplate.update(sb.toString(), new BeanPropertySqlParameterSource(board));
 	}
 
@@ -57,22 +57,22 @@ public class BoardDAOJdbc implements BoardDAO {
 		sb.append("	, MOD_USR = :modUsr	");
 		sb.append("	, MOD_DT = SYSDATE	");
 		sb.append(" WHERE ");
-		sb.append("	POST_ID = :postId ");
+		sb.append("	POST_SEQ = :postSeq ");
 		return jdbcTemplate.update(sb.toString(), new BeanPropertySqlParameterSource(board));
 	}
 
-	public Board view(int postId) {
+	public Board view(int postSeq) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("	SELECT POST_ID, TITLE, CONTENTS, REG_USR, REG_DT, MOD_USR, MOD_DT	");
+		sb.append("	SELECT POST_SEQ, TITLE, CONTENTS, REG_USR, REG_DT, MOD_USR, MOD_DT	");
 		sb.append("	FROM BOARD	");
-		sb.append(" WHERE POST_ID = ? ");
+		sb.append(" WHERE POST_SEQ = ? ");
 		
-		return jdbcTemplate.queryForObject(sb.toString(), new BeanPropertyRowMapper<Board>(Board.class), postId);
+		return jdbcTemplate.queryForObject(sb.toString(), new BeanPropertyRowMapper<Board>(Board.class), postSeq);
 	}
 
 	public int getPostSeq() {
 		StringBuffer sb = new StringBuffer();
-		sb.append(" SELECT MAX(POST_ID)+1 AS SEQ ");
+		sb.append(" SELECT MAX(POST_SEQ)+1 AS SEQ ");
 		sb.append(" FROM BOARD ");
 		return jdbcTemplate.queryForInt(sb.toString());
 	}

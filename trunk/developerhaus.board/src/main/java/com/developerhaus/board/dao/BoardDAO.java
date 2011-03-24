@@ -12,10 +12,10 @@ public interface BoardDAO {
 
 	public int insert(Board board);
 	
-	public Board view(int postId);
+	public Board view(int postSeq);
 	
 	public int update(Board board);
 	
-	public int delete(int postId);
+	public int delete(int postSeq);
 	
 }

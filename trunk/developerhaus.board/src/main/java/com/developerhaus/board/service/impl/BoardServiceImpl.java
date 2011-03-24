@@ -21,20 +21,20 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	public int insert(Board board) {
-		board.setPostId(boardDAO.getPostSeq());
+		board.setPostSeq(boardDAO.getPostSeq());
 		return boardDAO.insert(board);
 	}
 
-	public int delete(int postId) {
-		return boardDAO.delete(postId);
+	public int delete(int postSeq) {
+		return boardDAO.delete(postSeq);
 	}
 
 	public int update(Board board) {
 		return boardDAO.update(board);
 	}
 
-	public Board view(int postId) {
-		return boardDAO.view(postId);
+	public Board view(int postSeq) {
+		return boardDAO.view(postSeq);
 	}
 
 }
