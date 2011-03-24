@@ -4,25 +4,29 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="/css/common.css" />
+	<link rel="stylesheet" type="text/css" href="/haus/styles/common.css" />
 	<title>board</title>
 </head>
 <body>
-	<form action="/haus/board/insert" method="post">
-		<input type="hidden" name="regUsr" value="1" />
-		<table cellpadding="0" cellspacing="0" summary="게시판" class="tbl1">
-			<tr>
-				<td>제목 : </td>
-				<td><input type="text" name="title" value="" /></td>
-			</tr>
-			<tr>
-				<td>내용 : </td>
-				<td><textarea name="contents" cols="45" rows="4"></textarea></td>
-			</tr>
-			<tr>
-				<td colspan="2" style="text-align:right;"><input type="submit" value="저장" /></td>
-			</tr>
-		</table>
-	</form>
+	<div class="wrap">
+		<div class="head"></div>
+		<div class="container">
+			<form action="/haus/board/insert" method="post">
+				<input type="hidden" name="regUsr" value="1" />
+				<table cellpadding="0" cellspacing="0" summary="게시판" class="tbl1">
+					<tr>
+						<th class="ct2">제목 : </th>
+						<td class="le"><input type="text" name="title" value="" /></td>
+					</tr>
+					<tr>
+						<th class="ct2">내용 : </th>
+						<td class="le"><textarea name="contents" cols="45" rows="4"></textarea></td>
+					</tr>
+				</table>
+				<div class="btnr1"><a href="/haus/board/list">목록으로</a><input type="submit" value="저장" /></div>
+			</form>
+		</div>
+		<div class="footer"></div>
+	</div>
 </body>
 </html>
