@@ -2,6 +2,18 @@
 <!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN" "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
 <urlrewrite default-match-type="wildcard">
 	<rule>
+		<from>/styles/**</from>
+		<to>/styles/$1</to>
+	</rule>
+	<rule>
+		<from>/images/**</from>
+		<to>/styles/$1</to>
+	</rule>
+	<rule>
+		<from>/scripts/**</from>
+		<to>/styles/$1</to>
+	</rule>
+	<rule>
 		<from>/</from>
 		<to>/app/welcome</to>
 	</rule>
@@ -12,5 +24,5 @@
 	<outbound-rule>
 		<from>/app/**</from>
 		<to>/$1</to>
-	</outbound-rule>	
+	</outbound-rule>
 </urlrewrite>
