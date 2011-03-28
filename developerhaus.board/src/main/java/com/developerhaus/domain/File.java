@@ -2,43 +2,42 @@ package com.developerhaus.domain;
 
 public class File {
 
-	private int flSeq;
-	private String flNm;
-	private String flPth;
-	private String flExt;
-	private int flSz;
+	private int fileSeq;
+	private String fileNm;
+	private String filePth;
+	private String fileExt;
+	private long fileSz;
 	private int regUsr;
 	private String regDt;
-
-	public int getFlSeq() {
-		return flSeq;
+	public int getFileSeq() {
+		return fileSeq;
 	}
-	public void setFlSeq(int flSeq) {
-		this.flSeq = flSeq;
+	public void setFileSeq(int fileSeq) {
+		this.fileSeq = fileSeq;
 	}
-	public String getFlNm() {
-		return flNm;
+	public String getFileNm() {
+		return fileNm;
 	}
-	public void setFlNm(String flNm) {
-		this.flNm = flNm;
+	public void setFileNm(String fileNm) {
+		this.fileNm = fileNm;
 	}
-	public String getFlPth() {
-		return flPth;
+	public String getFilePth() {
+		return filePth;
 	}
-	public void setFlPth(String flPth) {
-		this.flPth = flPth;
+	public void setFilePth(String filePth) {
+		this.filePth = filePth;
 	}
-	public String getFlExt() {
-		return flExt;
+	public String getFileExt() {
+		return fileExt;
 	}
-	public void setFlExt(String flExt) {
-		this.flExt = flExt;
+	public void setFileExt(String fileExt) {
+		this.fileExt = fileExt;
 	}
-	public int getFlSz() {
-		return flSz;
+	public long getFileSz() {
+		return fileSz;
 	}
-	public void setFlSz(int flSz) {
-		this.flSz = flSz;
+	public void setFileSz(long fileSz) {
+		this.fileSz = fileSz;
 	}
 	public int getRegUsr() {
 		return regUsr;
@@ -52,5 +51,6 @@ public class File {
 	public void setRegDt(String regDt) {
 		this.regDt = regDt;
 	}
+
 	
 }
