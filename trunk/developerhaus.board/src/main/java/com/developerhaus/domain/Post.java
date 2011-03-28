@@ -8,6 +8,9 @@ public class Post {
 	private int regUsr;
 	private String regDt;
 	private int modUsr;
+	private int upPostSeq;
+	private int odr;
+	private int lvl;
 	
 	public int getPostSeq() {
 		return postSeq;
@@ -45,6 +48,22 @@ public class Post {
 	public int getModUsr() {
 		return modUsr;
 	}
-	
-	
+	public int getUpPostSeq() {
+		return upPostSeq;
+	}
+	public void setUpPostSeq(int upPostSeq) {
+		this.upPostSeq = upPostSeq;
+	}
+	public int getOdr() {
+		return odr;
+	}
+	public void setOdr(int odr) {
+		this.odr = odr;
+	}
+	public int getLvl() {
+		return lvl;
+	}
+	public void setLvl(int lvl) {
+		this.lvl = lvl;
+	}
 }
