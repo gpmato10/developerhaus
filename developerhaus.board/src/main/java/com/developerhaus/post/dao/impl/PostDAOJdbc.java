@@ -25,8 +25,9 @@ public class PostDAOJdbc implements PostDAO {
 	
 	public List<Post> list() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("	SELECT POST_SEQ, TITLE, CONTENTS, REG_USR, REG_DT, MOD_USR, MOD_DT	");
+		sb.append("	SELECT POST_SEQ, TITLE, CONTENTS, REG_USR, REG_DT, MOD_USR, MOD_DT, UP_POST_SEQ, ODR, LVL");
 		sb.append("	FROM POST	");
+		sb.append("	ORDER BY UP_POST_SEQ DESC, ODR, LVL ");
 		return jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<Post>(Post.class));
 	}
 
