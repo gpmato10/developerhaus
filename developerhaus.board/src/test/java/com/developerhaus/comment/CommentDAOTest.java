@@ -28,7 +28,7 @@ public class CommentDAOTest {
 		CommentDAOJdbc commentDao = new CommentDAOJdbc();
 		commentDao.setDataSource(dataSource);
 		Comment comment = new Comment();
-		comment.setComment("이건 뭥미");
+		comment.setComment("이건 뭥미222");
 		comment.setPostSeq(1);
 		comment.setRegUsr(1);
 		commentDao.insert(comment);
@@ -36,8 +36,8 @@ public class CommentDAOTest {
 		post.setPostSeq(1);
 		assertEquals(1,commentDao.list(post).size());
 		comment.setCommentSeq(0);
-		commentDao.delete(comment);
-		assertEquals(0,commentDao.list(post).size());
+//		commentDao.delete(comment);
+//		assertEquals(0,commentDao.list(post).size());
 	}
 	@Test
 	public void getListAndDeleteAllTest(){
