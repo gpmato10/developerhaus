@@ -16,4 +16,6 @@ public interface CommentDAO {
 	public int update(Comment comment);
 	
 	public int delete(Comment comment);
+	
+	public int deleteAll(Comment comment);
 }

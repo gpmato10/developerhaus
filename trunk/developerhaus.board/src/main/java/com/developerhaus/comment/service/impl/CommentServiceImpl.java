@@ -3,16 +3,18 @@ package com.developerhaus.comment.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.developerhaus.comment.service.CommentService;
 import com.developerhaus.domain.Comment;
 import com.developerhaus.domain.Post;
-import com.developerhaus.comment.dao.impl.CommentDAOJdbc;
+import com.developerhaus.comment.dao.CommentDAO;
 
+@Service
 public class CommentServiceImpl implements CommentService{
 
 	@Autowired
-	CommentDAOJdbc commentDao;
+	CommentDAO commentDao;
 	
 	@Override
 	public List<Comment> list(Post post) {
