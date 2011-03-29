@@ -29,6 +29,7 @@ public class CommentController {
 		post.setPostSeq(postSeq);
 		List list = commentService.list(post);
 		model.addAttribute("list", list);
+		model.addAttribute("postSeq", postSeq);
 		return "comment/list";
 	}
 	

@@ -59,7 +59,7 @@
 			</table>
 			<div class="container">
 				<form action="/haus/comment/insert" method="post">
-					<input type="hidden" name="postSeq" value="1" />
+					<input type="hidden" name="postSeq" value="${postSeq}" />
 					<input type="hidden" name="regUsr" value="1" />
 					<table cellpadding="0" cellspacing="0" summary="게시판" class="tbl1">
 						<tr>
