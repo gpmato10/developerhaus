@@ -48,7 +48,7 @@ public class CommentDAOJdbc implements CommentDAO{
 	public Comment getSeqSettedComment(Comment comment){
 		StringBuffer sb = new StringBuffer();
 		sb.append("	SELECT MAX(COMMENT_SEQ)+1 AS COMMENT_SEQ	");
-		sb.append("	FROM COMMENT WHERE POST_SEQ = :POST_SEQ	");
+		sb.append("	FROM COMMENT 	");
 		comment.setCommentSeq(jdbcTemplate.queryForInt(sb.toString(), new MapSqlParameterSource().addValue("POST_SEQ",comment.getPostSeq())));
 		return comment;
 	}
