@@ -18,5 +18,9 @@ public interface PostDAO {
 	public int update(Post post);
 	
 	public int delete(int postSeq);
+
+	public List list(int startRowNum, int endRowNum);
 	
+	public int getTotalCount();
+
 }

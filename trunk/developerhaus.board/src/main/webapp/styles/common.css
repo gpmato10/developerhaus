@@ -292,3 +292,9 @@ table.tbl1 td span.pi{
 table.tbl1 span.rd{
 	color:#ff5a00;
 }
+
+/*Paging*/
+	.paging { margin-top:20px; text-align:center; font-weight:bold; margin-bottom:40px;}	
+	.paging ul li { display:inline; margin:0 2px; }
+	.paging ul li a { color:#b8b8b8; text-decoration:none; }
+	.paging ul li.sel a { color:#000000; text-decoration:none; }
