@@ -7,9 +7,11 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.developerhaus.domain.PageInfo;
 import com.developerhaus.domain.Post;
 import com.developerhaus.post.dao.PostDAO;
 
@@ -77,6 +79,50 @@ public class PostDAOJdbc implements PostDAO {
 		sb.append(" FROM POST ");
 		return jdbcTemplate.queryForInt(sb.toString());
 	}
-	
 
+
+	public List list(int startRowNum, int endRowNum) {
+		StringBuffer sb = new StringBuffer();
+
+		// Oracle
+//		sb.append("SELECT * ");
+//		sb.append("	FROM ( ");
+//		sb.append(" 	SELECT  rownum as ROW_NUM,  datas.* ");
+
+		// HSQL
+		sb.append(" 	SELECT  limit :startRowNum :rowPerPage  datas.* ");
+		
+		sb.append(" 		FROM ( ");
+		
+		sb.append("	SELECT POST_SEQ, TITLE, CONTENTS, REG_USR, REG_DT, MOD_USR, MOD_DT, UP_POST_SEQ, ODR, LVL");
+		sb.append("	FROM POST	");
+		sb.append("	ORDER BY UP_POST_SEQ DESC, ODR, LVL ");
+		
+		sb.append("		) datas ");
+		
+		// Oracle
+//		sb.append("		  ) ");
+//		sb.append("	  WHERE ROW_NUM > :startRowNum ");
+//		sb.append("	    AND ROW_NUM <= :endRowNum ");
+		
+		System.out.println("query : " + sb.toString());
+		System.out.println("startRowNum : " + startRowNum);
+		System.out.println("endRowNum : " + endRowNum);
+		
+		MapSqlParameterSource msps = new MapSqlParameterSource();
+		msps.addValue("startRowNum", startRowNum);
+		msps.addValue("endRowNum", endRowNum);
+		msps.addValue("rowPerPage", PageInfo.ROW_PER_PAGE);
+		
+		return jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<Post>(Post.class), msps);
+	}
+
+	public int getTotalCount() {
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("	SELECT count(1)");
+		sb.append("	FROM POST	");
+
+		return jdbcTemplate.queryForObject(sb.toString(), Integer.class);
+	}
 }

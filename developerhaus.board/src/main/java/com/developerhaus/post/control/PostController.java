@@ -7,10 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.developerhaus.domain.PageInfo;
 import com.developerhaus.domain.Post;
 import com.developerhaus.post.service.PostService;
 
@@ -22,12 +25,20 @@ public class PostController {
 	PostService postService;
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String list(HttpServletRequest request, Model model) {
+	public String list(HttpServletRequest request, Model model) throws Exception {
 		System.out.println("list");
 		
-		List list = postService.list();
+		int page = ServletRequestUtils.getIntParameter(request, "page", 1);
+		System.out.println("page : " + page);
+		
+		List list = postService.list(page);
+		PageInfo pageInfo = postService.getPageInfo(page);
+		
 		System.out.println("list:"+list);
+		System.out.println("pageInfo : " + pageInfo);
 		model.addAttribute("list", list);
+		model.addAttribute("pageInfo", pageInfo);
+		
 		return "post/list";
 	}
 
@@ -56,7 +67,7 @@ public class PostController {
 	}
 	
 	@RequestMapping(value = "/delete/{postSeq}", method = RequestMethod.GET)
-	public String delete(@PathVariable("postSeq") int postSeq, HttpServletRequest request, Model model) {
+	public String delete(@PathVariable("postSeq") int postSeq, HttpServletRequest request, Model model) throws Exception {
 		postService.delete(postSeq);
 		return list(request, model);
 	}
