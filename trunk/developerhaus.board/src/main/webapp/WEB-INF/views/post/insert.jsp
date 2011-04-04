@@ -11,16 +11,21 @@
 	<div class="wrap">
 		<div class="head"></div>
 		<div class="container">
-			<form action="/haus/post/insert" method="post">
+<!--		enctype="multipart/form-data"-->
+			<form action="/haus/post/insert" method="post" enctype="multipart/form-data"> 
 				<input type="hidden" name="regUsr" value="1" />
 				<table cellpadding="0" cellspacing="0" summary="게시판" class="tbl1">
 					<tr>
 						<th class="ct2">제목 : </th>
-						<td class="le"><input type="text" name="title" value="" /></td>
+						<td class="le"><input type="text" name="title" value=""  class="txt5" /></td>
 					</tr>
 					<tr>
 						<th class="ct2">내용 : </th>
-						<td class="le"><textarea name="contents" cols="45" rows="4"></textarea></td>
+						<td class="le"><textarea name="contents" cols="70" rows="4"></textarea></td>
+					</tr>
+					<tr>
+						<th class="ct2">첨부파일 : </th>
+						<td class="le"><input type="file" name="uploadedFiles" id="file" class="txt5"/></td>
 					</tr>
 				</table>
 				<div class="btnr1"><a href="/haus/post/list">목록으로</a><input type="submit" value="저장" /></div>

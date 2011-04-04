@@ -10,7 +10,7 @@ public interface FileService {
 	public int insert(File file);
 	public int delete(int fileSeq);
 	
-	public File insertDataFile(CommonsMultipartFile multipartFile, int regUsr) throws Exception;
-	public File[] insertDataFile(CommonsMultipartFile[] multipartFiles, int regUsr) throws Exception;
+	public File insertDataFile(CommonsMultipartFile multipartFile, int regUsr) throws RuntimeException;
+	public File[] insertDataFile(CommonsMultipartFile[] multipartFiles, int regUsr) throws RuntimeException;
 	
 }

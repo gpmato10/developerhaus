@@ -29,6 +29,12 @@
 						<th class="ct2">내용 : </th>
 						<td class="le"><textarea name="contents" cols="45" rows="4">${post.contents}</textarea></td>
 					</tr>
+					<tr>
+						<th class="ct2">첨부파일 : </th>
+						<td class="le"><c:forEach items="${post.postFiles}" var="postFile">
+							<a href="/haus/fileDownload.do?fileSeq=${postFile.fileSeq}">${postFile.fileNm}.${postFile.fileExt}</a><br />
+						</c:forEach></td>
+					</tr>
 				</table>
 				
 				<div class="btnr1"><a href="/haus/post/list">목록으로</a><input type="submit" value="저장" /><input type="button" value="삭제" onclick="deletePost(${post.postSeq});" /></div>

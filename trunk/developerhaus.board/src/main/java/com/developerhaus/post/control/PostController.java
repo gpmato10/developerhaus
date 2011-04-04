@@ -44,6 +44,7 @@ public class PostController {
 
 	@RequestMapping(value = "/view/{postSeq}", method = RequestMethod.GET)
 	public String view(@PathVariable("postSeq") int postSeq, HttpServletRequest request, Model model) {
+		System.out.println("view in controller");
 		Post post = postService.view(postSeq);
 		model.addAttribute("post", post);
 		return "post/view";
@@ -63,7 +64,7 @@ public class PostController {
 			postService.insert(post);
 		}
 		model.addAttribute("post", post);
-		return "post/view";
+		return "redirect:view/"+post.getPostSeq();
 	}
 	
 	@RequestMapping(value = "/delete/{postSeq}", method = RequestMethod.GET)
