@@ -4,7 +4,7 @@ import com.developerhaus.domain.File;
 
 public interface FileDAO {
 
-	public long getFileSeq();
+	public int getFileSeq();
 	public File get(int fileSeq);
 	public int insert(File file);
 	public int delete(int fileSeq);

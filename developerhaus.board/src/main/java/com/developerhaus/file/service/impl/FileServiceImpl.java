@@ -33,11 +33,12 @@ public class FileServiceImpl implements FileService {
 		return fileDAO.insert(file);
 	}
 
-	public File insertDataFile(CommonsMultipartFile multipartFile, int regUsr) throws Exception {
+	public File insertDataFile(CommonsMultipartFile multipartFile, int regUsr) throws RuntimeException {
 		String destFlPth = getDestFilePath(multipartFile.getOriginalFilename());
 		//multipartFile.getFileItem().write(new File(FILE_PATH + destFlPth));
 		
 		File file = new File();
+		file.setFileSeq(fileDAO.getFileSeq());
 		file.setFilePth(destFlPth);
 		file.setFileExt(StringUtils.getFilenameExtension(destFlPth));
 		file.setFileNm(StringUtils.stripFilenameExtension(multipartFile.getOriginalFilename()));
@@ -47,7 +48,7 @@ public class FileServiceImpl implements FileService {
 		return file;
 	}
 
-	public File[] insertDataFile(CommonsMultipartFile[] multipartFiles, int regUsr) throws Exception {
+	public File[] insertDataFile(CommonsMultipartFile[] multipartFiles, int regUsr) throws RuntimeException {
 		File[] files = new File[multipartFiles.length];
 		for(int i=0;i<multipartFiles.length;i++) {
 			files[i] = insertDataFile(multipartFiles[i], regUsr);

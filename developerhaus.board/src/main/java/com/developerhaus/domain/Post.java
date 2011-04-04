@@ -1,5 +1,7 @@
 package com.developerhaus.domain;
 
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 public class Post {
 
 	private int postSeq;
@@ -11,6 +13,9 @@ public class Post {
 	private int upPostSeq;
 	private int odr;
 	private int lvl;
+	
+	private CommonsMultipartFile[] uploadedFiles;
+	private PostFile[] postFiles;
 	
 	public int getPostSeq() {
 		return postSeq;
@@ -65,5 +70,17 @@ public class Post {
 	}
 	public void setLvl(int lvl) {
 		this.lvl = lvl;
+	}
+	public void setPostFiles(PostFile[] postFiles) {
+		this.postFiles = postFiles;
+	}
+	public PostFile[] getPostFiles() {
+		return postFiles;
+	}
+	public void setUploadedFiles(CommonsMultipartFile[] uploadedFiles) {
+		this.uploadedFiles = uploadedFiles;
+	}
+	public CommonsMultipartFile[] getUploadedFiles() {
+		return uploadedFiles;
 	}
 }

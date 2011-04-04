@@ -6,9 +6,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.developerhaus.domain.File;
 import com.developerhaus.domain.PageInfo;
 import com.developerhaus.domain.Post;
+import com.developerhaus.domain.PostFile;
+import com.developerhaus.file.service.FileService;
 import com.developerhaus.post.dao.PostDAO;
+import com.developerhaus.post.dao.PostFileDAO;
 import com.developerhaus.post.service.PostService;
 
 
@@ -18,13 +22,26 @@ public class PostServiceImpl implements PostService {
 	@Autowired
 	PostDAO postDAO;
 	
+	@Autowired
+	PostFileDAO postFileDAO;
+	
+	@Autowired
+	FileService fileService;
+	
+	
 	public List<Post> list() {
 		return postDAO.list();
 	}
 
 	public int insert(Post post) {
 		post.setPostSeq(postDAO.getPostSeq());
-		return postDAO.insert(post);
+		// 파일 저장
+		int result = postDAO.insert(post);
+		if(post.getUploadedFiles()!=null) {
+			File[] files = fileService.insertDataFile(post.getUploadedFiles(), post.getRegUsr());
+			postFileDAO.insertPostFile(post.getPostSeq(), files);
+		}
+		return result;
 	}
 
 	public int delete(int postSeq) {
@@ -36,7 +53,13 @@ public class PostServiceImpl implements PostService {
 	}
 
 	public Post view(int postSeq) {
-		return postDAO.view(postSeq);
+		System.out.println("view in service");
+		Post post = postDAO.view(postSeq);
+		List<PostFile> postFileList = postFileDAO.getPostFileList(post.getPostSeq());
+		System.out.println("postFileList.size() : "+postFileList.size());
+		post.setPostFiles((PostFile[])postFileList.toArray(new PostFile[postFileList.size()]));
+		System.out.println(post.getPostFiles().length);
+		return post;
 	}
 
 	public List list(int page) {

@@ -17,4 +17,4 @@ public interface CommentService {
 	public int remove(Comment comment);
 	
 	public int removeAll(Comment comment);
-}
+} 

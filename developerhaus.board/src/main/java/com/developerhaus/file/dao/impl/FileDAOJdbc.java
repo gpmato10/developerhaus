@@ -39,7 +39,7 @@ public class FileDAOJdbc implements FileDAO {
 		return jdbcTemplate.queryForObject(sb.toString(), new BeanPropertyRowMapper<File>(File.class), fileSeq);
 	}
 
-	public long getFileSeq() {
+	public int getFileSeq() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(" SELECT MAX(FILE_SEQ)+1 AS SEQ ");
 		sb.append(" FROM FILE ");
@@ -52,7 +52,7 @@ public class FileDAOJdbc implements FileDAO {
 		sb.append("	FILE ");
 		sb.append("	(FILE_SEQ, FILE_NM, FILE_PTH, FILE_EXT, FILE_SZ, REG_USR, REG_DT)	");
 		sb.append(" VALUES ");
-		sb.append("	(:fileSeq, :fileNm, :filePth, :fileExt, fileSz, regUsr, SYSDATE)");
+		sb.append("	(:fileSeq, :fileNm, :filePth, :fileExt, :fileSz, :regUsr, SYSDATE)");
 		return jdbcTemplate.update(sb.toString(), new BeanPropertySqlParameterSource(file));
 	}
 
