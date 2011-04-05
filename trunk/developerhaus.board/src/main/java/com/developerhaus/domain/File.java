@@ -1,7 +1,13 @@
 package com.developerhaus.domain;
 
 public class File {
-
+	
+	public File() {
+		// TODO Auto-generated constructor stub
+	}
+	public File(int fileSeq) {
+		this.fileSeq = fileSeq;
+	}
 	private int fileSeq;
 	private String fileNm;
 	private String filePth;
