@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -15,7 +16,7 @@ import com.developerhaus.file.service.FileService;
 @Service
 public class FileServiceImpl implements FileService {
 
-	private static final String FILE_PATH = "/files";
+	private @Value("#{resourceProperties['ROOT_DIR']}") String FILE_ROOT_PATH;
 	public static final String FILE_SEP = java.io.File.separator;
 	
 	@Autowired
@@ -33,9 +34,14 @@ public class FileServiceImpl implements FileService {
 		return fileDAO.insert(file);
 	}
 
-	public File insertDataFile(CommonsMultipartFile multipartFile, int regUsr) throws RuntimeException {
+	public File insertDataFile(CommonsMultipartFile multipartFile, int regUsr) {
 		String destFlPth = getDestFilePath(multipartFile.getOriginalFilename());
-		//multipartFile.getFileItem().write(new File(FILE_PATH + destFlPth));
+		try {
+			multipartFile.getFileItem().write(new java.io.File(FILE_ROOT_PATH + destFlPth));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		File file = new File();
 		file.setFileSeq(fileDAO.getFileSeq());
@@ -64,7 +70,7 @@ public class FileServiceImpl implements FileService {
 	
 	private String getDestFilePath(String origFileName) {
 		String dirPath = FILE_SEP + genDirName();
-		java.io.File dirFile = new java.io.File(FILE_PATH + dirPath);
+		java.io.File dirFile = new java.io.File(FILE_ROOT_PATH + dirPath);
 		if(!dirFile.exists()) {
 			dirFile.mkdirs();
 		}

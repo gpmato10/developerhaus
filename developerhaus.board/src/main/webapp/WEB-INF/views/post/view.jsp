@@ -32,7 +32,7 @@
 					<tr>
 						<th class="ct2">첨부파일 : </th>
 						<td class="le"><c:forEach items="${post.postFiles}" var="postFile">
-							<a href="/haus/fileDownload.do?fileSeq=${postFile.fileSeq}">${postFile.fileNm}.${postFile.fileExt}</a><br />
+							<a href="/haus/file/download/${postFile.fileSeq}">${postFile.fileNm}.${postFile.fileExt}</a><br />
 						</c:forEach></td>
 					</tr>
 				</table>
