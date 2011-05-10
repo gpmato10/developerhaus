@@ -1,0 +1,135 @@
+#summary Hudson Plugin 개발 방법
+
+<wiki:toc max_depth="2" />
+
+= 준비 =
+
+
+== 환경설정 ==
+
+1. 이클립스에서 메이븐 프로젝트 생성
+
+groupId : hudson.plugin
+
+artifactId : HelloWorld
+
+2. pom.xml 을 다음과 같이 구성
+
+{{{
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>hudson.plugin</groupId>
+	<artifactId>HelloWorld</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>HelloWorld</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<!-- dependency specification -->
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
+
+	<!-- --><dependency>
+		<groupId>org.jvnet.hudson.main</groupId>
+		<artifactId>hudson-core</artifactId>
+		<version>1.170</version>   
+		<scope>provided</scope>
+	</dependency>
+
+
+
+	<dependency>
+		<groupId>org.jvnet.hudson.main</groupId>
+		<artifactId>hudson-war</artifactId>
+		<type>war</type>
+		<version>1.170</version>   
+		<scope>test</scope>
+	</dependency> 
+
+		
+	</dependencies>   
+	<!-- build process and details specification -->
+	<build>
+		<defaultGoal>package</defaultGoal>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javancss-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+}}}
+
+3. settings.xml 을 다음과 같이 구성
+
+{사용자 디렉토리}/.m2/settings.xml 이 없다면 생성한다.
+
+settings.xml 을 설정하지 않을 경우 hpi:create, hpi:run 이 실행되지 않는다.
+
+{{{
+<settings>
+  <mirrors>
+    <mirror>
+      <!--This sends everything else to /public -->
+      <id>nexus</id>
+      <mirrorOf>external:*</mirrorOf>
+      <!-- your address may differ: -->
+      <url>https://maven.nuxeo.org/nexus/content/groups/public/</url>
+    </mirror>
+  </mirrors>
+  <profiles>
+    <profile>
+      <id>nexus</id>
+      <!--Enable snapshots for the built in central repo to direct -->
+      <!--all requests to nexus via the mirror -->
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+      </repositories>
+     <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <!--make the profile active all the time -->
+    <activeProfile>nexus</activeProfile>
+  </activeProfiles>
+  <pluginGroups>
+    <pluginGroup>org.jvnet.hudson.tools</pluginGroup>
+  </pluginGroups>
+
+</settings>
+}}}
+
+== 구조 ==
