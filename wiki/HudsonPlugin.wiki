@@ -41,7 +41,7 @@ artifactId : HelloWorld
 			<scope>test</scope>
 		</dependency>
 
-	<!-- --><dependency>
+	<dependency>
 		<groupId>org.jvnet.hudson.main</groupId>
 		<artifactId>hudson-core</artifactId>
 		<version>1.170</version>   
@@ -133,3 +133,28 @@ settings.xml 을 설정하지 않을 경우 hpi:create, hpi:run 이 실행되지
 }}}
 
 == 구조 ==
+
+{{{
++ src
+    + main
+        + java
+             +  full.package.name
+                    +- MyClassPublisher.java
+                    +- PluginImpl.java
+        + resources         
+             +  full.package.name
+                    +- config.jelly
+                    +- global.jelly
+                    +- index.jelly
+        + webapp
+            +- help-globalConfig.html
+            +- help-projectConfig.html
+}}}
+
+= 참고사이트 =
+
+http://notatube.blogspot.com/2010/10/custom-hudson-plugins.html
+
+http://www.theserverlabs.com/blog/2008/09/24/developing-custom-hudson-plugins-integrate-with-your-own-applications/
+
+http://blog.naver.com/sckim0524?Redirect=Log&logNo=91225934
