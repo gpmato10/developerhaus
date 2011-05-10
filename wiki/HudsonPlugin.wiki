@@ -20,11 +20,17 @@ artifactId : HelloWorld
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+           <groupId>org.jvnet.hudson.plugins</groupId>
+           <artifactId>plugin</artifactId>
+           <version>1.318</version>
+           <relativePath>../pom.xml</relativePath>
+        </parent>
+
 	<groupId>hudson.plugin</groupId>
 	<artifactId>HelloWorld</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-
+	<packaging>hpi</packaging>
 	<name>HelloWorld</name>
 	<url>http://maven.apache.org</url>
 
@@ -138,9 +144,9 @@ mvn clean
 
 mvn package
 
-hpi:create (artifactId 입력)
+mvn hpi:create (artifactId 입력)
 
-hpi:run
+mvn hpi:run
 
 http://127.0.0.1:8080/ 으로 hudson 접속 가능
 
