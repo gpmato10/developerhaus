@@ -1,0 +1,8 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" 
+         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+   <f:section title="TSL Integration">
+      <f:entry title="Field Test" help="${rootURL}/plugin/tsl/help-globalConfig.html" >
+         <f:textbox name="tsl.field" value="${descriptor.field}" />
+      </f:entry>
+   </f:section>
+</j:jelly>
