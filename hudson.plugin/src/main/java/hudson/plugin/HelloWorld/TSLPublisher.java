@@ -41,7 +41,9 @@ public class TSLPublisher extends Publisher {
      * and execute the the actions.
      */
     public boolean perform(Build build, Launcher launcher, BuildListener listener) {
-        logger.info("Performing update...");
+    	System.out.println("Performing update...");
+        System.out.println("Bonjour, 빡썽!1");
+        listener.getLogger().println("Bonjour, 빡썽!");
         // TODO: WRITE THE LOGIC OF YOUR PLUGIN HERE!!!!
         return true;
     }
@@ -87,7 +89,7 @@ public class TSLPublisher extends Publisher {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "This is the TSL Sample Plugin";
+            return "(SAMPLE)This is the TSL Sample Plugin";
         }
  
         /**
@@ -96,7 +98,7 @@ public class TSLPublisher extends Publisher {
         public boolean configure(HttpServletRequest req) throws FormException {
             uri = req.getParameter("tsl.field");
             save();
-            logger.debug("Saved TSL configuration");
+            System.out.println("Saved TSL configuration");
             return super.configure(req);
         }
  
@@ -104,7 +106,7 @@ public class TSLPublisher extends Publisher {
          * Creates a new instance of {@link TSLPublisher} from a submitted form.
          */
         public TSLPublisher newInstance(StaplerRequest req) throws FormException {
-            logger.debug("New instance for a job");
+        	System.out.println("(SAMPLE)New instance for a job");
             return new TSLPublisher(req.getParameter("tsl.enable")!=null);
         }
  
